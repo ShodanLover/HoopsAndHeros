@@ -28,3 +28,6 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 - **agent-sprite-forge** (https://github.com/0x0funky/agent-sprite-forge), MIT, Copyright (c) 2026 0x0funky.
   A tool, not bundled. Credit any assets it produces here, and include any notices it ships (for example
   pixelfx `CREDITS.txt`).
+  - **Court player sprites** (`art/sprites/player/`, packed into `js/sprite-data.js`): original art authored for this
+    game in `tools/sprites/player_spec.py` and rendered with codeart2d `render_pixelspec.py` v0.5.0.
+    Code-drawn, no image model (`codeart-meta.json` records `"art_source": "code"`). No third-party images used.

@@ -297,6 +297,13 @@
 
   function hand(p) {
     // ball hold position relative to player
+    if (useSprites()) {
+      // line the ball up with the pixel sprite's hands (sprite px -> feet at this depth)
+      const fpp = C.pix / proj(p.x, p.y, 0).s, H = BE.sprites.HANDS, dr = p.team === 0 ? 1 : -1;
+      const k = p.arms === 'shoot' ? 'shoot' : p.arms === 'dunk' ? 'dunk' : p.arms === 'pass' ? 'pass' : 'idle';
+      const hx = H[k][0] * (k === 'idle' || k === 'pass' ? dr : 1);
+      return { x: p.x + hx * fpp, y: p.y - (k === 'shoot' || k === 'dunk' ? 0.2 : 0), z: p.z + H[k][1] * fpp };
+    }
     const side = p.team === 0 ? 0.7 : -0.7;
     if (p.arms === 'shoot') return { x: p.x + 0.1, y: p.y - 0.2, z: p.z + 7.4 };
     if (p.arms === 'dunk') return { x: p.x, y: p.y - 0.3, z: p.z + 7.8 };
@@ -796,6 +803,7 @@
       g.strokeStyle = D.rarities[info.rarity].color; g.globalAlpha = 0.55 + 0.25 * Math.sin(C.time * 4); g.lineWidth = 2;
       g.beginPath(); g.ellipse(sp.x, sp.y, s * 1.3, s * 0.44, 0, 0, 6.283); g.stroke(); g.globalAlpha = 1;
     }
+    if (useSprites()) { drawSpritePlayer(g, p, x, y, flip, look, gear, shoe); return; }
     g.save();
     g.translate(x, y);
     if (flip) g.rotate(((p.jumpT) % 1) * Math.PI * 2);
@@ -876,6 +884,40 @@
       g.fillRect(-s * 0.22, headY + s * 0.02, s * 0.1, s * 0.12); g.fillRect(s * 0.12, headY + s * 0.02, s * 0.1, s * 0.12);
     }
     if (gear.headband !== undefined) { g.fillStyle = D.rarities[gear.headband].color; g.fillRect(-s * 0.52, headY - s * 0.28, s * 1.04, s * 0.18); }
+    g.restore();
+  }
+  function useSprites() { return !!(BE.sprites && BE.sprites.available() && C.pix); }
+  // Pixel-sprite player (agent-sprite-forge codeart2d parts, composited and recolored in js/sprites.js)
+  const RUN = ['run_a', 'stand', 'run_c', 'stand'];
+  function drawSpritePlayer(g, p, x, y, flip, look, gear, shoe) {
+    const info = p.info, px = C.pix;
+    const rc = (r) => (r !== undefined ? D.rarities[r].color : undefined);
+    const cel = p.celebrate && p.celebrate.style !== 'quick' ? p.celebrate.style : null;
+    const inAir = p.z > 0.25;
+    const runIdx = Math.floor((((p.phase % 6.2832) + 6.2832) % 6.2832) / 1.5708) & 3;
+    const holder = C.ball && C.ball.holder === p;
+    let arms = p.arms;
+    if (arms === 'up' || (cel && !['shoot', 'dunk', 'block'].includes(arms))) arms = cel === 'flex' ? 'flex' : cel === 'sky' ? 'sky' : 'up';
+    else if (!['shoot', 'dunk', 'block', 'defend', 'point', 'pass'].includes(arms)) arms = p.moving && !holder ? (RUN[runIdx] === 'stand' ? 'idle' : RUN[runIdx]) : 'idle';
+    const legs = inAir ? 'jump' : p.arms === 'defend' ? 'stance' : p.moving ? RUN[runIdx] : 'stand';
+    const mirror = p.team !== 0 && ['idle', 'pass', 'point', 'run_a', 'run_c'].includes(arms);
+    const img = BE.sprites.player({
+      facing: p.facing === 'cam' ? 'front' : 'back', legs, arms, mirror,
+      hair: look.hair || 'buzz', skin: D.skinTones[look.skin] || '#c68a5a', hairColor: look.hairColor || '#111',
+      jersey: p.colors[0], trim: p.colors[1], shoe,
+      headband: rc(gear.headband), wristband: rc(gear.wristband), compression: gear.compression !== undefined,
+      number: info.number,
+    });
+    if (!img) return;
+    const sway = p.celebrate && p.celebrate.style === 'shimmy' ? Math.sin(C.time * 18) * 2 : p.celebrate && p.celebrate.style === 'spin' ? Math.sin(C.time * 10) * 3 : 0;
+    const X = Math.round(x / px + sway) * px, Y = Math.round(y / px) * px;
+    const [w, h] = BE.sprites.size();
+    g.save();
+    g.translate(X, Y);
+    if (flip) { g.translate(0, -16 * px); g.rotate(Math.round(((p.jumpT % 1) * 8)) * Math.PI / 4); g.translate(0, 16 * px); }
+    else if (p.slump) g.rotate(0.08);
+    g.imageSmoothingEnabled = false;
+    g.drawImage(img, -12 * px, -33 * px, w * px, h * px);
     g.restore();
   }
   function roundRect(g, x, y, w, h, r) {

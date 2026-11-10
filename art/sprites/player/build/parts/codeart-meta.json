@@ -1,0 +1,1565 @@
+{
+  "schema": "codeart2d.codeart_meta.v1",
+  "art_source": "code",
+  "placeholder": false,
+  "disclosure": "code-drawn, no image model",
+  "generator": "render_pixelspec.py",
+  "spec_sha256": "82db93cb3527f9305495b0072d9ea36f4840d8a0f5e753a4b7b729516b03cca5",
+  "renderer": {
+    "name": "codeart_core.render_pixelspec",
+    "version": "1.1"
+  },
+  "palette": {
+    "colors": {
+      "s": "#e0a070",
+      "S": "#b07850",
+      "e": "#1a1210",
+      "j": "#3060d0",
+      "J": "#203c90",
+      "t": "#f0d040",
+      "T": "#b09020",
+      "w": "#f4f4f4",
+      "W": "#a0a0a8",
+      "o": "#fbfbf5",
+      "c": "#e1a171",
+      "C": "#b17951",
+      "r": "#e2a272",
+      "h": "#3a2a20",
+      "H": "#6a4a30"
+    },
+    "variants": {}
+  },
+  "outputs": [
+    {
+      "path": "base/frames/body_back_stand.png",
+      "sha256": "5a0d245816ff2c4eccb59dfa7127bc7a9c59dab9e4f9d93ace429f93055889f6",
+      "bytes": 306
+    },
+    {
+      "path": "base/frames/body_back_run_a.png",
+      "sha256": "55a26f1a33374b3671af5d256c48784407b1994f7aeac9c8c6887651a2168db1",
+      "bytes": 336
+    },
+    {
+      "path": "base/frames/body_back_run_c.png",
+      "sha256": "73e2623968f6d46cee7d5bf02ceb593fead5eacf63d4529360871659d70d7fd5",
+      "bytes": 336
+    },
+    {
+      "path": "base/frames/body_back_jump.png",
+      "sha256": "d50c52b3e9f233d493744570ee92635c404e9d1e57aab144c0c46405a0266e11",
+      "bytes": 301
+    },
+    {
+      "path": "base/frames/body_back_stance.png",
+      "sha256": "98beebff7fd6a3bf5deb5311ef7b599e7a4df0a26002adbc072cbe41318557e7",
+      "bytes": 302
+    },
+    {
+      "path": "base/frames/body_front_stand.png",
+      "sha256": "97e93b70405ef46716a00400950a2bf960f2ac4eaedd0150cd93b60873d4f9d4",
+      "bytes": 332
+    },
+    {
+      "path": "base/frames/body_front_run_a.png",
+      "sha256": "aaf732d256bae013c06a934e5c75eda14c5e4041c751c86ff4212a14a52444bc",
+      "bytes": 362
+    },
+    {
+      "path": "base/frames/body_front_run_c.png",
+      "sha256": "8f550ca341c56829197166bfb5bf73dbafc9ea242d70bfe14e5cedec1260b4c6",
+      "bytes": 362
+    },
+    {
+      "path": "base/frames/body_front_jump.png",
+      "sha256": "6fcdc621b2af03de96c2b7fd1b95b4c07652fb7bd19edd693926f7cabc855387",
+      "bytes": 327
+    },
+    {
+      "path": "base/frames/body_front_stance.png",
+      "sha256": "b888199209fdc96df214a470373841df1398dcf2d7e851518b281205b0c8466f",
+      "bytes": 328
+    },
+    {
+      "path": "base/frames/arms_idle.png",
+      "sha256": "3fc06fc1684b766bdb0c8c5137e6f21acfcc2f35f598ca0cd959f8474dbfbf67",
+      "bytes": 176
+    },
+    {
+      "path": "base/frames/arms_run_a.png",
+      "sha256": "d488acf8973dc8c5d68f1189d589c0cc92e5cbde66ca4169d1fa2fda1ab672d7",
+      "bytes": 180
+    },
+    {
+      "path": "base/frames/arms_run_c.png",
+      "sha256": "8fbe7b811677760fdedac8436fe56ceea7605c326f38381f3afbaf32b7b970b5",
+      "bytes": 179
+    },
+    {
+      "path": "base/frames/arms_shoot.png",
+      "sha256": "359cfc6294a8ee7a3d8d8f7b3866437afc97ed652863df56d0e24bcc5a75650e",
+      "bytes": 185
+    },
+    {
+      "path": "base/frames/arms_dunk.png",
+      "sha256": "e9262bfd5b5bc693aa208481265b2f3a714090bfd3ae5fb73b1f7fb3e1bcdd1b",
+      "bytes": 158
+    },
+    {
+      "path": "base/frames/arms_block.png",
+      "sha256": "ed9afb211e04e7329c828547e3e3a2724b73de5fc59de281910623e96267ba4b",
+      "bytes": 144
+    },
+    {
+      "path": "base/frames/arms_defend.png",
+      "sha256": "d5a9ca51932043f628a9041761c6c642de0cca78a5ec71d496d09552054d48aa",
+      "bytes": 156
+    },
+    {
+      "path": "base/frames/arms_up.png",
+      "sha256": "22f8c2adf45367390f421e539946b611aaa0f98b592fa2baa0eff3b6bc702e5a",
+      "bytes": 148
+    },
+    {
+      "path": "base/frames/arms_flex.png",
+      "sha256": "6391492633c1f9c0ab75962e394660bb2389b98403df856f84b0c5225bf71b3b",
+      "bytes": 148
+    },
+    {
+      "path": "base/frames/arms_sky.png",
+      "sha256": "be5a7f3dc3fa69130eaa4ae350ea64a173b55766d10cb96b9a89deb8421596c5",
+      "bytes": 154
+    },
+    {
+      "path": "base/frames/arms_point.png",
+      "sha256": "4660de58fa8abdb863a0a41f566fe38b17718fa30ff678b9faca72b5d57c871b",
+      "bytes": 159
+    },
+    {
+      "path": "base/frames/arms_pass.png",
+      "sha256": "9fbdb7725c8e2741bdd5d5f844cfb951f6d1968ff79b41fd3579d547b49815a5",
+      "bytes": 177
+    },
+    {
+      "path": "base/frames/hair_back_buzz.png",
+      "sha256": "12a377dfe1cab953946a82d4ad5d4fecb4d763c5994985e6bec4d8bd38dde506",
+      "bytes": 116
+    },
+    {
+      "path": "base/frames/hair_back_afro.png",
+      "sha256": "20ed0e1582733c0db46190ac706812e89477af34cf13bb85e4892e4ac5a5bcd6",
+      "bytes": 149
+    },
+    {
+      "path": "base/frames/hair_back_fade.png",
+      "sha256": "baf19ab2e9cdbac9a17cc3fecf38ec1d33b141d0bfe486f5822f20b7a8bbd01b",
+      "bytes": 144
+    },
+    {
+      "path": "base/frames/hair_back_braids.png",
+      "sha256": "e1cff3f75afe70a3c6addfdbaa16354ca1aa031c69a76d2b262459e114800896",
+      "bytes": 162
+    },
+    {
+      "path": "base/frames/hair_back_curls.png",
+      "sha256": "b6013bcaaf8b8f102a0751d9158b5670ee67221092fe8a11a4c04daf1848c6f6",
+      "bytes": 154
+    },
+    {
+      "path": "base/frames/hair_back_mohawk.png",
+      "sha256": "00fdf57c48edef7b8bdfc8eaf1475bffbd4a6aa73278c1367ab883a6115507a0",
+      "bytes": 123
+    },
+    {
+      "path": "base/frames/hair_back_flattop.png",
+      "sha256": "4978518f7be7876977cf95364315032175ae595b015d45c93cf22a3022e0a980",
+      "bytes": 120
+    },
+    {
+      "path": "base/frames/hair_back_locs.png",
+      "sha256": "d05417aa8748ba7216880e8ce7621cebb518fa20986fb3f6ff6c7da4c2229bc7",
+      "bytes": 157
+    },
+    {
+      "path": "base/frames/hair_back_bun.png",
+      "sha256": "3ecb5bfa3ef409ae75963dcbe7f9ea358dd5884ea17988e619bebdd74be6440f",
+      "bytes": 140
+    },
+    {
+      "path": "base/frames/hair_back_spiky.png",
+      "sha256": "84097f78434d53d44be903386a2edd46da17be1daa8ddba6c7de108bb6bda26e",
+      "bytes": 123
+    },
+    {
+      "path": "base/frames/hair_back_waves.png",
+      "sha256": "69770ff199fbf111b437138c09666d5dda6a6f1df01beb27e3d59587431a9cb7",
+      "bytes": 154
+    },
+    {
+      "path": "base/frames/hair_front_buzz.png",
+      "sha256": "90ea75ae6ba15987fd2d91a1ac2ddf273645e45401480661dba33c180617b31d",
+      "bytes": 114
+    },
+    {
+      "path": "base/frames/hair_front_afro.png",
+      "sha256": "6dee55a04097b84323a40e67f39f56e4f74df0053354734e5bf6cdac8af6cd48",
+      "bytes": 159
+    },
+    {
+      "path": "base/frames/hair_front_fade.png",
+      "sha256": "522de30341109fe3393369cb53d6c3458d2683d2d0eb99fa97a5f4ee78c26bb2",
+      "bytes": 132
+    },
+    {
+      "path": "base/frames/hair_front_braids.png",
+      "sha256": "3de0c6d30482b4aa0b94c1b29d2769795241c27eaae96bb95f7bf7270e9fd6be",
+      "bytes": 159
+    },
+    {
+      "path": "base/frames/hair_front_curls.png",
+      "sha256": "d8f267d5326b998a61c2d8770dbace054635c1e818d743dcf91ee9d034c4c48c",
+      "bytes": 125
+    },
+    {
+      "path": "base/frames/hair_front_mohawk.png",
+      "sha256": "8ade071e9f3c71d9b3e73584ace67631e663e886fa9c64746b3cb88bafdbd713",
+      "bytes": 123
+    },
+    {
+      "path": "base/frames/hair_front_flattop.png",
+      "sha256": "f7977462c9a7b46ff1ca42ba671834d51289f2a69882b2e2c5860b99242757d2",
+      "bytes": 127
+    },
+    {
+      "path": "base/frames/hair_front_locs.png",
+      "sha256": "51bfe907f92f4272416576f394f669e75cca3cc832f258a45f71f7baeabe924f",
+      "bytes": 176
+    },
+    {
+      "path": "base/frames/hair_front_bun.png",
+      "sha256": "284fb9928fb082a6e044036fc4dd4241a8ccb0a27ea6f061b293a3f7cc7f52f5",
+      "bytes": 134
+    },
+    {
+      "path": "base/frames/hair_front_spiky.png",
+      "sha256": "4fe2ba699bca8a2ccb2a4cbbb3a6ce5048013cc1db9a234ba8daefa91cdf863b",
+      "bytes": 129
+    },
+    {
+      "path": "base/frames/hair_front_waves.png",
+      "sha256": "ffb03b542a5dfc8f04f23bae7e524298da24c0ce4d31293f284d86a924477b3e",
+      "bytes": 126
+    },
+    {
+      "path": "preview-x4.png",
+      "sha256": "479b7bc7d6100e083118ecab4c1cc032f0401c527b93b4d5d358ba4073ec1b8b",
+      "bytes": 5106
+    }
+  ],
+  "qa": {
+    "status": "pass",
+    "method": "render_pixelspec.py: every published frame PNG is read back and measured with codeart_core.qa_pixels against the resolved palette of its variant (alpha census, exact palette lookup and, with an outline, 4-neighbour outline gaps and L-corners); each check is the worst frame against its gate in codeart_core.QA_PIXEL_GATES",
+    "notProven": [
+      "Readability, silhouette and appeal at game scale; check them on a review sheet (pixel_qa.py --review).",
+      "Motion, timing and spacing between frames; numbers do not judge animation quality.",
+      "That the art matches the brief and the intent of the spec.",
+      "Outline continuity and L-corners: the spec has no outline, so they were not measured."
+    ],
+    "checks": [
+      {
+        "id": "partial_alpha",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "off_palette",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "outline_gaps",
+        "status": "skipped",
+        "value": null,
+        "threshold": 0
+      },
+      {
+        "id": "l_corners",
+        "status": "skipped",
+        "value": null,
+        "threshold": 10
+      }
+    ],
+    "inputs": [
+      {
+        "path": "../../player-parts.pixelspec.json",
+        "sha256": "82db93cb3527f9305495b0072d9ea36f4840d8a0f5e753a4b7b729516b03cca5",
+        "bytes": 54139
+      }
+    ],
+    "outputs": [
+      {
+        "path": "base/frames/body_back_stand.png",
+        "sha256": "5a0d245816ff2c4eccb59dfa7127bc7a9c59dab9e4f9d93ace429f93055889f6",
+        "bytes": 306
+      },
+      {
+        "path": "base/frames/body_back_run_a.png",
+        "sha256": "55a26f1a33374b3671af5d256c48784407b1994f7aeac9c8c6887651a2168db1",
+        "bytes": 336
+      },
+      {
+        "path": "base/frames/body_back_run_c.png",
+        "sha256": "73e2623968f6d46cee7d5bf02ceb593fead5eacf63d4529360871659d70d7fd5",
+        "bytes": 336
+      },
+      {
+        "path": "base/frames/body_back_jump.png",
+        "sha256": "d50c52b3e9f233d493744570ee92635c404e9d1e57aab144c0c46405a0266e11",
+        "bytes": 301
+      },
+      {
+        "path": "base/frames/body_back_stance.png",
+        "sha256": "98beebff7fd6a3bf5deb5311ef7b599e7a4df0a26002adbc072cbe41318557e7",
+        "bytes": 302
+      },
+      {
+        "path": "base/frames/body_front_stand.png",
+        "sha256": "97e93b70405ef46716a00400950a2bf960f2ac4eaedd0150cd93b60873d4f9d4",
+        "bytes": 332
+      },
+      {
+        "path": "base/frames/body_front_run_a.png",
+        "sha256": "aaf732d256bae013c06a934e5c75eda14c5e4041c751c86ff4212a14a52444bc",
+        "bytes": 362
+      },
+      {
+        "path": "base/frames/body_front_run_c.png",
+        "sha256": "8f550ca341c56829197166bfb5bf73dbafc9ea242d70bfe14e5cedec1260b4c6",
+        "bytes": 362
+      },
+      {
+        "path": "base/frames/body_front_jump.png",
+        "sha256": "6fcdc621b2af03de96c2b7fd1b95b4c07652fb7bd19edd693926f7cabc855387",
+        "bytes": 327
+      },
+      {
+        "path": "base/frames/body_front_stance.png",
+        "sha256": "b888199209fdc96df214a470373841df1398dcf2d7e851518b281205b0c8466f",
+        "bytes": 328
+      },
+      {
+        "path": "base/frames/arms_idle.png",
+        "sha256": "3fc06fc1684b766bdb0c8c5137e6f21acfcc2f35f598ca0cd959f8474dbfbf67",
+        "bytes": 176
+      },
+      {
+        "path": "base/frames/arms_run_a.png",
+        "sha256": "d488acf8973dc8c5d68f1189d589c0cc92e5cbde66ca4169d1fa2fda1ab672d7",
+        "bytes": 180
+      },
+      {
+        "path": "base/frames/arms_run_c.png",
+        "sha256": "8fbe7b811677760fdedac8436fe56ceea7605c326f38381f3afbaf32b7b970b5",
+        "bytes": 179
+      },
+      {
+        "path": "base/frames/arms_shoot.png",
+        "sha256": "359cfc6294a8ee7a3d8d8f7b3866437afc97ed652863df56d0e24bcc5a75650e",
+        "bytes": 185
+      },
+      {
+        "path": "base/frames/arms_dunk.png",
+        "sha256": "e9262bfd5b5bc693aa208481265b2f3a714090bfd3ae5fb73b1f7fb3e1bcdd1b",
+        "bytes": 158
+      },
+      {
+        "path": "base/frames/arms_block.png",
+        "sha256": "ed9afb211e04e7329c828547e3e3a2724b73de5fc59de281910623e96267ba4b",
+        "bytes": 144
+      },
+      {
+        "path": "base/frames/arms_defend.png",
+        "sha256": "d5a9ca51932043f628a9041761c6c642de0cca78a5ec71d496d09552054d48aa",
+        "bytes": 156
+      },
+      {
+        "path": "base/frames/arms_up.png",
+        "sha256": "22f8c2adf45367390f421e539946b611aaa0f98b592fa2baa0eff3b6bc702e5a",
+        "bytes": 148
+      },
+      {
+        "path": "base/frames/arms_flex.png",
+        "sha256": "6391492633c1f9c0ab75962e394660bb2389b98403df856f84b0c5225bf71b3b",
+        "bytes": 148
+      },
+      {
+        "path": "base/frames/arms_sky.png",
+        "sha256": "be5a7f3dc3fa69130eaa4ae350ea64a173b55766d10cb96b9a89deb8421596c5",
+        "bytes": 154
+      },
+      {
+        "path": "base/frames/arms_point.png",
+        "sha256": "4660de58fa8abdb863a0a41f566fe38b17718fa30ff678b9faca72b5d57c871b",
+        "bytes": 159
+      },
+      {
+        "path": "base/frames/arms_pass.png",
+        "sha256": "9fbdb7725c8e2741bdd5d5f844cfb951f6d1968ff79b41fd3579d547b49815a5",
+        "bytes": 177
+      },
+      {
+        "path": "base/frames/hair_back_buzz.png",
+        "sha256": "12a377dfe1cab953946a82d4ad5d4fecb4d763c5994985e6bec4d8bd38dde506",
+        "bytes": 116
+      },
+      {
+        "path": "base/frames/hair_back_afro.png",
+        "sha256": "20ed0e1582733c0db46190ac706812e89477af34cf13bb85e4892e4ac5a5bcd6",
+        "bytes": 149
+      },
+      {
+        "path": "base/frames/hair_back_fade.png",
+        "sha256": "baf19ab2e9cdbac9a17cc3fecf38ec1d33b141d0bfe486f5822f20b7a8bbd01b",
+        "bytes": 144
+      },
+      {
+        "path": "base/frames/hair_back_braids.png",
+        "sha256": "e1cff3f75afe70a3c6addfdbaa16354ca1aa031c69a76d2b262459e114800896",
+        "bytes": 162
+      },
+      {
+        "path": "base/frames/hair_back_curls.png",
+        "sha256": "b6013bcaaf8b8f102a0751d9158b5670ee67221092fe8a11a4c04daf1848c6f6",
+        "bytes": 154
+      },
+      {
+        "path": "base/frames/hair_back_mohawk.png",
+        "sha256": "00fdf57c48edef7b8bdfc8eaf1475bffbd4a6aa73278c1367ab883a6115507a0",
+        "bytes": 123
+      },
+      {
+        "path": "base/frames/hair_back_flattop.png",
+        "sha256": "4978518f7be7876977cf95364315032175ae595b015d45c93cf22a3022e0a980",
+        "bytes": 120
+      },
+      {
+        "path": "base/frames/hair_back_locs.png",
+        "sha256": "d05417aa8748ba7216880e8ce7621cebb518fa20986fb3f6ff6c7da4c2229bc7",
+        "bytes": 157
+      },
+      {
+        "path": "base/frames/hair_back_bun.png",
+        "sha256": "3ecb5bfa3ef409ae75963dcbe7f9ea358dd5884ea17988e619bebdd74be6440f",
+        "bytes": 140
+      },
+      {
+        "path": "base/frames/hair_back_spiky.png",
+        "sha256": "84097f78434d53d44be903386a2edd46da17be1daa8ddba6c7de108bb6bda26e",
+        "bytes": 123
+      },
+      {
+        "path": "base/frames/hair_back_waves.png",
+        "sha256": "69770ff199fbf111b437138c09666d5dda6a6f1df01beb27e3d59587431a9cb7",
+        "bytes": 154
+      },
+      {
+        "path": "base/frames/hair_front_buzz.png",
+        "sha256": "90ea75ae6ba15987fd2d91a1ac2ddf273645e45401480661dba33c180617b31d",
+        "bytes": 114
+      },
+      {
+        "path": "base/frames/hair_front_afro.png",
+        "sha256": "6dee55a04097b84323a40e67f39f56e4f74df0053354734e5bf6cdac8af6cd48",
+        "bytes": 159
+      },
+      {
+        "path": "base/frames/hair_front_fade.png",
+        "sha256": "522de30341109fe3393369cb53d6c3458d2683d2d0eb99fa97a5f4ee78c26bb2",
+        "bytes": 132
+      },
+      {
+        "path": "base/frames/hair_front_braids.png",
+        "sha256": "3de0c6d30482b4aa0b94c1b29d2769795241c27eaae96bb95f7bf7270e9fd6be",
+        "bytes": 159
+      },
+      {
+        "path": "base/frames/hair_front_curls.png",
+        "sha256": "d8f267d5326b998a61c2d8770dbace054635c1e818d743dcf91ee9d034c4c48c",
+        "bytes": 125
+      },
+      {
+        "path": "base/frames/hair_front_mohawk.png",
+        "sha256": "8ade071e9f3c71d9b3e73584ace67631e663e886fa9c64746b3cb88bafdbd713",
+        "bytes": 123
+      },
+      {
+        "path": "base/frames/hair_front_flattop.png",
+        "sha256": "f7977462c9a7b46ff1ca42ba671834d51289f2a69882b2e2c5860b99242757d2",
+        "bytes": 127
+      },
+      {
+        "path": "base/frames/hair_front_locs.png",
+        "sha256": "51bfe907f92f4272416576f394f669e75cca3cc832f258a45f71f7baeabe924f",
+        "bytes": 176
+      },
+      {
+        "path": "base/frames/hair_front_bun.png",
+        "sha256": "284fb9928fb082a6e044036fc4dd4241a8ccb0a27ea6f061b293a3f7cc7f52f5",
+        "bytes": 134
+      },
+      {
+        "path": "base/frames/hair_front_spiky.png",
+        "sha256": "4fe2ba699bca8a2ccb2a4cbbb3a6ce5048013cc1db9a234ba8daefa91cdf863b",
+        "bytes": 129
+      },
+      {
+        "path": "base/frames/hair_front_waves.png",
+        "sha256": "ffb03b542a5dfc8f04f23bae7e524298da24c0ce4d31293f284d86a924477b3e",
+        "bytes": 126
+      }
+    ],
+    "tool": {
+      "name": "render_pixelspec.py",
+      "version": "0.5.0"
+    },
+    "frames": [
+      {
+        "file": "base/frames/body_back_stand.png",
+        "variant": "base",
+        "frame": "body_back_stand",
+        "visible": 158,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          7,
+          16,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_back_run_a.png",
+        "variant": "base",
+        "frame": "body_back_run_a",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          7,
+          16,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_back_run_c.png",
+        "variant": "base",
+        "frame": "body_back_run_c",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          7,
+          16,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_back_jump.png",
+        "variant": "base",
+        "frame": "body_back_jump",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          7,
+          7,
+          17,
+          32
+        ]
+      },
+      {
+        "file": "base/frames/body_back_stance.png",
+        "variant": "base",
+        "frame": "body_back_stance",
+        "visible": 158,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          7,
+          7,
+          17,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_front_stand.png",
+        "variant": "base",
+        "frame": "body_front_stand",
+        "visible": 158,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          7,
+          16,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_front_run_a.png",
+        "variant": "base",
+        "frame": "body_front_run_a",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 5,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          7,
+          16,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_front_run_c.png",
+        "variant": "base",
+        "frame": "body_front_run_c",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 5,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          7,
+          16,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/body_front_jump.png",
+        "variant": "base",
+        "frame": "body_front_jump",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          7,
+          7,
+          17,
+          32
+        ]
+      },
+      {
+        "file": "base/frames/body_front_stance.png",
+        "variant": "base",
+        "frame": "body_front_stance",
+        "visible": 158,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          7,
+          7,
+          17,
+          33
+        ]
+      },
+      {
+        "file": "base/frames/arms_idle.png",
+        "variant": "base",
+        "frame": "arms_idle",
+        "visible": 32,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 5,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          5,
+          16,
+          20,
+          24
+        ]
+      },
+      {
+        "file": "base/frames/arms_run_a.png",
+        "variant": "base",
+        "frame": "arms_run_a",
+        "visible": 26,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          4,
+          15,
+          19,
+          24
+        ]
+      },
+      {
+        "file": "base/frames/arms_run_c.png",
+        "variant": "base",
+        "frame": "arms_run_c",
+        "visible": 26,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 4,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          5,
+          15,
+          20,
+          24
+        ]
+      },
+      {
+        "file": "base/frames/arms_shoot.png",
+        "variant": "base",
+        "frame": "arms_shoot",
+        "visible": 54,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          6,
+          3,
+          18,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/arms_dunk.png",
+        "variant": "base",
+        "frame": "arms_dunk",
+        "visible": 44,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          4,
+          2,
+          18,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/arms_block.png",
+        "variant": "base",
+        "frame": "arms_block",
+        "visible": 56,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          5,
+          3,
+          19,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/arms_defend.png",
+        "variant": "base",
+        "frame": "arms_defend",
+        "visible": 22,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 4,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "file": "base/frames/arms_up.png",
+        "variant": "base",
+        "frame": "arms_up",
+        "visible": 44,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          4,
+          6,
+          20,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/arms_flex.png",
+        "variant": "base",
+        "frame": "arms_flex",
+        "visible": 30,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          11,
+          21,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/arms_sky.png",
+        "variant": "base",
+        "frame": "arms_sky",
+        "visible": 56,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          6,
+          3,
+          18,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/arms_point.png",
+        "variant": "base",
+        "frame": "arms_point",
+        "visible": 44,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          5,
+          4,
+          19,
+          25
+        ]
+      },
+      {
+        "file": "base/frames/arms_pass.png",
+        "variant": "base",
+        "frame": "arms_pass",
+        "visible": 25,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 3,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          5,
+          15,
+          22,
+          24
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_buzz.png",
+        "variant": "base",
+        "frame": "hair_back_buzz",
+        "visible": 22,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          7,
+          15,
+          11
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_afro.png",
+        "variant": "base",
+        "frame": "hair_back_afro",
+        "visible": 90,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          7,
+          3,
+          17,
+          13
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_fade.png",
+        "variant": "base",
+        "frame": "hair_back_fade",
+        "visible": 26,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          6,
+          15,
+          11
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_braids.png",
+        "variant": "base",
+        "frame": "hair_back_braids",
+        "visible": 53,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 4,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          6,
+          15,
+          20
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_curls.png",
+        "variant": "base",
+        "frame": "hair_back_curls",
+        "visible": 62,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 7,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          5,
+          16,
+          13
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_mohawk.png",
+        "variant": "base",
+        "frame": "hair_back_mohawk",
+        "visible": 20,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          11,
+          3,
+          13,
+          13
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_flattop.png",
+        "variant": "base",
+        "frame": "hair_back_flattop",
+        "visible": 48,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          3,
+          15,
+          11
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_locs.png",
+        "variant": "base",
+        "frame": "hair_back_locs",
+        "visible": 74,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 12,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          6,
+          15,
+          19
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_bun.png",
+        "variant": "base",
+        "frame": "hair_back_bun",
+        "visible": 48,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          3,
+          15,
+          13
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_spiky.png",
+        "variant": "base",
+        "frame": "hair_back_spiky",
+        "visible": 45,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          4,
+          15,
+          12
+        ]
+      },
+      {
+        "file": "base/frames/hair_back_waves.png",
+        "variant": "base",
+        "frame": "hair_back_waves",
+        "visible": 38,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 9,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          6,
+          15,
+          13
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_buzz.png",
+        "variant": "base",
+        "frame": "hair_front_buzz",
+        "visible": 12,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          7,
+          15,
+          10
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_afro.png",
+        "variant": "base",
+        "frame": "hair_front_afro",
+        "visible": 66,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          7,
+          3,
+          17,
+          13
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_fade.png",
+        "variant": "base",
+        "frame": "hair_front_fade",
+        "visible": 16,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          6,
+          15,
+          10
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_braids.png",
+        "variant": "base",
+        "frame": "hair_front_braids",
+        "visible": 33,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 7,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          6,
+          16,
+          18
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_curls.png",
+        "variant": "base",
+        "frame": "hair_front_curls",
+        "visible": 30,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          5,
+          16,
+          9
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_mohawk.png",
+        "variant": "base",
+        "frame": "hair_front_mohawk",
+        "visible": 12,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          11,
+          3,
+          13,
+          9
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_flattop.png",
+        "variant": "base",
+        "frame": "hair_front_flattop",
+        "visible": 32,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          3,
+          15,
+          9
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_locs.png",
+        "variant": "base",
+        "frame": "hair_front_locs",
+        "visible": 40,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 8,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          8,
+          6,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_bun.png",
+        "variant": "base",
+        "frame": "hair_front_bun",
+        "visible": 22,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          3,
+          15,
+          9
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_spiky.png",
+        "variant": "base",
+        "frame": "hair_front_spiky",
+        "visible": 23,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          4,
+          15,
+          9
+        ]
+      },
+      {
+        "file": "base/frames/hair_front_waves.png",
+        "variant": "base",
+        "frame": "hair_front_waves",
+        "visible": 12,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          9,
+          6,
+          15,
+          9
+        ]
+      }
+    ]
+  },
+  "pixelspec": {
+    "name": "player-parts",
+    "schema": "codeart2d.pixelspec.v1",
+    "canvas": [
+      24,
+      35
+    ],
+    "anchor_px": [
+      12,
+      34
+    ],
+    "outline": "none",
+    "variants": {
+      "base": "base"
+    },
+    "frames": [
+      {
+        "index": 0,
+        "name": "body_back_stand",
+        "file": "frames/body_back_stand.png"
+      },
+      {
+        "index": 1,
+        "name": "body_back_run_a",
+        "file": "frames/body_back_run_a.png"
+      },
+      {
+        "index": 2,
+        "name": "body_back_run_c",
+        "file": "frames/body_back_run_c.png"
+      },
+      {
+        "index": 3,
+        "name": "body_back_jump",
+        "file": "frames/body_back_jump.png"
+      },
+      {
+        "index": 4,
+        "name": "body_back_stance",
+        "file": "frames/body_back_stance.png"
+      },
+      {
+        "index": 5,
+        "name": "body_front_stand",
+        "file": "frames/body_front_stand.png"
+      },
+      {
+        "index": 6,
+        "name": "body_front_run_a",
+        "file": "frames/body_front_run_a.png"
+      },
+      {
+        "index": 7,
+        "name": "body_front_run_c",
+        "file": "frames/body_front_run_c.png"
+      },
+      {
+        "index": 8,
+        "name": "body_front_jump",
+        "file": "frames/body_front_jump.png"
+      },
+      {
+        "index": 9,
+        "name": "body_front_stance",
+        "file": "frames/body_front_stance.png"
+      },
+      {
+        "index": 10,
+        "name": "arms_idle",
+        "file": "frames/arms_idle.png"
+      },
+      {
+        "index": 11,
+        "name": "arms_run_a",
+        "file": "frames/arms_run_a.png"
+      },
+      {
+        "index": 12,
+        "name": "arms_run_c",
+        "file": "frames/arms_run_c.png"
+      },
+      {
+        "index": 13,
+        "name": "arms_shoot",
+        "file": "frames/arms_shoot.png"
+      },
+      {
+        "index": 14,
+        "name": "arms_dunk",
+        "file": "frames/arms_dunk.png"
+      },
+      {
+        "index": 15,
+        "name": "arms_block",
+        "file": "frames/arms_block.png"
+      },
+      {
+        "index": 16,
+        "name": "arms_defend",
+        "file": "frames/arms_defend.png"
+      },
+      {
+        "index": 17,
+        "name": "arms_up",
+        "file": "frames/arms_up.png"
+      },
+      {
+        "index": 18,
+        "name": "arms_flex",
+        "file": "frames/arms_flex.png"
+      },
+      {
+        "index": 19,
+        "name": "arms_sky",
+        "file": "frames/arms_sky.png"
+      },
+      {
+        "index": 20,
+        "name": "arms_point",
+        "file": "frames/arms_point.png"
+      },
+      {
+        "index": 21,
+        "name": "arms_pass",
+        "file": "frames/arms_pass.png"
+      },
+      {
+        "index": 22,
+        "name": "hair_back_buzz",
+        "file": "frames/hair_back_buzz.png"
+      },
+      {
+        "index": 23,
+        "name": "hair_back_afro",
+        "file": "frames/hair_back_afro.png"
+      },
+      {
+        "index": 24,
+        "name": "hair_back_fade",
+        "file": "frames/hair_back_fade.png"
+      },
+      {
+        "index": 25,
+        "name": "hair_back_braids",
+        "file": "frames/hair_back_braids.png"
+      },
+      {
+        "index": 26,
+        "name": "hair_back_curls",
+        "file": "frames/hair_back_curls.png"
+      },
+      {
+        "index": 27,
+        "name": "hair_back_mohawk",
+        "file": "frames/hair_back_mohawk.png"
+      },
+      {
+        "index": 28,
+        "name": "hair_back_flattop",
+        "file": "frames/hair_back_flattop.png"
+      },
+      {
+        "index": 29,
+        "name": "hair_back_locs",
+        "file": "frames/hair_back_locs.png"
+      },
+      {
+        "index": 30,
+        "name": "hair_back_bun",
+        "file": "frames/hair_back_bun.png"
+      },
+      {
+        "index": 31,
+        "name": "hair_back_spiky",
+        "file": "frames/hair_back_spiky.png"
+      },
+      {
+        "index": 32,
+        "name": "hair_back_waves",
+        "file": "frames/hair_back_waves.png"
+      },
+      {
+        "index": 33,
+        "name": "hair_front_buzz",
+        "file": "frames/hair_front_buzz.png"
+      },
+      {
+        "index": 34,
+        "name": "hair_front_afro",
+        "file": "frames/hair_front_afro.png"
+      },
+      {
+        "index": 35,
+        "name": "hair_front_fade",
+        "file": "frames/hair_front_fade.png"
+      },
+      {
+        "index": 36,
+        "name": "hair_front_braids",
+        "file": "frames/hair_front_braids.png"
+      },
+      {
+        "index": 37,
+        "name": "hair_front_curls",
+        "file": "frames/hair_front_curls.png"
+      },
+      {
+        "index": 38,
+        "name": "hair_front_mohawk",
+        "file": "frames/hair_front_mohawk.png"
+      },
+      {
+        "index": 39,
+        "name": "hair_front_flattop",
+        "file": "frames/hair_front_flattop.png"
+      },
+      {
+        "index": 40,
+        "name": "hair_front_locs",
+        "file": "frames/hair_front_locs.png"
+      },
+      {
+        "index": 41,
+        "name": "hair_front_bun",
+        "file": "frames/hair_front_bun.png"
+      },
+      {
+        "index": 42,
+        "name": "hair_front_spiky",
+        "file": "frames/hair_front_spiky.png"
+      },
+      {
+        "index": 43,
+        "name": "hair_front_waves",
+        "file": "frames/hair_front_waves.png"
+      }
+    ],
+    "preview": {
+      "file": "preview-x4.png",
+      "scale": 4,
+      "layout": "rows are variants, columns are distinct frames"
+    }
+  }
+}

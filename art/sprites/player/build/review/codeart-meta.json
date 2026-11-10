@@ -1,0 +1,1603 @@
+{
+  "schema": "codeart2d.codeart_meta.v1",
+  "art_source": "code",
+  "placeholder": false,
+  "disclosure": "code-drawn, no image model",
+  "generator": "render_pixelspec.py",
+  "spec_sha256": "14172096e3b9f749cf201226fdd0db8d7bc970e9ff15407eacc895c1494ac191",
+  "renderer": {
+    "name": "codeart_core.render_pixelspec",
+    "version": "1.1"
+  },
+  "palette": {
+    "colors": {
+      "s": "#e0a070",
+      "S": "#b07850",
+      "e": "#1a1210",
+      "j": "#3060d0",
+      "J": "#203c90",
+      "t": "#f0d040",
+      "T": "#b09020",
+      "w": "#f4f4f4",
+      "W": "#a0a0a8",
+      "o": "#fbfbf5",
+      "c": "#e1a171",
+      "C": "#b17951",
+      "r": "#e2a272",
+      "h": "#3a2a20",
+      "H": "#6a4a30",
+      "k": "#0c0a18"
+    },
+    "variants": {
+      "home": {
+        "j": "#ff6a1f",
+        "J": "#c4470f",
+        "t": "#1b1f3a",
+        "T": "#0f1226",
+        "h": "#121014",
+        "H": "#3a3238",
+        "s": "#8d5a3b",
+        "S": "#6b4129",
+        "c": "#8d5a3b",
+        "C": "#6b4129",
+        "r": "#8d5a3b"
+      },
+      "away": {
+        "j": "#f4f1ea",
+        "J": "#b9b4a8",
+        "t": "#2a7de1",
+        "T": "#1b55a0",
+        "h": "#d6b25a",
+        "H": "#f0d890",
+        "c": "#1a1d26",
+        "C": "#0c0e14",
+        "r": "#ffb22e"
+      }
+    }
+  },
+  "outputs": [
+    {
+      "path": "home/frames/back_idle_buzz.png",
+      "sha256": "7d6a3f37aa9ecc84c3571dfbefb6d7fb3522a631330904b8d283a78c521f95b8",
+      "bytes": 458
+    },
+    {
+      "path": "home/frames/back_run_a_afro.png",
+      "sha256": "7c39dcd575a0da42642f6d1017cd09f25e25174b120f5e0edd0eee2ffb848ebd",
+      "bytes": 499
+    },
+    {
+      "path": "home/frames/back_run_c_fade.png",
+      "sha256": "96915a9329ab666106fb1c843db74b448edb471702556c0cf3e3a871237cd46f",
+      "bytes": 484
+    },
+    {
+      "path": "home/frames/back_shoot_braids.png",
+      "sha256": "69f14037a90e36a97c36c6a2790eab147116cf59832fa29aa1a8ea899bd4e6c4",
+      "bytes": 520
+    },
+    {
+      "path": "home/frames/back_dunk_bald.png",
+      "sha256": "2f87fcce2f9a2a7303168845165a77740a141d943bfab243e5739ed87f360155",
+      "bytes": 472
+    },
+    {
+      "path": "home/frames/back_block_curls.png",
+      "sha256": "5da502673a189c3d4c58ad4acb9b12b17d03899b37184b2fd0e023c98472d8c0",
+      "bytes": 476
+    },
+    {
+      "path": "home/frames/back_defend_mohawk.png",
+      "sha256": "ee47be1d994e6830312c2d9a682a16e0d2ab8d63a35bddaf15262f26c1d9b2ef",
+      "bytes": 478
+    },
+    {
+      "path": "home/frames/back_up_flattop.png",
+      "sha256": "d042911d018bf8c859d006ecedeb980193ee4273e1dd55ffb8fbaad4e19c4130",
+      "bytes": 451
+    },
+    {
+      "path": "home/frames/back_flex_locs.png",
+      "sha256": "fa4aecfc8e12e714a60148857d6a5864e1913eac5c4319b8001c071666f7ccc5",
+      "bytes": 468
+    },
+    {
+      "path": "home/frames/back_sky_bun.png",
+      "sha256": "41069a43a88f398bc7ca51442a4e88f6248e9e8c6d68f52928e0d06d5e79a735",
+      "bytes": 464
+    },
+    {
+      "path": "home/frames/back_point_spiky.png",
+      "sha256": "827268de7fa9c8d4beec643774f44a1bec1bed3fbb654dc853905a3a41341fa6",
+      "bytes": 477
+    },
+    {
+      "path": "home/frames/back_pass_waves.png",
+      "sha256": "01625576723ac5f720dfa666e5123bc0322e93e8d70a979fb019fa732bffa82d",
+      "bytes": 479
+    },
+    {
+      "path": "home/frames/front_idle_buzz.png",
+      "sha256": "e8c0b9c111d7fb84082438158156a295af0cf97b7a937a0488a9b2eeb4646a42",
+      "bytes": 525
+    },
+    {
+      "path": "home/frames/front_run_a_afro.png",
+      "sha256": "ed8e10358cfecd9e13e5de0f0dc6bb424be032225c51e7d5aa4b68bebaad8939",
+      "bytes": 535
+    },
+    {
+      "path": "home/frames/front_run_c_fade.png",
+      "sha256": "765fb069be69539eaf6e73871cd747b0c2004ece952a7da40e0591f8ab1a1513",
+      "bytes": 525
+    },
+    {
+      "path": "home/frames/front_shoot_braids.png",
+      "sha256": "4a54388c7f229b89658eaf41bb12303b4e27d659e446d849d2dabd6c403ca502",
+      "bytes": 529
+    },
+    {
+      "path": "home/frames/front_dunk_bald.png",
+      "sha256": "ac708550df6d5c8510848ac2331040d28485c6b3341a6bc046c102ff02ce678e",
+      "bytes": 496
+    },
+    {
+      "path": "home/frames/front_block_curls.png",
+      "sha256": "d312a868a259e08db3ba753cf01e8028e0a62368cd9bde3020ebb3414d48c831",
+      "bytes": 507
+    },
+    {
+      "path": "home/frames/front_defend_mohawk.png",
+      "sha256": "fffb7b1ee15fe7bf2da4a3a0edfc60cac439780833447fade5a32f67d87a0b47",
+      "bytes": 507
+    },
+    {
+      "path": "home/frames/front_up_flattop.png",
+      "sha256": "c2854a6c10937aeb442c8236e94a02142dd07b31caa6913543dc5f2e72b8a9ed",
+      "bytes": 513
+    },
+    {
+      "path": "home/frames/front_flex_locs.png",
+      "sha256": "c16df843aaf1c48faaf574b1c7475311e4cf16bd76b4100477e132e534cf6167",
+      "bytes": 510
+    },
+    {
+      "path": "home/frames/front_sky_bun.png",
+      "sha256": "5886a7eef414ad6a5c0f2a0aa3290276af0827fc1a26e7faae73ac4fd7efd3f2",
+      "bytes": 484
+    },
+    {
+      "path": "home/frames/front_point_spiky.png",
+      "sha256": "3c7c842032824cd23064040078043fbf718b06b69c6f97cd54e720bece431726",
+      "bytes": 531
+    },
+    {
+      "path": "home/frames/front_pass_waves.png",
+      "sha256": "ca9f955ebc216de9d394853cce742a8eeb6d00be92afab85c006d0d30a1acb33",
+      "bytes": 517
+    },
+    {
+      "path": "away/frames/back_idle_buzz.png",
+      "sha256": "6c64c870a3127c635c994df489a65cce4725bd680e00ad69f9191ced3b3c9e9c",
+      "bytes": 472
+    },
+    {
+      "path": "away/frames/back_run_a_afro.png",
+      "sha256": "533d27d84a804e4c83da72814002f99b9a9368272e5cfd59c2512a49a0c41ca1",
+      "bytes": 527
+    },
+    {
+      "path": "away/frames/back_run_c_fade.png",
+      "sha256": "f6eeeb2c4d6bc6d6e3b38e0d79a31c679d3bc3931bb6ad2385daa3cc8b0f97a7",
+      "bytes": 511
+    },
+    {
+      "path": "away/frames/back_shoot_braids.png",
+      "sha256": "feca32c3e9a65485ee473b72c2a854f2602367c7f04b5ddb0fad36d0b3194292",
+      "bytes": 524
+    },
+    {
+      "path": "away/frames/back_dunk_bald.png",
+      "sha256": "7beac2f9d50d1e7d5c5c516855af9ffff02f3bbfa496ada5c90ff6451859e276",
+      "bytes": 462
+    },
+    {
+      "path": "away/frames/back_block_curls.png",
+      "sha256": "2cbfb1256fc7b7c6e19f05b2b4d5376c4fb2e27ed5109837be269b92cfc9d1a4",
+      "bytes": 474
+    },
+    {
+      "path": "away/frames/back_defend_mohawk.png",
+      "sha256": "97ef238452f79da6ba94f227963f8a09af5b29842e1306cb81cd680e6e465368",
+      "bytes": 497
+    },
+    {
+      "path": "away/frames/back_up_flattop.png",
+      "sha256": "9d5f921620a3458003272a4c3de9af09d0efc0657cc05e4356703ff89f62be8a",
+      "bytes": 475
+    },
+    {
+      "path": "away/frames/back_flex_locs.png",
+      "sha256": "d91a8af77e8367ed3c33ab95add7e0c83ec6f5df2e727e208c45daf8a05f69fd",
+      "bytes": 477
+    },
+    {
+      "path": "away/frames/back_sky_bun.png",
+      "sha256": "01a923f7a47138b055ed199a2d0a486d074a6d1abb2443ef42aca3fe22209e92",
+      "bytes": 470
+    },
+    {
+      "path": "away/frames/back_point_spiky.png",
+      "sha256": "126ab466a9f3aa6db372a22a67492320f81ea9fbd505d68dc4f12e6b5cf22088",
+      "bytes": 485
+    },
+    {
+      "path": "away/frames/back_pass_waves.png",
+      "sha256": "9dc6b50c9cef1aaba3b13f2ca591b83dcb0f942f74b8539dd9718e4b0d98dc8b",
+      "bytes": 511
+    },
+    {
+      "path": "away/frames/front_idle_buzz.png",
+      "sha256": "0d4888296c5644bf3ea7848461787161d31968b8058cdfa87980afab2001c2ae",
+      "bytes": 538
+    },
+    {
+      "path": "away/frames/front_run_a_afro.png",
+      "sha256": "73eb7fdbc6e7494646d1becc0e17ae07e8a87830b3d685e7ec5e2ed8df1976f7",
+      "bytes": 561
+    },
+    {
+      "path": "away/frames/front_run_c_fade.png",
+      "sha256": "e552c1982f1a8065220f7bd084e07d68baf64d5027c654ff508c46209fc6254c",
+      "bytes": 558
+    },
+    {
+      "path": "away/frames/front_shoot_braids.png",
+      "sha256": "4ef40eb5812d8173f4b1fd4ea6ce51d53c82f892903fdab1d26670b3cd397f78",
+      "bytes": 524
+    },
+    {
+      "path": "away/frames/front_dunk_bald.png",
+      "sha256": "11a4463680bd75ad84760934082e6ee51977280e7ddcd17a176f325c2fc82459",
+      "bytes": 499
+    },
+    {
+      "path": "away/frames/front_block_curls.png",
+      "sha256": "900af0a05df0c094762c32acb130a1848c8fe9fd0a5c67e8524a394a02813351",
+      "bytes": 536
+    },
+    {
+      "path": "away/frames/front_defend_mohawk.png",
+      "sha256": "9306d086c1575e324a450630793a2221f6ff07a39176db883d54d1cc47f5f5d5",
+      "bytes": 542
+    },
+    {
+      "path": "away/frames/front_up_flattop.png",
+      "sha256": "f2662a027e4cc48f7004b18b1a13263ea94397b06465116d9f124280572a2000",
+      "bytes": 534
+    },
+    {
+      "path": "away/frames/front_flex_locs.png",
+      "sha256": "220059ed0d23819eda4d655f7d6dcf3c87644c347d089d9e94b83b0ef8ec905d",
+      "bytes": 538
+    },
+    {
+      "path": "away/frames/front_sky_bun.png",
+      "sha256": "59eba56e8d4f2b8fd4b21edbb9f2f3898f87a4951ee397272fad54f8e58713a6",
+      "bytes": 499
+    },
+    {
+      "path": "away/frames/front_point_spiky.png",
+      "sha256": "3546dc9693ba5376369dfaabd55893eae3e34fb77a3c5a7e8e5b9eef1ebddc46",
+      "bytes": 546
+    },
+    {
+      "path": "away/frames/front_pass_waves.png",
+      "sha256": "5b4aae3beb7a40314eddb76dcdf6eeb280f4799d720f586f8861f749f55ab002",
+      "bytes": 533
+    },
+    {
+      "path": "preview-x4.png",
+      "sha256": "cfdf36905d86d1d614c09a024552a1943e75f52869e09ef4f54957908f68d6e5",
+      "bytes": 10393
+    }
+  ],
+  "qa": {
+    "status": "pass",
+    "method": "render_pixelspec.py: every published frame PNG is read back and measured with codeart_core.qa_pixels against the resolved palette of its variant (alpha census, exact palette lookup and, with an outline, 4-neighbour outline gaps and L-corners); each check is the worst frame against its gate in codeart_core.QA_PIXEL_GATES",
+    "notProven": [
+      "Readability, silhouette and appeal at game scale; check them on a review sheet (pixel_qa.py --review).",
+      "Motion, timing and spacing between frames; numbers do not judge animation quality.",
+      "That the art matches the brief and the intent of the spec."
+    ],
+    "checks": [
+      {
+        "id": "partial_alpha",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "off_palette",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "outline_gaps",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "l_corners",
+        "status": "pass",
+        "value": 6,
+        "threshold": 10
+      }
+    ],
+    "inputs": [
+      {
+        "path": "../../player-review.pixelspec.json",
+        "sha256": "14172096e3b9f749cf201226fdd0db8d7bc970e9ff15407eacc895c1494ac191",
+        "bytes": 30394
+      }
+    ],
+    "outputs": [
+      {
+        "path": "home/frames/back_idle_buzz.png",
+        "sha256": "7d6a3f37aa9ecc84c3571dfbefb6d7fb3522a631330904b8d283a78c521f95b8",
+        "bytes": 458
+      },
+      {
+        "path": "home/frames/back_run_a_afro.png",
+        "sha256": "7c39dcd575a0da42642f6d1017cd09f25e25174b120f5e0edd0eee2ffb848ebd",
+        "bytes": 499
+      },
+      {
+        "path": "home/frames/back_run_c_fade.png",
+        "sha256": "96915a9329ab666106fb1c843db74b448edb471702556c0cf3e3a871237cd46f",
+        "bytes": 484
+      },
+      {
+        "path": "home/frames/back_shoot_braids.png",
+        "sha256": "69f14037a90e36a97c36c6a2790eab147116cf59832fa29aa1a8ea899bd4e6c4",
+        "bytes": 520
+      },
+      {
+        "path": "home/frames/back_dunk_bald.png",
+        "sha256": "2f87fcce2f9a2a7303168845165a77740a141d943bfab243e5739ed87f360155",
+        "bytes": 472
+      },
+      {
+        "path": "home/frames/back_block_curls.png",
+        "sha256": "5da502673a189c3d4c58ad4acb9b12b17d03899b37184b2fd0e023c98472d8c0",
+        "bytes": 476
+      },
+      {
+        "path": "home/frames/back_defend_mohawk.png",
+        "sha256": "ee47be1d994e6830312c2d9a682a16e0d2ab8d63a35bddaf15262f26c1d9b2ef",
+        "bytes": 478
+      },
+      {
+        "path": "home/frames/back_up_flattop.png",
+        "sha256": "d042911d018bf8c859d006ecedeb980193ee4273e1dd55ffb8fbaad4e19c4130",
+        "bytes": 451
+      },
+      {
+        "path": "home/frames/back_flex_locs.png",
+        "sha256": "fa4aecfc8e12e714a60148857d6a5864e1913eac5c4319b8001c071666f7ccc5",
+        "bytes": 468
+      },
+      {
+        "path": "home/frames/back_sky_bun.png",
+        "sha256": "41069a43a88f398bc7ca51442a4e88f6248e9e8c6d68f52928e0d06d5e79a735",
+        "bytes": 464
+      },
+      {
+        "path": "home/frames/back_point_spiky.png",
+        "sha256": "827268de7fa9c8d4beec643774f44a1bec1bed3fbb654dc853905a3a41341fa6",
+        "bytes": 477
+      },
+      {
+        "path": "home/frames/back_pass_waves.png",
+        "sha256": "01625576723ac5f720dfa666e5123bc0322e93e8d70a979fb019fa732bffa82d",
+        "bytes": 479
+      },
+      {
+        "path": "home/frames/front_idle_buzz.png",
+        "sha256": "e8c0b9c111d7fb84082438158156a295af0cf97b7a937a0488a9b2eeb4646a42",
+        "bytes": 525
+      },
+      {
+        "path": "home/frames/front_run_a_afro.png",
+        "sha256": "ed8e10358cfecd9e13e5de0f0dc6bb424be032225c51e7d5aa4b68bebaad8939",
+        "bytes": 535
+      },
+      {
+        "path": "home/frames/front_run_c_fade.png",
+        "sha256": "765fb069be69539eaf6e73871cd747b0c2004ece952a7da40e0591f8ab1a1513",
+        "bytes": 525
+      },
+      {
+        "path": "home/frames/front_shoot_braids.png",
+        "sha256": "4a54388c7f229b89658eaf41bb12303b4e27d659e446d849d2dabd6c403ca502",
+        "bytes": 529
+      },
+      {
+        "path": "home/frames/front_dunk_bald.png",
+        "sha256": "ac708550df6d5c8510848ac2331040d28485c6b3341a6bc046c102ff02ce678e",
+        "bytes": 496
+      },
+      {
+        "path": "home/frames/front_block_curls.png",
+        "sha256": "d312a868a259e08db3ba753cf01e8028e0a62368cd9bde3020ebb3414d48c831",
+        "bytes": 507
+      },
+      {
+        "path": "home/frames/front_defend_mohawk.png",
+        "sha256": "fffb7b1ee15fe7bf2da4a3a0edfc60cac439780833447fade5a32f67d87a0b47",
+        "bytes": 507
+      },
+      {
+        "path": "home/frames/front_up_flattop.png",
+        "sha256": "c2854a6c10937aeb442c8236e94a02142dd07b31caa6913543dc5f2e72b8a9ed",
+        "bytes": 513
+      },
+      {
+        "path": "home/frames/front_flex_locs.png",
+        "sha256": "c16df843aaf1c48faaf574b1c7475311e4cf16bd76b4100477e132e534cf6167",
+        "bytes": 510
+      },
+      {
+        "path": "home/frames/front_sky_bun.png",
+        "sha256": "5886a7eef414ad6a5c0f2a0aa3290276af0827fc1a26e7faae73ac4fd7efd3f2",
+        "bytes": 484
+      },
+      {
+        "path": "home/frames/front_point_spiky.png",
+        "sha256": "3c7c842032824cd23064040078043fbf718b06b69c6f97cd54e720bece431726",
+        "bytes": 531
+      },
+      {
+        "path": "home/frames/front_pass_waves.png",
+        "sha256": "ca9f955ebc216de9d394853cce742a8eeb6d00be92afab85c006d0d30a1acb33",
+        "bytes": 517
+      },
+      {
+        "path": "away/frames/back_idle_buzz.png",
+        "sha256": "6c64c870a3127c635c994df489a65cce4725bd680e00ad69f9191ced3b3c9e9c",
+        "bytes": 472
+      },
+      {
+        "path": "away/frames/back_run_a_afro.png",
+        "sha256": "533d27d84a804e4c83da72814002f99b9a9368272e5cfd59c2512a49a0c41ca1",
+        "bytes": 527
+      },
+      {
+        "path": "away/frames/back_run_c_fade.png",
+        "sha256": "f6eeeb2c4d6bc6d6e3b38e0d79a31c679d3bc3931bb6ad2385daa3cc8b0f97a7",
+        "bytes": 511
+      },
+      {
+        "path": "away/frames/back_shoot_braids.png",
+        "sha256": "feca32c3e9a65485ee473b72c2a854f2602367c7f04b5ddb0fad36d0b3194292",
+        "bytes": 524
+      },
+      {
+        "path": "away/frames/back_dunk_bald.png",
+        "sha256": "7beac2f9d50d1e7d5c5c516855af9ffff02f3bbfa496ada5c90ff6451859e276",
+        "bytes": 462
+      },
+      {
+        "path": "away/frames/back_block_curls.png",
+        "sha256": "2cbfb1256fc7b7c6e19f05b2b4d5376c4fb2e27ed5109837be269b92cfc9d1a4",
+        "bytes": 474
+      },
+      {
+        "path": "away/frames/back_defend_mohawk.png",
+        "sha256": "97ef238452f79da6ba94f227963f8a09af5b29842e1306cb81cd680e6e465368",
+        "bytes": 497
+      },
+      {
+        "path": "away/frames/back_up_flattop.png",
+        "sha256": "9d5f921620a3458003272a4c3de9af09d0efc0657cc05e4356703ff89f62be8a",
+        "bytes": 475
+      },
+      {
+        "path": "away/frames/back_flex_locs.png",
+        "sha256": "d91a8af77e8367ed3c33ab95add7e0c83ec6f5df2e727e208c45daf8a05f69fd",
+        "bytes": 477
+      },
+      {
+        "path": "away/frames/back_sky_bun.png",
+        "sha256": "01a923f7a47138b055ed199a2d0a486d074a6d1abb2443ef42aca3fe22209e92",
+        "bytes": 470
+      },
+      {
+        "path": "away/frames/back_point_spiky.png",
+        "sha256": "126ab466a9f3aa6db372a22a67492320f81ea9fbd505d68dc4f12e6b5cf22088",
+        "bytes": 485
+      },
+      {
+        "path": "away/frames/back_pass_waves.png",
+        "sha256": "9dc6b50c9cef1aaba3b13f2ca591b83dcb0f942f74b8539dd9718e4b0d98dc8b",
+        "bytes": 511
+      },
+      {
+        "path": "away/frames/front_idle_buzz.png",
+        "sha256": "0d4888296c5644bf3ea7848461787161d31968b8058cdfa87980afab2001c2ae",
+        "bytes": 538
+      },
+      {
+        "path": "away/frames/front_run_a_afro.png",
+        "sha256": "73eb7fdbc6e7494646d1becc0e17ae07e8a87830b3d685e7ec5e2ed8df1976f7",
+        "bytes": 561
+      },
+      {
+        "path": "away/frames/front_run_c_fade.png",
+        "sha256": "e552c1982f1a8065220f7bd084e07d68baf64d5027c654ff508c46209fc6254c",
+        "bytes": 558
+      },
+      {
+        "path": "away/frames/front_shoot_braids.png",
+        "sha256": "4ef40eb5812d8173f4b1fd4ea6ce51d53c82f892903fdab1d26670b3cd397f78",
+        "bytes": 524
+      },
+      {
+        "path": "away/frames/front_dunk_bald.png",
+        "sha256": "11a4463680bd75ad84760934082e6ee51977280e7ddcd17a176f325c2fc82459",
+        "bytes": 499
+      },
+      {
+        "path": "away/frames/front_block_curls.png",
+        "sha256": "900af0a05df0c094762c32acb130a1848c8fe9fd0a5c67e8524a394a02813351",
+        "bytes": 536
+      },
+      {
+        "path": "away/frames/front_defend_mohawk.png",
+        "sha256": "9306d086c1575e324a450630793a2221f6ff07a39176db883d54d1cc47f5f5d5",
+        "bytes": 542
+      },
+      {
+        "path": "away/frames/front_up_flattop.png",
+        "sha256": "f2662a027e4cc48f7004b18b1a13263ea94397b06465116d9f124280572a2000",
+        "bytes": 534
+      },
+      {
+        "path": "away/frames/front_flex_locs.png",
+        "sha256": "220059ed0d23819eda4d655f7d6dcf3c87644c347d089d9e94b83b0ef8ec905d",
+        "bytes": 538
+      },
+      {
+        "path": "away/frames/front_sky_bun.png",
+        "sha256": "59eba56e8d4f2b8fd4b21edbb9f2f3898f87a4951ee397272fad54f8e58713a6",
+        "bytes": 499
+      },
+      {
+        "path": "away/frames/front_point_spiky.png",
+        "sha256": "3546dc9693ba5376369dfaabd55893eae3e34fb77a3c5a7e8e5b9eef1ebddc46",
+        "bytes": 546
+      },
+      {
+        "path": "away/frames/front_pass_waves.png",
+        "sha256": "5b4aae3beb7a40314eddb76dcdf6eeb280f4799d720f586f8861f749f55ab002",
+        "bytes": 533
+      }
+    ],
+    "tool": {
+      "name": "render_pixelspec.py",
+      "version": "0.5.0"
+    },
+    "frames": [
+      {
+        "file": "home/frames/back_idle_buzz.png",
+        "variant": "home",
+        "frame": "back_idle_buzz",
+        "visible": 297,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 12,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          6,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_run_a_afro.png",
+        "variant": "home",
+        "frame": "back_run_a_afro",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 12,
+        "l_corners": 1,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_run_c_fade.png",
+        "variant": "home",
+        "frame": "back_run_c_fade",
+        "visible": 282,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 12,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_shoot_braids.png",
+        "variant": "home",
+        "frame": "back_shoot_braids",
+        "visible": 309,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 7,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "home/frames/back_dunk_bald.png",
+        "variant": "home",
+        "frame": "back_dunk_bald",
+        "visible": 310,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 10,
+        "orphans": 4,
+        "l_corners": 5,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          1,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "home/frames/back_block_curls.png",
+        "variant": "home",
+        "frame": "back_block_curls",
+        "visible": 358,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 8,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          2,
+          20,
+          33
+        ]
+      },
+      {
+        "file": "home/frames/back_defend_mohawk.png",
+        "variant": "home",
+        "frame": "back_defend_mohawk",
+        "visible": 298,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 15,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          1,
+          2,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_up_flattop.png",
+        "variant": "home",
+        "frame": "back_up_flattop",
+        "visible": 358,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 4,
+        "l_corners": 6,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_flex_locs.png",
+        "variant": "home",
+        "frame": "back_flex_locs",
+        "visible": 312,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 22,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          2,
+          5,
+          22,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_sky_bun.png",
+        "variant": "home",
+        "frame": "back_sky_bun",
+        "visible": 314,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 5,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_point_spiky.png",
+        "variant": "home",
+        "frame": "back_point_spiky",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 13,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          3,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/back_pass_waves.png",
+        "variant": "home",
+        "frame": "back_pass_waves",
+        "visible": 294,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 19,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_idle_buzz.png",
+        "variant": "home",
+        "frame": "front_idle_buzz",
+        "visible": 297,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 12,
+        "orphans": 12,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          6,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_run_a_afro.png",
+        "variant": "home",
+        "frame": "front_run_a_afro",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 14,
+        "l_corners": 1,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_run_c_fade.png",
+        "variant": "home",
+        "frame": "front_run_c_fade",
+        "visible": 282,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 12,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_shoot_braids.png",
+        "variant": "home",
+        "frame": "front_shoot_braids",
+        "visible": 309,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 11,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "home/frames/front_dunk_bald.png",
+        "variant": "home",
+        "frame": "front_dunk_bald",
+        "visible": 310,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 11,
+        "orphans": 6,
+        "l_corners": 5,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          1,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "home/frames/front_block_curls.png",
+        "variant": "home",
+        "frame": "front_block_curls",
+        "visible": 356,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 6,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          2,
+          20,
+          33
+        ]
+      },
+      {
+        "file": "home/frames/front_defend_mohawk.png",
+        "variant": "home",
+        "frame": "front_defend_mohawk",
+        "visible": 298,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 17,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          1,
+          2,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_up_flattop.png",
+        "variant": "home",
+        "frame": "front_up_flattop",
+        "visible": 358,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 4,
+        "l_corners": 6,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_flex_locs.png",
+        "variant": "home",
+        "frame": "front_flex_locs",
+        "visible": 324,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 19,
+        "l_corners": 6,
+        "outline_gaps": 0,
+        "bbox": [
+          2,
+          5,
+          22,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_sky_bun.png",
+        "variant": "home",
+        "frame": "front_sky_bun",
+        "visible": 314,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 6,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_point_spiky.png",
+        "variant": "home",
+        "frame": "front_point_spiky",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 12,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          3,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "home/frames/front_pass_waves.png",
+        "variant": "home",
+        "frame": "front_pass_waves",
+        "visible": 294,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 10,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_idle_buzz.png",
+        "variant": "away",
+        "frame": "back_idle_buzz",
+        "visible": 297,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 14,
+        "orphans": 13,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          6,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_run_a_afro.png",
+        "variant": "away",
+        "frame": "back_run_a_afro",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 12,
+        "l_corners": 1,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_run_c_fade.png",
+        "variant": "away",
+        "frame": "back_run_c_fade",
+        "visible": 282,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 13,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_shoot_braids.png",
+        "variant": "away",
+        "frame": "back_shoot_braids",
+        "visible": 309,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 8,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "away/frames/back_dunk_bald.png",
+        "variant": "away",
+        "frame": "back_dunk_bald",
+        "visible": 310,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 13,
+        "orphans": 5,
+        "l_corners": 5,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          1,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "away/frames/back_block_curls.png",
+        "variant": "away",
+        "frame": "back_block_curls",
+        "visible": 358,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 8,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          2,
+          20,
+          33
+        ]
+      },
+      {
+        "file": "away/frames/back_defend_mohawk.png",
+        "variant": "away",
+        "frame": "back_defend_mohawk",
+        "visible": 298,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 15,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          1,
+          2,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_up_flattop.png",
+        "variant": "away",
+        "frame": "back_up_flattop",
+        "visible": 358,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 5,
+        "l_corners": 6,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_flex_locs.png",
+        "variant": "away",
+        "frame": "back_flex_locs",
+        "visible": 312,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 22,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          2,
+          5,
+          22,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_sky_bun.png",
+        "variant": "away",
+        "frame": "back_sky_bun",
+        "visible": 314,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 5,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_point_spiky.png",
+        "variant": "away",
+        "frame": "back_point_spiky",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 13,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          3,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/back_pass_waves.png",
+        "variant": "away",
+        "frame": "back_pass_waves",
+        "visible": 294,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 19,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_idle_buzz.png",
+        "variant": "away",
+        "frame": "front_idle_buzz",
+        "visible": 297,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 15,
+        "orphans": 13,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          6,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_run_a_afro.png",
+        "variant": "away",
+        "frame": "front_run_a_afro",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 14,
+        "l_corners": 1,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_run_c_fade.png",
+        "variant": "away",
+        "frame": "front_run_c_fade",
+        "visible": 282,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 13,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_shoot_braids.png",
+        "variant": "away",
+        "frame": "front_shoot_braids",
+        "visible": 309,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 12,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "away/frames/front_dunk_bald.png",
+        "variant": "away",
+        "frame": "front_dunk_bald",
+        "visible": 310,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 14,
+        "orphans": 7,
+        "l_corners": 5,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          1,
+          19,
+          33
+        ]
+      },
+      {
+        "file": "away/frames/front_block_curls.png",
+        "variant": "away",
+        "frame": "front_block_curls",
+        "visible": 356,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 6,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          2,
+          20,
+          33
+        ]
+      },
+      {
+        "file": "away/frames/front_defend_mohawk.png",
+        "variant": "away",
+        "frame": "front_defend_mohawk",
+        "visible": 298,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 17,
+        "l_corners": 4,
+        "outline_gaps": 0,
+        "bbox": [
+          1,
+          2,
+          23,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_up_flattop.png",
+        "variant": "away",
+        "frame": "front_up_flattop",
+        "visible": 358,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 5,
+        "l_corners": 6,
+        "outline_gaps": 0,
+        "bbox": [
+          3,
+          2,
+          21,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_flex_locs.png",
+        "variant": "away",
+        "frame": "front_flex_locs",
+        "visible": 324,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 19,
+        "l_corners": 6,
+        "outline_gaps": 0,
+        "bbox": [
+          2,
+          5,
+          22,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_sky_bun.png",
+        "variant": "away",
+        "frame": "front_sky_bun",
+        "visible": 314,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 6,
+        "l_corners": 2,
+        "outline_gaps": 0,
+        "bbox": [
+          5,
+          2,
+          19,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_point_spiky.png",
+        "variant": "away",
+        "frame": "front_point_spiky",
+        "visible": 342,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 12,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          3,
+          20,
+          34
+        ]
+      },
+      {
+        "file": "away/frames/front_pass_waves.png",
+        "variant": "away",
+        "frame": "front_pass_waves",
+        "visible": 294,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 16,
+        "orphans": 10,
+        "l_corners": 3,
+        "outline_gaps": 0,
+        "bbox": [
+          4,
+          5,
+          23,
+          34
+        ]
+      }
+    ]
+  },
+  "pixelspec": {
+    "name": "player-review",
+    "schema": "codeart2d.pixelspec.v1",
+    "canvas": [
+      24,
+      35
+    ],
+    "anchor_px": [
+      12,
+      34
+    ],
+    "outline": "solid",
+    "variants": {
+      "home": "home",
+      "away": "away"
+    },
+    "frames": [
+      {
+        "index": 0,
+        "name": "back_idle_buzz",
+        "file": "frames/back_idle_buzz.png"
+      },
+      {
+        "index": 1,
+        "name": "back_run_a_afro",
+        "file": "frames/back_run_a_afro.png"
+      },
+      {
+        "index": 2,
+        "name": "back_run_c_fade",
+        "file": "frames/back_run_c_fade.png"
+      },
+      {
+        "index": 3,
+        "name": "back_shoot_braids",
+        "file": "frames/back_shoot_braids.png"
+      },
+      {
+        "index": 4,
+        "name": "back_dunk_bald",
+        "file": "frames/back_dunk_bald.png"
+      },
+      {
+        "index": 5,
+        "name": "back_block_curls",
+        "file": "frames/back_block_curls.png"
+      },
+      {
+        "index": 6,
+        "name": "back_defend_mohawk",
+        "file": "frames/back_defend_mohawk.png"
+      },
+      {
+        "index": 7,
+        "name": "back_up_flattop",
+        "file": "frames/back_up_flattop.png"
+      },
+      {
+        "index": 8,
+        "name": "back_flex_locs",
+        "file": "frames/back_flex_locs.png"
+      },
+      {
+        "index": 9,
+        "name": "back_sky_bun",
+        "file": "frames/back_sky_bun.png"
+      },
+      {
+        "index": 10,
+        "name": "back_point_spiky",
+        "file": "frames/back_point_spiky.png"
+      },
+      {
+        "index": 11,
+        "name": "back_pass_waves",
+        "file": "frames/back_pass_waves.png"
+      },
+      {
+        "index": 12,
+        "name": "front_idle_buzz",
+        "file": "frames/front_idle_buzz.png"
+      },
+      {
+        "index": 13,
+        "name": "front_run_a_afro",
+        "file": "frames/front_run_a_afro.png"
+      },
+      {
+        "index": 14,
+        "name": "front_run_c_fade",
+        "file": "frames/front_run_c_fade.png"
+      },
+      {
+        "index": 15,
+        "name": "front_shoot_braids",
+        "file": "frames/front_shoot_braids.png"
+      },
+      {
+        "index": 16,
+        "name": "front_dunk_bald",
+        "file": "frames/front_dunk_bald.png"
+      },
+      {
+        "index": 17,
+        "name": "front_block_curls",
+        "file": "frames/front_block_curls.png"
+      },
+      {
+        "index": 18,
+        "name": "front_defend_mohawk",
+        "file": "frames/front_defend_mohawk.png"
+      },
+      {
+        "index": 19,
+        "name": "front_up_flattop",
+        "file": "frames/front_up_flattop.png"
+      },
+      {
+        "index": 20,
+        "name": "front_flex_locs",
+        "file": "frames/front_flex_locs.png"
+      },
+      {
+        "index": 21,
+        "name": "front_sky_bun",
+        "file": "frames/front_sky_bun.png"
+      },
+      {
+        "index": 22,
+        "name": "front_point_spiky",
+        "file": "frames/front_point_spiky.png"
+      },
+      {
+        "index": 23,
+        "name": "front_pass_waves",
+        "file": "frames/front_pass_waves.png"
+      }
+    ],
+    "preview": {
+      "file": "preview-x4.png",
+      "scale": 4,
+      "layout": "rows are variants, columns are distinct frames"
+    }
+  }
+}

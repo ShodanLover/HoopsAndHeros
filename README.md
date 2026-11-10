@@ -163,8 +163,16 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
   notched SNES windows with double borders, beveled buttons, stepped gradients, a dithered page background and
   `steps()` animation. `e2e` passes with no errors.
   Next steps:
-  1. Court player sprites: replace the vector stick figures in `court.js` `drawPlayer()` with 24×32 pixel sprite
-     frames (idle, run, dribble, shoot, jump/dunk, block, celebrate), ideally from sprite-forge `codeart2d`.
+  1. ✅ Court player sprites. They are code-drawn with agent-sprite-forge `codeart2d` (no image model). The art is
+     authored in `tools/sprites/player_spec.py` (24×35 canvas, 2 facings, 5 leg poses, 12 arm poses, 12 hairstyles)
+     and turned into PixelSpecs in `art/sprites/player/`. `python tools/sprites/build_player.py` regenerates the
+     specs, renders them with `render_pixelspec.py --strict-qc` into `art/sprites/player/build/` (review sheet:
+     `build/review/preview-x4.png`), and packs the parts into `js/sprite-data.js`. At runtime `js/sprites.js`
+     composites the parts, recolors skin, hair, jersey, trim, shoes and gear per athlete, adds the jersey number and
+     a 1px outline, and caches each result. `court.js` draws them one internal pixel per sprite pixel and lines the
+     ball up with the sprite's hands, and the contests use them at 2×. The old vector figure remains as a fallback.
+     Ideas: perspective scaling for far players, dedicated dribble and celebrate frames, and a lighter outline
+     for very dark jerseys.
   2. Portraits: upgrade `js/pixel.js`'s simple rasterizer with the sprite-forge hibit finish (render
      `BE.athletes.portraitSVGRaw` to PNG, then run `forge_hibit.py`).
   3. Pixel icons: the UI icons in `ui-core.js` are still smooth vector SVGs. Redraw them as 16×16 pixel icons.

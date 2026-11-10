@@ -169,6 +169,20 @@
     // ---------- Render ----------
     const shooterPos = () => kind === 'ft' ? { x: W * 0.5, y: H * 0.78 } : kind === 'three' ? { x: W * (0.15 + 0.7 * (Math.floor(st.i / 5) / 2)), y: H * 0.86 } : { x: W * 0.5, y: H * 0.88 };
     const hoop = () => ({ x: W * 0.5, y: H * 0.26 });
+    function contestSprite(anim) {
+      const gear = BE.game.gearVis ? BE.game.gearVis(s, shooter.a) : {};
+      const rc = (r) => (r !== undefined ? D.rarities[r].color : undefined);
+      const running = anim && anim.type === 'dunk' && anim.t < 0.35;
+      const air = anim && ((anim.type === 'shot' && anim.t < 0.34) || (anim.type === 'dunk' && anim.t >= 0.35 && anim.t < 0.95));
+      const step = ['run_a', 'stand', 'run_c', 'stand'][Math.floor(performance.now() / 110) & 3];
+      return BE.sprites.player({
+        facing: 'back', legs: running ? step : air ? 'jump' : 'stand',
+        arms: running ? (step === 'stand' ? 'idle' : step) : anim && anim.type === 'dunk' ? 'dunk' : 'shoot', mirror: false,
+        hair: t.look.hair || 'buzz', skin: D.skinTones[t.look.skin] || '#c68a5a', hairColor: t.look.hairColor || '#111',
+        jersey: cos.jersey[0], trim: cos.jersey[1], shoe: gear.shoes !== undefined ? rc(gear.shoes) : t.look.shoe || '#fff',
+        headband: rc(gear.headband), wristband: rc(gear.wristband), compression: gear.compression !== undefined, number: t.number,
+      });
+    }
     function drawScene(dt) {
       const th = D.worlds[Math.min(9, E.worldOf(s.best))].theme;
       const grd = g.createLinearGradient(0, 0, 0, H * 0.45);
@@ -216,17 +230,28 @@
       }
       const y0 = py - jump;
       g.fillStyle = 'rgba(0,0,0,.3)'; g.beginPath(); g.ellipse(px, py + 2, 16, 5, 0, 0, 6.28); g.fill();
-      const skin = D.skinTones[t.look.skin];
-      g.strokeStyle = skin; g.lineWidth = 6; g.lineCap = 'round';
-      g.beginPath(); g.moveTo(px - 5, y0 - 30); g.lineTo(px - 7, y0 - 2); g.moveTo(px + 5, y0 - 30); g.lineTo(px + 7, y0 - 2); g.stroke();
-      g.fillStyle = cos.jersey[1]; g.fillRect(px - 11, y0 - 40, 22, 14);
-      g.fillStyle = cos.jersey[0]; g.fillRect(px - 11, y0 - 66, 22, 28);
-      g.fillStyle = cos.jersey[1]; g.font = '400 14px "Pixelify Sans", monospace'; g.textAlign = 'center'; g.fillText(t.number, px, y0 - 46);
-      g.strokeStyle = skin; g.lineWidth = 5;
-      g.beginPath(); g.moveTo(px - 10, y0 - 62); g.lineTo(px - 6, y0 - 88); g.moveTo(px + 10, y0 - 62); g.lineTo(px + 6, y0 - 88); g.stroke();
-      g.fillStyle = skin; g.beginPath(); g.arc(px, y0 - 74, 8, 0, 6.28); g.fill();
-      g.fillStyle = t.look.hairColor; g.beginPath(); g.arc(px, y0 - 76, 8.5, Math.PI, 0); g.fill();
-      if (!ballAt && st.phase !== 'choose') ballAt = { x: px, y: y0 - 94 };
+      const spr = BE.sprites && BE.sprites.available() ? contestSprite(st.anim) : null;
+      let handY = y0 - 94;
+      if (spr) {
+        // pixel sprite from agent-sprite-forge codeart2d parts (js/sprites.js), integer-scaled
+        const sc = Math.max(1, Math.round(92 / (26 * pix))), u = sc * pix;
+        const X = Math.round(px / pix) * pix, Y = Math.round(y0 / pix) * pix;
+        g.imageSmoothingEnabled = false;
+        g.drawImage(spr, X - 12 * u, Y - 33 * u, spr.width * u, spr.height * u);
+        handY = Y - 31 * u;
+      } else {
+        const skin = D.skinTones[t.look.skin];
+        g.strokeStyle = skin; g.lineWidth = 6; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(px - 5, y0 - 30); g.lineTo(px - 7, y0 - 2); g.moveTo(px + 5, y0 - 30); g.lineTo(px + 7, y0 - 2); g.stroke();
+        g.fillStyle = cos.jersey[1]; g.fillRect(px - 11, y0 - 40, 22, 14);
+        g.fillStyle = cos.jersey[0]; g.fillRect(px - 11, y0 - 66, 22, 28);
+        g.fillStyle = cos.jersey[1]; g.font = '400 14px "Pixelify Sans", monospace'; g.textAlign = 'center'; g.fillText(t.number, px, y0 - 46);
+        g.strokeStyle = skin; g.lineWidth = 5;
+        g.beginPath(); g.moveTo(px - 10, y0 - 62); g.lineTo(px - 6, y0 - 88); g.moveTo(px + 10, y0 - 62); g.lineTo(px + 6, y0 - 88); g.stroke();
+        g.fillStyle = skin; g.beginPath(); g.arc(px, y0 - 74, 8, 0, 6.28); g.fill();
+        g.fillStyle = t.look.hairColor; g.beginPath(); g.arc(px, y0 - 76, 8.5, Math.PI, 0); g.fill();
+      }
+      if (!ballAt && st.phase !== 'choose') ballAt = { x: px, y: handY };
       if (ballAt) BE.court.drawBallAt(g, ballAt.x, ballAt.y, 8, performance.now() / 120);
       if (kind === 'three') {
         for (let r = 0; r < 3; r++) for (let b = 0; b < 5; b++) {
