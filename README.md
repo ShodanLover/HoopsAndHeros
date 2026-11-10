@@ -143,9 +143,26 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
 ## Status and next steps
 
 - ✅ Core game complete and tested end to end (`node tests/e2e.js`, no page errors).
-- 🚧 **In progress: 16-bit visual overhaul**, requested by the owner. Plan: render the court and contests
-  at low internal resolution with pixelated upscaling, quantize to a 15-bit (SNES) palette with ordered
-  dithering, rasterize portraits into pixel sprites, use pixel fonts (Press Start 2P / Pixelify Sans),
-  and give menus SNES-style windows and beveled buttons.
+- 🚧 **In progress: 16-bit visual overhaul** (requested by the owner). Done so far: `js/pixel.js` (written and
+  syntax-checked, **not yet loaded** by `index.html`) provides `BE.pixel.quantize()` (4-bit-per-channel palette
+  with a Bayer 4×4 dither), `BE.pixel.pixFor()`, and pixel-sprite portraits (it wraps
+  `BE.athletes.portraitSVG` so every portrait becomes a 40×40 outlined sprite `<img class="pix">`).
+  Remaining steps:
+  1. Add `<script src="js/pixel.js">` right after `athletes.js` in `index.html`.
+  2. `court.js`: render at low internal resolution. In `resize()` set `C.pix = BE.pixel.pixFor(W)`, make the
+     canvas backing store `ceil(W/pix) × ceil(H/pix)`, use `setTransform(1/pix, 0, 0, 1/pix, 0, 0)` for the main
+     canvas and the cached background, and call `BE.pixel.quantize(ctx, cw, ch)` at the end of `draw()`.
+     Snap shake offsets to multiples of `pix`, set court line widths to about `pix`, swap canvas fonts to
+     "Press Start 2P" / "Pixelify Sans" at multiples of 8 internal px, and replace the tiny ad-board text with
+     colored blocks.
+  3. `contests.js`: apply the same low-res, quantize and pixel-font treatment to the contest canvas.
+  4. CSS: add `image-rendering: pixelated` for `canvas` and `img.pix`; let the `svg` sizing rules for
+     portraits (`.acard .pt`, `.hero .port`, `.banner-card .bart`, `.coach .face`) also cover `img.pix`; load
+     Google Fonts *Press Start 2P* (display: scores, titles, at much smaller sizes because it is wide) and
+     *Pixelify Sans* (body and labels); and restyle menus as SNES windows: notched `clip-path` corners
+     instead of border-radius, double inset borders, beveled buttons with inset highlight and shadow,
+     stepped instead of smooth gradients, a dithered checker page background, and `steps()` timing for
+     the rarity shimmer.
+  5. Update the font link in `tools/build.js`, rebuild, run `node tests/e2e.js`, and check the screenshots.
 - Ideas: real online leaderboards and alliances through `BE.game.social`, a store wrapper through
   `BEPlatform`, more arenas and cosmetics, localized prices, push notifications (opt-in only).
