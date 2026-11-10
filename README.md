@@ -175,7 +175,11 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
      for very dark jerseys.
   2. Portraits: upgrade `js/pixel.js`'s simple rasterizer with the sprite-forge hibit finish (render
      `BE.athletes.portraitSVGRaw` to PNG, then run `forge_hibit.py`).
-  3. Pixel icons: the UI icons in `ui-core.js` are still smooth vector SVGs. Redraw them as 16×16 pixel icons.
+  3. ✅ Pixel icons. All 60 UI icons are 16×16 two-tone pixel icons, code-drawn in `tools/sprites/icon_spec.py` and
+     rendered with codeart2d. `python tools/sprites/build_icons.py` rebuilds `art/sprites/icons/` and packs crisp SVG
+     paths into `js/icon-data.js`. Both tones use `currentColor`, so `BE.ui.icon(k)` keeps taking each button's color;
+     CSS shows them only at 16 or 32 px so pixels stay even. The vector set in `ui-core.js` remains as a fallback.
+     Still vector: the splash ball and the trophy art (`ballArt`, `trophyArt`) and the currency glyphs (`$ ◆ ★`).
   4. Art-director review of every screen. Small text in Pixelify Sans below 12px (chips, `.sb-pow`, `.p`) is
      readable but under the art bible's 13px minimum.
   5. Add a `prefers-reduced-motion` check that the stepped animations still respect, and profile `quantize()`

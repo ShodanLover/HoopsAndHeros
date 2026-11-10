@@ -588,3 +588,11 @@ img.pix { display: block; width: 100%; height: 100%; object-fit: contain; }
 .banner-card > :not(.bart) { position: relative; z-index: 1; }
 .banner-card .pity, .banner-card .odds-mini { text-shadow: 2px 2px 0 var(--ink); }
 .btn { padding-left: 12px; padding-right: 12px; white-space: normal; text-align: center; line-height: 1.1; }
+
+/* ---------- 16x16 pixel icons: integer sizes only (16px = 1x, 32px = 2x) ---------- */
+svg.pxi { width: 16px; height: 16px; vertical-align: -3px; }
+.nav-btn svg.pxi { width: 32px; height: 32px; }
+.nav-btn.active svg.pxi { transform: translateY(-2px); }
+.hub-btn svg.pxi, .urow .uic svg.pxi, .gicon svg.pxi, .offer .oico svg.pxi { width: 32px; height: 32px; }
+.abil svg.pxi, .objective .oi svg.pxi, .toast .ti svg.pxi, .close-x svg.pxi, .hud-btn svg.pxi, .icon-btn svg.pxi { width: 16px; height: 16px; }
+@media (max-height: 700px) { .hub-btn svg.pxi { width: 16px; height: 16px; } }

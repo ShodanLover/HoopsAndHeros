@@ -1,0 +1,1589 @@
+{
+ "schema": "codeart2d.pixelspec.v1",
+ "name": "icons",
+ "canvas": [
+  18,
+  18
+ ],
+ "palette": {
+  "x": "#f2f4ff",
+  "o": "#7f87a8"
+ },
+ "outline": {
+  "mode": "none"
+ },
+ "poses": {
+  "academy": [
+   "................",
+   "................",
+   ".......xx.......",
+   ".....xxxxxx.....",
+   "...xxxxxxxxxx...",
+   ".xxxxxxxxxxxxxx.",
+   "xxxxxxxxxxxxxxxx",
+   ".xxxxxxxxxxxxxx.",
+   "...xxxxxxxxxx.x.",
+   "...oooooooooo.x.",
+   "...oooooooooo.x.",
+   "...ooooooooooxxx",
+   "...xxxxxxxxxxxxx",
+   "...xxxxxxxxxx...",
+   "................",
+   "................"
+  ],
+  "auto": [
+   "................",
+   "......xxxx......",
+   "....xxxxxxxx....",
+   "...xxxx..xxxx...",
+   "..xxx......xxx..",
+   "..xx........xx..",
+   ".xxx..oooo..xxx.",
+   "xxxxx.oooo......",
+   "......oooo.xxxxx",
+   ".xxx..oooo..xxx.",
+   "..xx........xx..",
+   "..xxx......xxx..",
+   "...xxxx..xxxx...",
+   "....xxxxxxxx....",
+   "......xxxx......",
+   "................"
+  ],
+  "ball": [
+   ".......oo.......",
+   "....xxxooxxx....",
+   "...xxxxooxxxx...",
+   "..xxxxooooxxxx..",
+   ".xxxxoxooxoxxxx.",
+   ".xxxxoxooxoxxxx.",
+   ".xxxoxxooxxoxxx.",
+   "xoooooooooooooox",
+   "xoooooooooooooox",
+   ".xxxoxxooxxoxxx.",
+   ".xxxxoxooxoxxxx.",
+   ".xxxxoxooxoxxxx.",
+   "..xxxxooooxxxx..",
+   "...xxxxooxxxx...",
+   "....xxxooxxx....",
+   ".......oo......."
+  ],
+  "block": [
+   "................",
+   "....x.x.x.x.....",
+   "....x.x.x.x.....",
+   "....xxxxxxx.....",
+   "....xxxxxxx.xx..",
+   "....xxxxxxxxxx..",
+   "....xxxxxxxxx...",
+   "....xxxxxxxx....",
+   ".....xxxxxx.....",
+   "......xxxx......",
+   "......oooo......",
+   "......oooo......",
+   "......oooo......",
+   "......oooo......",
+   "......oooo......",
+   "......oooo......"
+  ],
+  "bolt": [
+   "................",
+   ".........xxxxx..",
+   "........xxxxx...",
+   ".......xxxxx....",
+   "......xxxxx.....",
+   ".....xxxxx......",
+   "....xxxxxxxxxx..",
+   "...xxxxxxxxxx...",
+   "........xxxx....",
+   ".......xxxx.....",
+   "......xxxx......",
+   ".....xxxx.......",
+   "....xxx.........",
+   "...xx...........",
+   "..x.............",
+   "................"
+  ],
+  "cards": [
+   ".....ooooooooooo",
+   ".....ooooooooooo",
+   ".....ooooooooooo",
+   "xxxxxxxxxxxooooo",
+   "xoooooooooxooooo",
+   "xoooooooooxooooo",
+   "xoooooooooxooooo",
+   "xooooxooooxooooo",
+   "xoooxxxoooxooooo",
+   "xooxxxxxooxooooo",
+   "xoooxxxoooxooooo",
+   "xooxoooxooxooooo",
+   "xoooooooooxooooo",
+   "xooooooooox.....",
+   "xooooooooox.....",
+   "xxxxxxxxxxx....."
+  ],
+  "cash": [
+   "................",
+   "................",
+   "................",
+   "xxxxxxxxxxxxxxxx",
+   "xoooooooooooooox",
+   "xoooooxxxxooooox",
+   "xooooxxxxxxoooox",
+   "xoxxoxxooxxoxxox",
+   "xoxxoxxooxxoxxox",
+   "xooooxxxxxxoooox",
+   "xoooooxxxxooooox",
+   "xoooooooooooooox",
+   "xxxxxxxxxxxxxxxx",
+   "................",
+   "................",
+   "................"
+  ],
+  "chart": [
+   "................",
+   "................",
+   "......xxx.......",
+   "......xxx.......",
+   "......xxx.......",
+   "......xxx.......",
+   "......xxx..xxx..",
+   "......xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   ".xxx..xxx..xxx..",
+   "oooooooooooooooo"
+  ],
+  "check": [
+   "................",
+   "................",
+   "................",
+   "..............x.",
+   ".............xx.",
+   "............xxx.",
+   "...........xxx..",
+   "..........xxx...",
+   ".x.......xxx....",
+   ".xx.....xxx.....",
+   ".xxx...xxx......",
+   "..xxx.xxx.......",
+   "...xxxxx........",
+   "....xxx.........",
+   ".....x..........",
+   "................"
+  ],
+  "clock": [
+   ".......xx.......",
+   "....xxxxxxxx....",
+   "...xxxxooxxxx...",
+   "..xxxooxxooxxx..",
+   ".xxxoooxxoooxxx.",
+   ".xxooooxxooooxx.",
+   ".xxooooxxooooxx.",
+   "xxoooooxxxxxooxx",
+   "xxoooooxxxxxooxx",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxxooooooooxxx.",
+   "..xxxooooooxxx..",
+   "...xxxxooxxxx...",
+   "....xxxxxxxx....",
+   ".......xx......."
+  ],
+  "coach": [
+   "oooo............",
+   "oooo............",
+   "................",
+   "......xxxxxxxxxx",
+   "....xxxxxxxxxxxx",
+   "...xxxxxxxxxxxxx",
+   "..xxxxxxxxxxxxxx",
+   ".xxxxxxxxxxxoooo",
+   ".xxxxoooxxxxoooo",
+   ".xxxxoooxxxx....",
+   ".xxxxoooxxxx....",
+   ".xxxxxxxxxxx....",
+   "..xxxxxxxxx.....",
+   "...xxxxxxx......",
+   "....xxxxx.......",
+   "................"
+  ],
+  "coin": [
+   ".......xx.......",
+   "....xxxxxxxx....",
+   "...xxooooooxx...",
+   "..xxooxxxxooxx..",
+   ".xxoxxxxoxxxoxx.",
+   ".xooxxxoooxxoox.",
+   ".xoxxxoxxxxxxox.",
+   "xxoxxxxoooxxxoxx",
+   "xxoxxxxxxxoxxoxx",
+   ".xoxxxooooxxxox.",
+   ".xooxxxxoxxxoox.",
+   ".xxoxxxxxxxxoxx.",
+   "..xxooxxxxooxx..",
+   "...xxooooooxx...",
+   "....xxxxxxxx....",
+   ".......xx......."
+  ],
+  "court": [
+   "................",
+   "................",
+   "xxxxxxxxxxxxxxxx",
+   "xooooooxxoooooox",
+   "xooooooxxoooooox",
+   "xoooooxxxxooooox",
+   "xxxxoxxxxxxoxxxx",
+   "xooxoxoxxoxoxoox",
+   "xooxoxoxxoxoxoox",
+   "xxxxoxxxxxxoxxxx",
+   "xoooooxxxxooooox",
+   "xooooooxxoooooox",
+   "xooooooxxoooooox",
+   "xxxxxxxxxxxxxxxx",
+   "................",
+   "................"
+  ],
+  "craft": [
+   ".......xxxxx....",
+   "......xxxxxxx...",
+   ".....xxxxxxxxx..",
+   "......xxxxxxxxx.",
+   ".......xxxoxxxx.",
+   "........xxoxxxx.",
+   ".........xxxxxx.",
+   ".........xxxx...",
+   ".......x........",
+   "......xx........",
+   ".....xx.........",
+   "....xx..........",
+   "...xx...........",
+   "..xx............",
+   ".xx.............",
+   ".x.............."
+  ],
+  "daily": [
+   "................",
+   "...xxx....xxx...",
+   "..x...x..x...x..",
+   "..x....xx....x..",
+   "...xxxxxxxxxx...",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx",
+   "oooooooooooooooo",
+   "oooooooooooooooo",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx",
+   "xxxxxxxooxxxxxxx"
+  ],
+  "division": [
+   ".......xx.......",
+   ".....xxxxxx.....",
+   "...xxxxxxxxxx...",
+   ".xxxxxxxxxxxxxx.",
+   "...xxxxxxxxxx...",
+   ".....xxxxxx.....",
+   ".......xx.......",
+   "................",
+   "xx............xx",
+   ".xxxx......xxxx.",
+   "...xxxxxxxxxx...",
+   "................",
+   "oo............oo",
+   ".oooo......oooo.",
+   "...oooooooooo...",
+   "................"
+  ],
+  "dumbbell": [
+   "................",
+   "................",
+   "................",
+   "..xxx......xxx..",
+   "..xxx......xxx..",
+   "ooxxx......xxxoo",
+   "ooxxx......xxxoo",
+   "ooxxxxxxxxxxxxoo",
+   "ooxxxxxxxxxxxxoo",
+   "ooxxx......xxxoo",
+   "ooxxx......xxxoo",
+   "..xxx......xxx..",
+   "..xxx......xxx..",
+   "................",
+   "................",
+   "................"
+  ],
+  "dunk": [
+   "........o.......",
+   "......xxoxx.....",
+   ".....xxxoxxx....",
+   ".....ooooooo....",
+   ".....xxxoxxx....",
+   ".....xxxoxxx....",
+   "......xxoxx.....",
+   "................",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   "...o.o.o.o.o....",
+   "...o.o.o.o.o....",
+   "....o.o.o.o.....",
+   "....o.o.o.o.....",
+   ".....o.o.o......",
+   "................"
+  ],
+  "empire": [
+   "................",
+   ".......xx.......",
+   "......xxxx......",
+   ".....xxxxxx.....",
+   "....xxxxxxxx....",
+   "...xxxxxxxxxx...",
+   "..xxxxxxxxxxxx..",
+   ".xxxxxxxxxxxxxx.",
+   "..xxxxxxxxxxxx..",
+   "..xxooxxxxooxx..",
+   "..xxooxxxxooxx..",
+   "..xxooooooooxx..",
+   "..xxxxooooxxxx..",
+   "..xxxxooooxxxx..",
+   "..xxxxooooxxxx..",
+   "xxxxxxxxxxxxxxxx"
+  ],
+  "events": [
+   ".......xx.......",
+   "....xxxxxxxx....",
+   "...xxxxxxxxxx...",
+   "..xxxooooooxxx..",
+   ".xxxooooooooxxx.",
+   ".xxoooxxxxoooxx.",
+   ".xxooxxxxxxooxx.",
+   "xxxooxxooxxooxxx",
+   "xxxooxxooxxooxxx",
+   ".xxooxxxxxxooxx.",
+   ".xxoooxxxxoooxx.",
+   ".xxxooooooooxxx.",
+   "..xxxooooooxxx..",
+   "...xxxxxxxxxx...",
+   "....xxxxxxxx....",
+   ".......xx......."
+  ],
+  "ff": [
+   "................",
+   "................",
+   "xx......xx......",
+   "xx......xx......",
+   "xxx.....xxx.....",
+   "xxxx....xxxx....",
+   "xxxxx...xxxxx...",
+   "xxxxxx..xxxxxx..",
+   "xxxxxx..xxxxxx..",
+   "xxxxx...xxxxx...",
+   "xxxx....xxxx....",
+   "xxx.....xxx.....",
+   "xx......xx......",
+   "xx......xx......",
+   "................",
+   "................"
+  ],
+  "fire": [
+   "................",
+   "........x.......",
+   ".......xx.......",
+   "......xxx...x...",
+   ".....xxxxx.xx...",
+   "....xxxxxxxxx...",
+   "...xxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxooxxxxx..",
+   ".xxxxxoooxxxxxx.",
+   ".xxxxooooooxxxx.",
+   ".xxxoooooooxxxx.",
+   ".xxxooooooooxxx.",
+   "..xxoooooooxxx..",
+   "...xxxooooxxx...",
+   "....xxxxxxxx...."
+  ],
+  "gear": [
+   "......xxxx......",
+   "......xxxx......",
+   "..xx..xxxx..xx..",
+   "..xx.xxxxxx.xx..",
+   "....xxxxxxxx....",
+   "...xxxxxxxxxx...",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "...xxxxxxxxxx...",
+   "....xxxxxxxx....",
+   "..xx.xxxxxx.xx..",
+   "..xx..xxxx..xx..",
+   "......xxxx......",
+   "......xxxx......"
+  ],
+  "gem": [
+   "................",
+   "................",
+   "...xxxxxxxxxx...",
+   "..xxoooxxoooxx..",
+   ".xxoooxxxxoooxx.",
+   "xxxxxxxxxxxxxxxx",
+   ".xxooxxxxxxooxx.",
+   "..xxooxxxxooxx..",
+   "...xxoxxxxoxx...",
+   "....xxoxxoxx....",
+   ".....xxxxxx.....",
+   "......xxxx......",
+   ".......xx.......",
+   "................",
+   "................",
+   "................"
+  ],
+  "gym": [
+   "................",
+   "................",
+   "................",
+   "..xxx......xxx..",
+   "..xxx......xxx..",
+   "ooxxx......xxxoo",
+   "ooxxx......xxxoo",
+   "ooxxxxxxxxxxxxoo",
+   "ooxxxxxxxxxxxxoo",
+   "ooxxx......xxxoo",
+   "ooxxx......xxxoo",
+   "..xxx......xxx..",
+   "..xxx......xxx..",
+   "................",
+   "................",
+   "................"
+  ],
+  "headband": [
+   "................",
+   "................",
+   ".....xxxxxx.....",
+   "...xxxxxxxxxx...",
+   "..xx........xx..",
+   ".xx..........xx.",
+   "xxxxxxxxxxxxxxxx",
+   "xxooooooooooooxx",
+   "xxooooooooooooxx",
+   "xxxxxxxxxxxxxxxx",
+   "xx............xx",
+   "xx............xx",
+   "xx............xx",
+   "xx............xx",
+   "................",
+   "................"
+  ],
+  "hq": [
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxoooxxoooxx..",
+   "..xxoooxxoooxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxoooxxoooxx..",
+   "..xxoooxxoooxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxoooxxoooxx..",
+   "..xxoooxxoooxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxooooxxxx..",
+   "..xxxxooooxxxx..",
+   "..xxxxooooxxxx..",
+   "..xxxxooooxxxx..",
+   "..xxxxooooxxxx.."
+  ],
+  "info": [
+   ".......xx.......",
+   "....xxxxxxxx....",
+   "...xxxxxxxxxx...",
+   "..xxxxx..xxxxx..",
+   ".xxxxxx..xxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxx...xxxxxx.",
+   "xxxxxxx..xxxxxxx",
+   "xxxxxxx..xxxxxxx",
+   ".xxxxxx..xxxxxx.",
+   ".xxxxxx..xxxxxx.",
+   ".xxxxxx..xxxxxx.",
+   "..xxxx....xxxx..",
+   "...xxxxxxxxxx...",
+   "....xxxxxxxx....",
+   ".......xx......."
+  ],
+  "jersey": [
+   "................",
+   "...xxx....xxx...",
+   "..xxxxx..xxxxx..",
+   ".xxxxxxxxxxxxxx.",
+   "xxxx.xxxxxx.xxxx",
+   "xxx..xxxxxx..xxx",
+   ".....xxxxxx.....",
+   "....xxxxxxxx....",
+   "....xxxxxxxx....",
+   "....xxoxxoxx....",
+   "....xxoxxoxx....",
+   "....xxoxxoxx....",
+   "....xxoxxoxx....",
+   "....xxxxxxxx....",
+   "....xxxxxxxx....",
+   "................"
+  ],
+  "legacy": [
+   ".......xx.......",
+   "......xxxx......",
+   "xxxxxxxooxxxxxxx",
+   ".xxxxxxooxxxxxx.",
+   "..xxxxxooxxxxx..",
+   "...xxxxooxxxx...",
+   "...xxxxooxxxx...",
+   "..xxxx..xxxxx...",
+   "..xxx....xxxx...",
+   "................",
+   "................",
+   "................",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "oooooooooooooooo",
+   "oooooooooooooooo"
+  ],
+  "lock": [
+   "................",
+   ".....xxxxxx.....",
+   "....xx....xx....",
+   "....xx....xx....",
+   "....xx....xx....",
+   "....xx....xx....",
+   "....xx....xx....",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxooxxxxx..",
+   "..xxxxxooxxxxx..",
+   "..xxxxxooxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx.."
+  ],
+  "map": [
+   "................",
+   "xx....xx....xx..",
+   "xxxxxoxxxxoxxxxx",
+   "xxxxxooooooxxxxx",
+   "xoooooooooooooox",
+   "xoooooxoxoooooox",
+   "xooooooxooooooox",
+   "xoooooxoxoooooox",
+   "xoooooooooooooox",
+   "xoooooooooooooox",
+   "xoooooooooooooox",
+   "xoooooooooooooox",
+   "xoooooxxxxooooox",
+   "xxxxxoxxxxoxxxxx",
+   "xx....xx....xx..",
+   "................"
+  ],
+  "medical": [
+   ".xxxxxxxxxxxxxx.",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxx..........xxx",
+   "xxx..........xxx",
+   "xxx..........xxx",
+   "xxx..........xxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxx....xxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   ".xxxxxxxxxxxxxx."
+  ],
+  "merch": [
+   "................",
+   "..xxxxxxxxxxxx..",
+   ".xxxxxxxxxxxxxx.",
+   "xxxxxxxxxxxxxxxx",
+   "x.x.x.x.x.x.x.x.",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".xoooxxxxxxooox.",
+   ".xoooxxxxxxooox.",
+   ".xoooxooooxooox.",
+   ".xxxxxooooxxxxx.",
+   ".xxxxxooooxxxxx.",
+   ".xxxxxooooxxxxx.",
+   ".xxxxxooooxxxxx.",
+   ".xxxxxooooxxxxx.",
+   ".xxxxxooooxxxxx."
+  ],
+  "missions": [
+   ".....xxxxxx.....",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xoooooooooox..",
+   "..xoooooooooox..",
+   "..xoooooooxoox..",
+   "..xooooooxxoox..",
+   "..xoxoooxxooox..",
+   "..xoxxoxxoooox..",
+   "..xooxxxooooox..",
+   "..xoooxoooooox..",
+   "..xoooooooooox..",
+   "..xooxxxxxxoox..",
+   "..xoooooooooox..",
+   "..xoooooooooox..",
+   "..xxxxxxxxxxxx.."
+  ],
+  "pass": [
+   "................",
+   "................",
+   "................",
+   "x......xx......x",
+   "xx.....xx.....xx",
+   "xxx...xxxx...xxx",
+   "xxxx.xxxxxx.xxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxooooooooooooxx",
+   ".xxxxxxxxxxxxxx.",
+   "................",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   "................",
+   "................"
+  ],
+  "play": [
+   "................",
+   "...x............",
+   "...xxx..........",
+   "...xxxxx........",
+   "...xxxxxxx......",
+   "...xxxxxxxxx....",
+   "...xxxxxxxxxxx..",
+   "...xxxxxxxxxxxxx",
+   "...xxxxxxxxxxxxx",
+   "...xxxxxxxxxxx..",
+   "...xxxxxxxxx....",
+   "...xxxxxxx......",
+   "...xxxxx........",
+   "...xxx..........",
+   "...x............",
+   "................"
+  ],
+  "plus": [
+   "................",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "................"
+  ],
+  "recruit": [
+   ".....ooooooooooo",
+   ".....ooooooooooo",
+   ".....ooooooooooo",
+   "xxxxxxxxxxxooooo",
+   "xoooooooooxooooo",
+   "xoooooooooxooooo",
+   "xoooooooooxooooo",
+   "xooooxooooxooooo",
+   "xoooxxxoooxooooo",
+   "xooxxxxxooxooooo",
+   "xoooxxxoooxooooo",
+   "xooxoooxooxooooo",
+   "xoooooooooxooooo",
+   "xooooooooox.....",
+   "xooooooooox.....",
+   "xxxxxxxxxxx....."
+  ],
+  "scout": [
+   "................",
+   "...xxxxxxx......",
+   "..xxxxxxxxx.....",
+   ".xxxxoooxxxx....",
+   ".xxxoooooxxx....",
+   ".xxoooooooxx....",
+   ".xxoooooooxx....",
+   ".xxoooooooxx....",
+   ".xxxoooooxxx....",
+   ".xxxxoooxxxx....",
+   "..xxxxxxxxx.....",
+   "...xxxxxxxxx....",
+   "..........xxx...",
+   "...........xxx..",
+   "............xxx.",
+   ".............xx."
+  ],
+  "share": [
+   "................",
+   "...........xxx..",
+   "..........xxxxx.",
+   "..........xoxxx.",
+   ".........oooxxx.",
+   ".......ooooxxx..",
+   "..xxxoooo.......",
+   ".xxxooo.........",
+   ".xxxox..........",
+   ".xxxoo..........",
+   "..xxoooo...xxx..",
+   "......ooooxxxxx.",
+   "........ooooxxx.",
+   "..........ooxxx.",
+   "...........xxx..",
+   "................"
+  ],
+  "shield": [
+   "................",
+   ".......xx.......",
+   "....xxxxxxxx....",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxoxxxx",
+   "xxxxxxxxxxooxxxx",
+   "xxxxxxxxxooxxxxx",
+   "xxxxoxxxooxxxxxx",
+   ".xxxooxooxxxxxx.",
+   ".xxxxoooxxxxxxx.",
+   "..xxxxoxxxxxxx..",
+   "...xxxxxxxxxx...",
+   "....xxxxxxxx....",
+   "......xxxx......",
+   ".......xx.......",
+   "................"
+  ],
+  "shoe": [
+   "................",
+   "................",
+   "................",
+   "................",
+   "....xxxxx.......",
+   "....xxxxx.......",
+   "....xoxox.......",
+   "....xxxxxx......",
+   "...xxxxxxxxx....",
+   "xxxxxxxxxxxxxxx.",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "oooooooooooooooo",
+   "oooooooooooooooo",
+   "................",
+   "................"
+  ],
+  "shop": [
+   "................",
+   "....xxxxxxxx....",
+   "....x......x....",
+   "....x......x....",
+   "....x......x....",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxooooooooooxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx."
+  ],
+  "sleeve": [
+   "................",
+   "...xxxxxxxxxx...",
+   "...xxxxxxxxxx...",
+   "....xxxxxxxx....",
+   "....xxxxxxxx....",
+   "....oooooooo....",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....oooooo.....",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "................"
+  ],
+  "social": [
+   "................",
+   "................",
+   "....xxx.........",
+   "...xxxxx........",
+   "..xxxxxxx..ooo..",
+   "..xxxxxxx.ooooo.",
+   "...xxxxx..ooooo.",
+   "....xxx....ooo..",
+   "................",
+   ".xxxxxxxxx.oooo.",
+   "xxxxxxxxxxxooooo",
+   "xxxxxxxxxxxooooo",
+   "xxxxxxxxxxxooooo",
+   "xxxxxxxxxxxooooo",
+   "xxxxxxxxxxxooooo",
+   "xxxxxxxxxxxooooo"
+  ],
+  "sound": [
+   "................",
+   "................",
+   ".......xx.......",
+   "......xxx.......",
+   ".....xxxx....oo.",
+   "xxxxxxxxx....oo.",
+   "xxxxxxxxx.oo.oo.",
+   "xxxxxxxxx.oo.oo.",
+   "xxxxxxxxx.oo.oo.",
+   "xxxxxxxxx.oo.oo.",
+   "xxxxxxxxx....oo.",
+   ".....xxxx....oo.",
+   "......xxx.......",
+   ".......xx.......",
+   "................",
+   "................"
+  ],
+  "stadium": [
+   "................",
+   "................",
+   "....xxxxxxxx....",
+   "..xxxxxxxxxxxx..",
+   ".xxxooooooooxxx.",
+   "xxoooooooooooxxx",
+   "xxxooooooooooxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxx.xxxxxx.xxxx",
+   "xxxx.xxxxxx.xxxx",
+   ".xxx.xxxxxx.xxx.",
+   "..xx.xxxxxx.xx..",
+   "....xxxxxxxx....",
+   "................",
+   "................"
+  ],
+  "star": [
+   "................",
+   ".......xx.......",
+   ".......xx.......",
+   "......xxxx......",
+   "......xxxx......",
+   "xxxxxxxooxxxxxxx",
+   ".xxxxxxooxxxxxx.",
+   "..xxxxxooxxxxx..",
+   "...xxxxooxxxx...",
+   "....xxxooxxx....",
+   "....xxxxxxxx....",
+   "...xxxxxxxxxx...",
+   "...xxxx..xxxx...",
+   "..xxx......xxx..",
+   "..xx........xx..",
+   "................"
+  ],
+  "steal": [
+   "................",
+   ".........xoox...",
+   ".......xxxooxxx.",
+   ".......xxxooxxx.",
+   "......oooooooooo",
+   "......oooooooooo",
+   "......xxxxooxxxx",
+   ".......xxxooxxx.",
+   ".......xxxooxxx.",
+   ".........xoox...",
+   "xxxx............",
+   "xxxxxx..........",
+   "xxxxxxoooo......",
+   ".xxxxxoooo......",
+   "..xxx...........",
+   "................"
+  ],
+  "swap": [
+   "................",
+   "..x.............",
+   ".xx.............",
+   "xxxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   "..x.............",
+   "................",
+   "................",
+   "................",
+   ".............x..",
+   ".............xx.",
+   ".xxxxxxxxxxxxxxx",
+   ".xxxxxxxxxxxxxx.",
+   ".............x..",
+   "................",
+   "................"
+  ],
+  "tactics": [
+   ".xxxxxxxxxxxxxx.",
+   ".xoooooooooooox.",
+   ".xoooooooooooox.",
+   ".xoxooxooooooox.",
+   ".xooxxoooooooox.",
+   ".xooxxoooxxooox.",
+   ".xoxooxooxxooox.",
+   ".xooooooxooooox.",
+   ".xoooooxoooooox.",
+   ".xoooooxooxxxox.",
+   ".xooooxooxxoxxx.",
+   ".xoooxoooxoooxx.",
+   ".xoooooooxxoxxx.",
+   ".xooooooooxxxox.",
+   ".xoooooooooooox.",
+   ".xxxxxxxxxxxxxx."
+  ],
+  "ticket": [
+   "................",
+   "................",
+   "................",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxx.xxxxx",
+   "xxxxxxxxxxxxxxxx",
+   ".xxoooxxxx.xxxx.",
+   ".xxoxoxxxxxxxxx.",
+   ".xxoooxxxx.xxxx.",
+   ".xxxxxxxxxxxxxx.",
+   "xxxxxxxxxx.xxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "................",
+   "................",
+   "................"
+  ],
+  "train": [
+   "................",
+   "...........xxxxx",
+   ".........xxxxxxx",
+   "........xxxxxxx.",
+   "........xxxooxx.",
+   ".......xxxooxx..",
+   ".......xxxxxx...",
+   "......xxxxxx....",
+   "......xxxx......",
+   "......x.........",
+   ".....xx.........",
+   "....xx..........",
+   "...xx...........",
+   "..xx............",
+   ".xx.............",
+   ".x.............."
+  ],
+  "trophy": [
+   "...xxxxxxxxxx...",
+   "xxxxxxxxxxxxxxxx",
+   "x..xxooxxxxxx..x",
+   "x..xxooxxxxxx..x",
+   "x..xxooxxxxxx..x",
+   "xxxxxooxxxxxxxxx",
+   "...xxooxxxxxx...",
+   "...xxxxxxxxxx...",
+   "...xxxxxxxxxx...",
+   "....xxxxxxxx....",
+   "......xxxx......",
+   "......xxxx......",
+   "......xxxx......",
+   "....xxxxxxxx....",
+   "....xxxxxxxx....",
+   "....xxxxxxxx...."
+  ],
+  "tv": [
+   "....x......x....",
+   ".....x....x.....",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxooooooooooooxx",
+   "xxooooxoooooooxx",
+   "xxooooxxooooooxx",
+   "xxooooxxxoooooxx",
+   "xxooooxxooooooxx",
+   "xxooooxoooooooxx",
+   "xxooooooooooooxx",
+   "xxxxxxxxxxxxxxxx",
+   "xxxxxxxxxxxxxxxx",
+   ".......xx.......",
+   ".....xxxxxx.....",
+   ".....xxxxxx....."
+  ],
+  "up": [
+   "................",
+   ".......xx.......",
+   "......xxxx......",
+   ".....xxxxxx.....",
+   "....xxxxxxxx....",
+   "...xxxxxxxxxx...",
+   "..xxxxxxxxxxxx..",
+   ".xxxxxxxxxxxxxx.",
+   ".xxxxxxxxxxxxxx.",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....xxxxxx.....",
+   ".....xxxxxx....."
+  ],
+  "whistle": [
+   "oooo............",
+   "oooo............",
+   "................",
+   "......xxxxxxxxxx",
+   "....xxxxxxxxxxxx",
+   "...xxxxxxxxxxxxx",
+   "..xxxxxxxxxxxxxx",
+   ".xxxxxxxxxxxoooo",
+   ".xxxxoooxxxxoooo",
+   ".xxxxoooxxxx....",
+   ".xxxxoooxxxx....",
+   ".xxxxxxxxxxx....",
+   "..xxxxxxxxx.....",
+   "...xxxxxxx......",
+   "....xxxxx.......",
+   "................"
+  ],
+  "wrist": [
+   "....oooooooo....",
+   "....oooooooo....",
+   "....oooooooo....",
+   "....oooooooo....",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxooooooooxx..",
+   "..xxooxxxxooxx..",
+   "..xxooxxxxooxx..",
+   "..xxooooooooxx..",
+   "..xxxxxxxxxxxx..",
+   "..xxxxxxxxxxxx..",
+   "....oooooooo....",
+   "....oooooooo....",
+   "....oooooooo....",
+   "....oooooooo...."
+  ],
+  "x": [
+   "................",
+   "................",
+   "..x..........x..",
+   "..xx........xx..",
+   "..xxx......xxx..",
+   "...xxx....xxx...",
+   "....xxx..xxx....",
+   ".....xxxxxx.....",
+   "......xxxx......",
+   "......xxxx......",
+   ".....xxxxxx.....",
+   "....xxx..xxx....",
+   "...xxx....xxx...",
+   "..xxx......xxx..",
+   "..xx........xx..",
+   "..x..........x.."
+  ]
+ },
+ "layers": [
+  {
+   "name": "icon",
+   "origin": [
+    1,
+    1
+   ],
+   "rows": "academy"
+  }
+ ],
+ "frames": [
+  {
+   "name": "academy",
+   "layers": {
+    "icon": {
+     "rows": "academy"
+    }
+   }
+  },
+  {
+   "name": "auto",
+   "layers": {
+    "icon": {
+     "rows": "auto"
+    }
+   }
+  },
+  {
+   "name": "ball",
+   "layers": {
+    "icon": {
+     "rows": "ball"
+    }
+   }
+  },
+  {
+   "name": "block",
+   "layers": {
+    "icon": {
+     "rows": "block"
+    }
+   }
+  },
+  {
+   "name": "bolt",
+   "layers": {
+    "icon": {
+     "rows": "bolt"
+    }
+   }
+  },
+  {
+   "name": "cards",
+   "layers": {
+    "icon": {
+     "rows": "cards"
+    }
+   }
+  },
+  {
+   "name": "cash",
+   "layers": {
+    "icon": {
+     "rows": "cash"
+    }
+   }
+  },
+  {
+   "name": "chart",
+   "layers": {
+    "icon": {
+     "rows": "chart"
+    }
+   }
+  },
+  {
+   "name": "check",
+   "layers": {
+    "icon": {
+     "rows": "check"
+    }
+   }
+  },
+  {
+   "name": "clock",
+   "layers": {
+    "icon": {
+     "rows": "clock"
+    }
+   }
+  },
+  {
+   "name": "coach",
+   "layers": {
+    "icon": {
+     "rows": "coach"
+    }
+   }
+  },
+  {
+   "name": "coin",
+   "layers": {
+    "icon": {
+     "rows": "coin"
+    }
+   }
+  },
+  {
+   "name": "court",
+   "layers": {
+    "icon": {
+     "rows": "court"
+    }
+   }
+  },
+  {
+   "name": "craft",
+   "layers": {
+    "icon": {
+     "rows": "craft"
+    }
+   }
+  },
+  {
+   "name": "daily",
+   "layers": {
+    "icon": {
+     "rows": "daily"
+    }
+   }
+  },
+  {
+   "name": "division",
+   "layers": {
+    "icon": {
+     "rows": "division"
+    }
+   }
+  },
+  {
+   "name": "dumbbell",
+   "layers": {
+    "icon": {
+     "rows": "dumbbell"
+    }
+   }
+  },
+  {
+   "name": "dunk",
+   "layers": {
+    "icon": {
+     "rows": "dunk"
+    }
+   }
+  },
+  {
+   "name": "empire",
+   "layers": {
+    "icon": {
+     "rows": "empire"
+    }
+   }
+  },
+  {
+   "name": "events",
+   "layers": {
+    "icon": {
+     "rows": "events"
+    }
+   }
+  },
+  {
+   "name": "ff",
+   "layers": {
+    "icon": {
+     "rows": "ff"
+    }
+   }
+  },
+  {
+   "name": "fire",
+   "layers": {
+    "icon": {
+     "rows": "fire"
+    }
+   }
+  },
+  {
+   "name": "gear",
+   "layers": {
+    "icon": {
+     "rows": "gear"
+    }
+   }
+  },
+  {
+   "name": "gem",
+   "layers": {
+    "icon": {
+     "rows": "gem"
+    }
+   }
+  },
+  {
+   "name": "gym",
+   "layers": {
+    "icon": {
+     "rows": "gym"
+    }
+   }
+  },
+  {
+   "name": "headband",
+   "layers": {
+    "icon": {
+     "rows": "headband"
+    }
+   }
+  },
+  {
+   "name": "hq",
+   "layers": {
+    "icon": {
+     "rows": "hq"
+    }
+   }
+  },
+  {
+   "name": "info",
+   "layers": {
+    "icon": {
+     "rows": "info"
+    }
+   }
+  },
+  {
+   "name": "jersey",
+   "layers": {
+    "icon": {
+     "rows": "jersey"
+    }
+   }
+  },
+  {
+   "name": "legacy",
+   "layers": {
+    "icon": {
+     "rows": "legacy"
+    }
+   }
+  },
+  {
+   "name": "lock",
+   "layers": {
+    "icon": {
+     "rows": "lock"
+    }
+   }
+  },
+  {
+   "name": "map",
+   "layers": {
+    "icon": {
+     "rows": "map"
+    }
+   }
+  },
+  {
+   "name": "medical",
+   "layers": {
+    "icon": {
+     "rows": "medical"
+    }
+   }
+  },
+  {
+   "name": "merch",
+   "layers": {
+    "icon": {
+     "rows": "merch"
+    }
+   }
+  },
+  {
+   "name": "missions",
+   "layers": {
+    "icon": {
+     "rows": "missions"
+    }
+   }
+  },
+  {
+   "name": "pass",
+   "layers": {
+    "icon": {
+     "rows": "pass"
+    }
+   }
+  },
+  {
+   "name": "play",
+   "layers": {
+    "icon": {
+     "rows": "play"
+    }
+   }
+  },
+  {
+   "name": "plus",
+   "layers": {
+    "icon": {
+     "rows": "plus"
+    }
+   }
+  },
+  {
+   "name": "recruit",
+   "layers": {
+    "icon": {
+     "rows": "recruit"
+    }
+   }
+  },
+  {
+   "name": "scout",
+   "layers": {
+    "icon": {
+     "rows": "scout"
+    }
+   }
+  },
+  {
+   "name": "share",
+   "layers": {
+    "icon": {
+     "rows": "share"
+    }
+   }
+  },
+  {
+   "name": "shield",
+   "layers": {
+    "icon": {
+     "rows": "shield"
+    }
+   }
+  },
+  {
+   "name": "shoe",
+   "layers": {
+    "icon": {
+     "rows": "shoe"
+    }
+   }
+  },
+  {
+   "name": "shop",
+   "layers": {
+    "icon": {
+     "rows": "shop"
+    }
+   }
+  },
+  {
+   "name": "sleeve",
+   "layers": {
+    "icon": {
+     "rows": "sleeve"
+    }
+   }
+  },
+  {
+   "name": "social",
+   "layers": {
+    "icon": {
+     "rows": "social"
+    }
+   }
+  },
+  {
+   "name": "sound",
+   "layers": {
+    "icon": {
+     "rows": "sound"
+    }
+   }
+  },
+  {
+   "name": "stadium",
+   "layers": {
+    "icon": {
+     "rows": "stadium"
+    }
+   }
+  },
+  {
+   "name": "star",
+   "layers": {
+    "icon": {
+     "rows": "star"
+    }
+   }
+  },
+  {
+   "name": "steal",
+   "layers": {
+    "icon": {
+     "rows": "steal"
+    }
+   }
+  },
+  {
+   "name": "swap",
+   "layers": {
+    "icon": {
+     "rows": "swap"
+    }
+   }
+  },
+  {
+   "name": "tactics",
+   "layers": {
+    "icon": {
+     "rows": "tactics"
+    }
+   }
+  },
+  {
+   "name": "ticket",
+   "layers": {
+    "icon": {
+     "rows": "ticket"
+    }
+   }
+  },
+  {
+   "name": "train",
+   "layers": {
+    "icon": {
+     "rows": "train"
+    }
+   }
+  },
+  {
+   "name": "trophy",
+   "layers": {
+    "icon": {
+     "rows": "trophy"
+    }
+   }
+  },
+  {
+   "name": "tv",
+   "layers": {
+    "icon": {
+     "rows": "tv"
+    }
+   }
+  },
+  {
+   "name": "up",
+   "layers": {
+    "icon": {
+     "rows": "up"
+    }
+   }
+  },
+  {
+   "name": "whistle",
+   "layers": {
+    "icon": {
+     "rows": "whistle"
+    }
+   }
+  },
+  {
+   "name": "wrist",
+   "layers": {
+    "icon": {
+     "rows": "wrist"
+    }
+   }
+  },
+  {
+   "name": "x",
+   "layers": {
+    "icon": {
+     "rows": "x"
+    }
+   }
+  }
+ ]
+}

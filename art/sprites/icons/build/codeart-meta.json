@@ -1,0 +1,1996 @@
+{
+  "schema": "codeart2d.codeart_meta.v1",
+  "art_source": "code",
+  "placeholder": false,
+  "disclosure": "code-drawn, no image model",
+  "generator": "render_pixelspec.py",
+  "spec_sha256": "56d3a0b500fdf6fa82356b5214d611c72442b663788f5c087c2c87ba5d659df0",
+  "renderer": {
+    "name": "codeart_core.render_pixelspec",
+    "version": "1.1"
+  },
+  "palette": {
+    "colors": {
+      "x": "#f2f4ff",
+      "o": "#7f87a8"
+    },
+    "variants": {}
+  },
+  "outputs": [
+    {
+      "path": "base/frames/academy.png",
+      "sha256": "dcd42bdd9434710a4b70bb7cb5eec9c7d5acc4275ed1234138d5304f6be7efd2",
+      "bytes": 151
+    },
+    {
+      "path": "base/frames/auto.png",
+      "sha256": "3009b5a6fdd2eba3c0d3814b6ceceb3c4d079d2c4fa03eb6eb4c630f2937a785",
+      "bytes": 182
+    },
+    {
+      "path": "base/frames/ball.png",
+      "sha256": "deac6d4db081455e6f275c4030c1ba6be74f7b16460e4ff50b00a442ad28b599",
+      "bytes": 212
+    },
+    {
+      "path": "base/frames/block.png",
+      "sha256": "2abca35b437e6f5eccd56da6d3808ce24933e6dde099c72c201dae5b953fcdf1",
+      "bytes": 141
+    },
+    {
+      "path": "base/frames/bolt.png",
+      "sha256": "0b6f09974b2dde8458678ac6c48cc944141ed03f83ed228031e8a2ee456940ba",
+      "bytes": 149
+    },
+    {
+      "path": "base/frames/cards.png",
+      "sha256": "d730c3466c1a13a93f5af41851b08b0a8c4a6bf1be68761799654a4a96515166",
+      "bytes": 168
+    },
+    {
+      "path": "base/frames/cash.png",
+      "sha256": "c24122268bf0eed560763b57c1537e77bb8a947454763a0659a2ca7bdc9d5d89",
+      "bytes": 159
+    },
+    {
+      "path": "base/frames/chart.png",
+      "sha256": "6287ba5aee043ec8e4a5f904e0bdf83f96296ac7eb3b40f7ee649c2acb68c1e6",
+      "bytes": 127
+    },
+    {
+      "path": "base/frames/check.png",
+      "sha256": "2cd2e3c4312f874e17b778f7314d876b02674596100c19eeace04b69026e02a4",
+      "bytes": 151
+    },
+    {
+      "path": "base/frames/clock.png",
+      "sha256": "b7d5ce6ccc292e6413071dd2dd615e8a2d4f4bcec4d641671f951c7e1058702c",
+      "bytes": 192
+    },
+    {
+      "path": "base/frames/coach.png",
+      "sha256": "7ed0963a84f5a87398691a620711edd77739198e071ceea0697d2db029dc594d",
+      "bytes": 175
+    },
+    {
+      "path": "base/frames/coin.png",
+      "sha256": "08fb75da676c045dab62124bd413c8406f2e98e70e5e3d0a3ad2d840f0a56754",
+      "bytes": 221
+    },
+    {
+      "path": "base/frames/court.png",
+      "sha256": "e61a22399d5b49c9be4f10caa9cd99b53ef83d53422a7e020c769dd14a675e4f",
+      "bytes": 175
+    },
+    {
+      "path": "base/frames/craft.png",
+      "sha256": "43df89702948d574176524a558691ed510c73eca59cdfc011bbd8d64a9ef2544",
+      "bytes": 150
+    },
+    {
+      "path": "base/frames/daily.png",
+      "sha256": "6fa185c4ee7cef85ef6f4ef30ef74c52437cc7f0ddfee166b572902df6d47170",
+      "bytes": 156
+    },
+    {
+      "path": "base/frames/division.png",
+      "sha256": "d25bb8953c0a495c5473640ed453d930b5ec40057689efd27393278a12f365a6",
+      "bytes": 163
+    },
+    {
+      "path": "base/frames/dumbbell.png",
+      "sha256": "a85cf18b7ead732e89a0b2cc17a311f0839ac2d52a26226c908c589a3811167f",
+      "bytes": 131
+    },
+    {
+      "path": "base/frames/dunk.png",
+      "sha256": "bcdce4a15ec0984909eef3fb56b83050e5f81ec2dff7a7a7a7ed114113902f4f",
+      "bytes": 161
+    },
+    {
+      "path": "base/frames/empire.png",
+      "sha256": "0ef30a6932ccc0e9d726c8407ee13ff483a184e3690bdfb953a7ef5e535de452",
+      "bytes": 175
+    },
+    {
+      "path": "base/frames/events.png",
+      "sha256": "c3ba2af9c63e82af568b876e714d223f34de38c05173e8a33605dec3e0ca81bf",
+      "bytes": 202
+    },
+    {
+      "path": "base/frames/ff.png",
+      "sha256": "39a8b5bae2656b179e0832341285cf52c21409b26765b0571baa87c6bb2d900a",
+      "bytes": 141
+    },
+    {
+      "path": "base/frames/fire.png",
+      "sha256": "9512f0eae176bab6b42bcb9e9f88cb2325d703705832442f63a6dfcc92dfbc14",
+      "bytes": 181
+    },
+    {
+      "path": "base/frames/gear.png",
+      "sha256": "c24e08d801a3f7d2a4be9ffff0440fc853e31573150fe70321ef5ba6f48bd20a",
+      "bytes": 164
+    },
+    {
+      "path": "base/frames/gem.png",
+      "sha256": "2b29522e95a84cb3d9ec9bce7d597cebab85df62005296055e1f3027402610a1",
+      "bytes": 187
+    },
+    {
+      "path": "base/frames/headband.png",
+      "sha256": "f5f632445761ed0e1b89ba75f49ef55e2b99abe4e83ed4a94d9a210c6a644f43",
+      "bytes": 141
+    },
+    {
+      "path": "base/frames/hq.png",
+      "sha256": "c2e4ba92871010501df87a09797a71d7d5f2751028b6cbe107b6167fca7168f6",
+      "bytes": 124
+    },
+    {
+      "path": "base/frames/info.png",
+      "sha256": "7f665eb85f78550bce863f81ab7d0d273f21a9521f9bce0c19caafb326ad3367",
+      "bytes": 168
+    },
+    {
+      "path": "base/frames/jersey.png",
+      "sha256": "c8b1c94da0742b55eaf149994e164d2b63408e314d267741989058455be4a904",
+      "bytes": 157
+    },
+    {
+      "path": "base/frames/legacy.png",
+      "sha256": "5877f1c64c8fa5c5840cd08a140fb1bb8ef4dc31e15d45f29bcc050406a2f897",
+      "bytes": 172
+    },
+    {
+      "path": "base/frames/lock.png",
+      "sha256": "64405241f2556d4d75e6af1b252785bef53387a9da1c2797b42173dff1c841b5",
+      "bytes": 131
+    },
+    {
+      "path": "base/frames/map.png",
+      "sha256": "54109dd98f903100bb74fe576931d52cf19e982122cda495bb1d92e5f3e03dfd",
+      "bytes": 177
+    },
+    {
+      "path": "base/frames/medical.png",
+      "sha256": "6edbaf84f7193258f4b2b5f3c4aa6425baf95cc4149478256b856a1044a81c32",
+      "bytes": 139
+    },
+    {
+      "path": "base/frames/merch.png",
+      "sha256": "4794c9426ddb5a27a4c1441ad5aecf4bd1a014517397eb061a4fbc0ee6ba8ff9",
+      "bytes": 147
+    },
+    {
+      "path": "base/frames/missions.png",
+      "sha256": "c07ce6dde98b8b092c9fb3185134576a9f671b19697de6ea8325bc34c149e5ab",
+      "bytes": 175
+    },
+    {
+      "path": "base/frames/pass.png",
+      "sha256": "827751564eb0c22f4d5cc0d5f7f692b300bec5ae6c4f964dfe11e76a5bbbcd24",
+      "bytes": 151
+    },
+    {
+      "path": "base/frames/play.png",
+      "sha256": "74cde61e9ba3805f64a61bb820ea0233545835b5cbc71b24420943df36cef6bd",
+      "bytes": 146
+    },
+    {
+      "path": "base/frames/plus.png",
+      "sha256": "17734acb8eff902bb5c1214dcf81dc3937f14601af3df1e99fa2bd0c266b11ba",
+      "bytes": 109
+    },
+    {
+      "path": "base/frames/scout.png",
+      "sha256": "eeff6fa800c852f91ffcf8008508a786bff7bc65ccf950a36d9f0c242e67430a",
+      "bytes": 180
+    },
+    {
+      "path": "base/frames/share.png",
+      "sha256": "01d8d1ad445ba437772b93fc6d713a936b905963539b9c79f6313954b47abfea",
+      "bytes": 192
+    },
+    {
+      "path": "base/frames/shield.png",
+      "sha256": "9fe409e263833742284b328f811062d6dc3642a91cc154bb1f35a67ba568ddc0",
+      "bytes": 183
+    },
+    {
+      "path": "base/frames/shoe.png",
+      "sha256": "179b30d51150ec12afbf08573bab3ca42904073922336cbc1791e14453d2fc29",
+      "bytes": 131
+    },
+    {
+      "path": "base/frames/shop.png",
+      "sha256": "0f13eb3df5b492f19b4751c8916154fb94d021b5fe8f1ca0dca68a6910ca274f",
+      "bytes": 128
+    },
+    {
+      "path": "base/frames/sleeve.png",
+      "sha256": "b4ec8a8094fe656ab53349df7b630da0487b5d0bc990d734e0baa491b0738184",
+      "bytes": 135
+    },
+    {
+      "path": "base/frames/social.png",
+      "sha256": "8eadf8b1c38f2a4c9d915af40e7e986dab2bc56f2b259edf4e5e5050b2750c5d",
+      "bytes": 162
+    },
+    {
+      "path": "base/frames/sound.png",
+      "sha256": "b712b3f7af88ef22fbdfa9744fc3bb852dfebbb6a68336400228f5e89cdc6c80",
+      "bytes": 150
+    },
+    {
+      "path": "base/frames/stadium.png",
+      "sha256": "548d48bbe03fc958a1881a743a67bf226e7126129307a0d9bcd69f75a013fad9",
+      "bytes": 153
+    },
+    {
+      "path": "base/frames/star.png",
+      "sha256": "50cdfbdac6eb148b48ca5950bc133855c2d02b32fdd8d30a2d9632f3876748d6",
+      "bytes": 175
+    },
+    {
+      "path": "base/frames/steal.png",
+      "sha256": "418dd929f7d68e689d4f5788c525bec27ad4c7515f48f974d7065e70f406837b",
+      "bytes": 182
+    },
+    {
+      "path": "base/frames/swap.png",
+      "sha256": "c8ccb589dc7d47630930a41488aef3cb0c41513f95f82e778ad4c652b49ff6fa",
+      "bytes": 124
+    },
+    {
+      "path": "base/frames/tactics.png",
+      "sha256": "1e97ffed25c7aac05e4626af7b630d7a599326bfdb7380852b660b1442ff0a36",
+      "bytes": 197
+    },
+    {
+      "path": "base/frames/ticket.png",
+      "sha256": "6627e2c22aa30de335aff57a78edb1449f09bce710e4c3e46cbc906e6f0f1d7e",
+      "bytes": 152
+    },
+    {
+      "path": "base/frames/train.png",
+      "sha256": "72b6d68d2b7f27e5b98c0476368e3772a46d405f5b72cf886d3873036325f31f",
+      "bytes": 163
+    },
+    {
+      "path": "base/frames/trophy.png",
+      "sha256": "d85a761f493f2f2d08b0a88488f205e06a283e920f59dbfff39fb29bfe7079a8",
+      "bytes": 158
+    },
+    {
+      "path": "base/frames/tv.png",
+      "sha256": "f1b256448b11b5bb0f4ffe86db3f20726b072db9bd0317b047c284bd298a8625",
+      "bytes": 155
+    },
+    {
+      "path": "base/frames/up.png",
+      "sha256": "a0646f60c1be6afa8fad347534ae1461c8a4d7f8ea36589fda11d8802bc34fb6",
+      "bytes": 139
+    },
+    {
+      "path": "base/frames/wrist.png",
+      "sha256": "6877e3862c451be1993ef5d1a3da77729e915772d9d1a08a9a2c79c6d619296b",
+      "bytes": 138
+    },
+    {
+      "path": "base/frames/x.png",
+      "sha256": "ef5719854027a42bd1f92c0b4e5a27dc2ffc3ff60d32e89544c0e79dd561e5fd",
+      "bytes": 164
+    },
+    {
+      "path": "preview-x4.png",
+      "sha256": "52446c082b462d1ea444c59557a1bfb64085796139f18d8359895b8161ddd409",
+      "bytes": 5202
+    }
+  ],
+  "qa": {
+    "status": "pass",
+    "method": "render_pixelspec.py: every published frame PNG is read back and measured with codeart_core.qa_pixels against the resolved palette of its variant (alpha census, exact palette lookup and, with an outline, 4-neighbour outline gaps and L-corners); each check is the worst frame against its gate in codeart_core.QA_PIXEL_GATES",
+    "notProven": [
+      "Readability, silhouette and appeal at game scale; check them on a review sheet (pixel_qa.py --review).",
+      "Motion, timing and spacing between frames; numbers do not judge animation quality.",
+      "That the art matches the brief and the intent of the spec.",
+      "Outline continuity and L-corners: the spec has no outline, so they were not measured."
+    ],
+    "checks": [
+      {
+        "id": "partial_alpha",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "off_palette",
+        "status": "pass",
+        "value": 0,
+        "threshold": 0
+      },
+      {
+        "id": "outline_gaps",
+        "status": "skipped",
+        "value": null,
+        "threshold": 0
+      },
+      {
+        "id": "l_corners",
+        "status": "skipped",
+        "value": null,
+        "threshold": 10
+      }
+    ],
+    "inputs": [
+      {
+        "path": "../icons.pixelspec.json",
+        "sha256": "56d3a0b500fdf6fa82356b5214d611c72442b663788f5c087c2c87ba5d659df0",
+        "bytes": 28786
+      }
+    ],
+    "outputs": [
+      {
+        "path": "base/frames/academy.png",
+        "sha256": "dcd42bdd9434710a4b70bb7cb5eec9c7d5acc4275ed1234138d5304f6be7efd2",
+        "bytes": 151
+      },
+      {
+        "path": "base/frames/auto.png",
+        "sha256": "3009b5a6fdd2eba3c0d3814b6ceceb3c4d079d2c4fa03eb6eb4c630f2937a785",
+        "bytes": 182
+      },
+      {
+        "path": "base/frames/ball.png",
+        "sha256": "deac6d4db081455e6f275c4030c1ba6be74f7b16460e4ff50b00a442ad28b599",
+        "bytes": 212
+      },
+      {
+        "path": "base/frames/block.png",
+        "sha256": "2abca35b437e6f5eccd56da6d3808ce24933e6dde099c72c201dae5b953fcdf1",
+        "bytes": 141
+      },
+      {
+        "path": "base/frames/bolt.png",
+        "sha256": "0b6f09974b2dde8458678ac6c48cc944141ed03f83ed228031e8a2ee456940ba",
+        "bytes": 149
+      },
+      {
+        "path": "base/frames/cards.png",
+        "sha256": "d730c3466c1a13a93f5af41851b08b0a8c4a6bf1be68761799654a4a96515166",
+        "bytes": 168
+      },
+      {
+        "path": "base/frames/cash.png",
+        "sha256": "c24122268bf0eed560763b57c1537e77bb8a947454763a0659a2ca7bdc9d5d89",
+        "bytes": 159
+      },
+      {
+        "path": "base/frames/chart.png",
+        "sha256": "6287ba5aee043ec8e4a5f904e0bdf83f96296ac7eb3b40f7ee649c2acb68c1e6",
+        "bytes": 127
+      },
+      {
+        "path": "base/frames/check.png",
+        "sha256": "2cd2e3c4312f874e17b778f7314d876b02674596100c19eeace04b69026e02a4",
+        "bytes": 151
+      },
+      {
+        "path": "base/frames/clock.png",
+        "sha256": "b7d5ce6ccc292e6413071dd2dd615e8a2d4f4bcec4d641671f951c7e1058702c",
+        "bytes": 192
+      },
+      {
+        "path": "base/frames/coach.png",
+        "sha256": "7ed0963a84f5a87398691a620711edd77739198e071ceea0697d2db029dc594d",
+        "bytes": 175
+      },
+      {
+        "path": "base/frames/coin.png",
+        "sha256": "08fb75da676c045dab62124bd413c8406f2e98e70e5e3d0a3ad2d840f0a56754",
+        "bytes": 221
+      },
+      {
+        "path": "base/frames/court.png",
+        "sha256": "e61a22399d5b49c9be4f10caa9cd99b53ef83d53422a7e020c769dd14a675e4f",
+        "bytes": 175
+      },
+      {
+        "path": "base/frames/craft.png",
+        "sha256": "43df89702948d574176524a558691ed510c73eca59cdfc011bbd8d64a9ef2544",
+        "bytes": 150
+      },
+      {
+        "path": "base/frames/daily.png",
+        "sha256": "6fa185c4ee7cef85ef6f4ef30ef74c52437cc7f0ddfee166b572902df6d47170",
+        "bytes": 156
+      },
+      {
+        "path": "base/frames/division.png",
+        "sha256": "d25bb8953c0a495c5473640ed453d930b5ec40057689efd27393278a12f365a6",
+        "bytes": 163
+      },
+      {
+        "path": "base/frames/dumbbell.png",
+        "sha256": "a85cf18b7ead732e89a0b2cc17a311f0839ac2d52a26226c908c589a3811167f",
+        "bytes": 131
+      },
+      {
+        "path": "base/frames/dunk.png",
+        "sha256": "bcdce4a15ec0984909eef3fb56b83050e5f81ec2dff7a7a7a7ed114113902f4f",
+        "bytes": 161
+      },
+      {
+        "path": "base/frames/empire.png",
+        "sha256": "0ef30a6932ccc0e9d726c8407ee13ff483a184e3690bdfb953a7ef5e535de452",
+        "bytes": 175
+      },
+      {
+        "path": "base/frames/events.png",
+        "sha256": "c3ba2af9c63e82af568b876e714d223f34de38c05173e8a33605dec3e0ca81bf",
+        "bytes": 202
+      },
+      {
+        "path": "base/frames/ff.png",
+        "sha256": "39a8b5bae2656b179e0832341285cf52c21409b26765b0571baa87c6bb2d900a",
+        "bytes": 141
+      },
+      {
+        "path": "base/frames/fire.png",
+        "sha256": "9512f0eae176bab6b42bcb9e9f88cb2325d703705832442f63a6dfcc92dfbc14",
+        "bytes": 181
+      },
+      {
+        "path": "base/frames/gear.png",
+        "sha256": "c24e08d801a3f7d2a4be9ffff0440fc853e31573150fe70321ef5ba6f48bd20a",
+        "bytes": 164
+      },
+      {
+        "path": "base/frames/gem.png",
+        "sha256": "2b29522e95a84cb3d9ec9bce7d597cebab85df62005296055e1f3027402610a1",
+        "bytes": 187
+      },
+      {
+        "path": "base/frames/headband.png",
+        "sha256": "f5f632445761ed0e1b89ba75f49ef55e2b99abe4e83ed4a94d9a210c6a644f43",
+        "bytes": 141
+      },
+      {
+        "path": "base/frames/hq.png",
+        "sha256": "c2e4ba92871010501df87a09797a71d7d5f2751028b6cbe107b6167fca7168f6",
+        "bytes": 124
+      },
+      {
+        "path": "base/frames/info.png",
+        "sha256": "7f665eb85f78550bce863f81ab7d0d273f21a9521f9bce0c19caafb326ad3367",
+        "bytes": 168
+      },
+      {
+        "path": "base/frames/jersey.png",
+        "sha256": "c8b1c94da0742b55eaf149994e164d2b63408e314d267741989058455be4a904",
+        "bytes": 157
+      },
+      {
+        "path": "base/frames/legacy.png",
+        "sha256": "5877f1c64c8fa5c5840cd08a140fb1bb8ef4dc31e15d45f29bcc050406a2f897",
+        "bytes": 172
+      },
+      {
+        "path": "base/frames/lock.png",
+        "sha256": "64405241f2556d4d75e6af1b252785bef53387a9da1c2797b42173dff1c841b5",
+        "bytes": 131
+      },
+      {
+        "path": "base/frames/map.png",
+        "sha256": "54109dd98f903100bb74fe576931d52cf19e982122cda495bb1d92e5f3e03dfd",
+        "bytes": 177
+      },
+      {
+        "path": "base/frames/medical.png",
+        "sha256": "6edbaf84f7193258f4b2b5f3c4aa6425baf95cc4149478256b856a1044a81c32",
+        "bytes": 139
+      },
+      {
+        "path": "base/frames/merch.png",
+        "sha256": "4794c9426ddb5a27a4c1441ad5aecf4bd1a014517397eb061a4fbc0ee6ba8ff9",
+        "bytes": 147
+      },
+      {
+        "path": "base/frames/missions.png",
+        "sha256": "c07ce6dde98b8b092c9fb3185134576a9f671b19697de6ea8325bc34c149e5ab",
+        "bytes": 175
+      },
+      {
+        "path": "base/frames/pass.png",
+        "sha256": "827751564eb0c22f4d5cc0d5f7f692b300bec5ae6c4f964dfe11e76a5bbbcd24",
+        "bytes": 151
+      },
+      {
+        "path": "base/frames/play.png",
+        "sha256": "74cde61e9ba3805f64a61bb820ea0233545835b5cbc71b24420943df36cef6bd",
+        "bytes": 146
+      },
+      {
+        "path": "base/frames/plus.png",
+        "sha256": "17734acb8eff902bb5c1214dcf81dc3937f14601af3df1e99fa2bd0c266b11ba",
+        "bytes": 109
+      },
+      {
+        "path": "base/frames/scout.png",
+        "sha256": "eeff6fa800c852f91ffcf8008508a786bff7bc65ccf950a36d9f0c242e67430a",
+        "bytes": 180
+      },
+      {
+        "path": "base/frames/share.png",
+        "sha256": "01d8d1ad445ba437772b93fc6d713a936b905963539b9c79f6313954b47abfea",
+        "bytes": 192
+      },
+      {
+        "path": "base/frames/shield.png",
+        "sha256": "9fe409e263833742284b328f811062d6dc3642a91cc154bb1f35a67ba568ddc0",
+        "bytes": 183
+      },
+      {
+        "path": "base/frames/shoe.png",
+        "sha256": "179b30d51150ec12afbf08573bab3ca42904073922336cbc1791e14453d2fc29",
+        "bytes": 131
+      },
+      {
+        "path": "base/frames/shop.png",
+        "sha256": "0f13eb3df5b492f19b4751c8916154fb94d021b5fe8f1ca0dca68a6910ca274f",
+        "bytes": 128
+      },
+      {
+        "path": "base/frames/sleeve.png",
+        "sha256": "b4ec8a8094fe656ab53349df7b630da0487b5d0bc990d734e0baa491b0738184",
+        "bytes": 135
+      },
+      {
+        "path": "base/frames/social.png",
+        "sha256": "8eadf8b1c38f2a4c9d915af40e7e986dab2bc56f2b259edf4e5e5050b2750c5d",
+        "bytes": 162
+      },
+      {
+        "path": "base/frames/sound.png",
+        "sha256": "b712b3f7af88ef22fbdfa9744fc3bb852dfebbb6a68336400228f5e89cdc6c80",
+        "bytes": 150
+      },
+      {
+        "path": "base/frames/stadium.png",
+        "sha256": "548d48bbe03fc958a1881a743a67bf226e7126129307a0d9bcd69f75a013fad9",
+        "bytes": 153
+      },
+      {
+        "path": "base/frames/star.png",
+        "sha256": "50cdfbdac6eb148b48ca5950bc133855c2d02b32fdd8d30a2d9632f3876748d6",
+        "bytes": 175
+      },
+      {
+        "path": "base/frames/steal.png",
+        "sha256": "418dd929f7d68e689d4f5788c525bec27ad4c7515f48f974d7065e70f406837b",
+        "bytes": 182
+      },
+      {
+        "path": "base/frames/swap.png",
+        "sha256": "c8ccb589dc7d47630930a41488aef3cb0c41513f95f82e778ad4c652b49ff6fa",
+        "bytes": 124
+      },
+      {
+        "path": "base/frames/tactics.png",
+        "sha256": "1e97ffed25c7aac05e4626af7b630d7a599326bfdb7380852b660b1442ff0a36",
+        "bytes": 197
+      },
+      {
+        "path": "base/frames/ticket.png",
+        "sha256": "6627e2c22aa30de335aff57a78edb1449f09bce710e4c3e46cbc906e6f0f1d7e",
+        "bytes": 152
+      },
+      {
+        "path": "base/frames/train.png",
+        "sha256": "72b6d68d2b7f27e5b98c0476368e3772a46d405f5b72cf886d3873036325f31f",
+        "bytes": 163
+      },
+      {
+        "path": "base/frames/trophy.png",
+        "sha256": "d85a761f493f2f2d08b0a88488f205e06a283e920f59dbfff39fb29bfe7079a8",
+        "bytes": 158
+      },
+      {
+        "path": "base/frames/tv.png",
+        "sha256": "f1b256448b11b5bb0f4ffe86db3f20726b072db9bd0317b047c284bd298a8625",
+        "bytes": 155
+      },
+      {
+        "path": "base/frames/up.png",
+        "sha256": "a0646f60c1be6afa8fad347534ae1461c8a4d7f8ea36589fda11d8802bc34fb6",
+        "bytes": 139
+      },
+      {
+        "path": "base/frames/wrist.png",
+        "sha256": "6877e3862c451be1993ef5d1a3da77729e915772d9d1a08a9a2c79c6d619296b",
+        "bytes": 138
+      },
+      {
+        "path": "base/frames/x.png",
+        "sha256": "ef5719854027a42bd1f92c0b4e5a27dc2ffc3ff60d32e89544c0e79dd561e5fd",
+        "bytes": 164
+      }
+    ],
+    "tool": {
+      "name": "render_pixelspec.py",
+      "version": "0.5.0"
+    },
+    "frames": [
+      {
+        "file": "base/frames/academy.png",
+        "variant": "base",
+        "frame": "academy",
+        "visible": 131,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/auto.png",
+        "variant": "base",
+        "frame": "auto",
+        "visible": 98,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/ball.png",
+        "variant": "base",
+        "frame": "ball",
+        "visible": 180,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/block.png",
+        "variant": "base",
+        "frame": "block",
+        "visible": 85,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          5,
+          2,
+          15,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/bolt.png",
+        "variant": "base",
+        "frame": "bolt",
+        "visible": 67,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          2,
+          15,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/cards.png",
+        "variant": "base",
+        "frame": "cards",
+        "visible": 226,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/cash.png",
+        "variant": "base",
+        "frame": "cash",
+        "visible": 160,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          4,
+          17,
+          14
+        ]
+      },
+      {
+        "file": "base/frames/chart.png",
+        "variant": "base",
+        "frame": "chart",
+        "visible": 103,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/check.png",
+        "variant": "base",
+        "frame": "check",
+        "visible": 42,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          4,
+          16,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/clock.png",
+        "variant": "base",
+        "frame": "clock",
+        "visible": 180,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/coach.png",
+        "variant": "base",
+        "frame": "coach",
+        "visible": 141,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/coin.png",
+        "variant": "base",
+        "frame": "coin",
+        "visible": 180,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/court.png",
+        "variant": "base",
+        "frame": "court",
+        "visible": 192,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/craft.png",
+        "variant": "base",
+        "frame": "craft",
+        "visible": 69,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          1,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/daily.png",
+        "variant": "base",
+        "frame": "daily",
+        "visible": 200,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/division.png",
+        "variant": "base",
+        "frame": "division",
+        "visible": 94,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/dumbbell.png",
+        "variant": "base",
+        "frame": "dumbbell",
+        "visible": 96,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          4,
+          17,
+          14
+        ]
+      },
+      {
+        "file": "base/frames/dunk.png",
+        "variant": "base",
+        "frame": "dunk",
+        "visible": 88,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 3,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          1,
+          16,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/empire.png",
+        "variant": "base",
+        "frame": "empire",
+        "visible": 156,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/events.png",
+        "variant": "base",
+        "frame": "events",
+        "visible": 180,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/ff.png",
+        "variant": "base",
+        "frame": "ff",
+        "visible": 88,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          15,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/fire.png",
+        "variant": "base",
+        "frame": "fire",
+        "visible": 144,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/gear.png",
+        "variant": "base",
+        "frame": "gear",
+        "visible": 136,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/gem.png",
+        "variant": "base",
+        "frame": "gem",
+        "visible": 108,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          14
+        ]
+      },
+      {
+        "file": "base/frames/headband.png",
+        "variant": "base",
+        "frame": "headband",
+        "visible": 104,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/hq.png",
+        "variant": "base",
+        "frame": "hq",
+        "visible": 192,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          1,
+          15,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/info.png",
+        "variant": "base",
+        "frame": "info",
+        "visible": 159,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/jersey.png",
+        "variant": "base",
+        "frame": "jersey",
+        "visible": 126,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/legacy.png",
+        "variant": "base",
+        "frame": "legacy",
+        "visible": 140,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/lock.png",
+        "variant": "base",
+        "frame": "lock",
+        "visible": 134,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          2,
+          15,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/map.png",
+        "variant": "base",
+        "frame": "map",
+        "visible": 204,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 5,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/medical.png",
+        "variant": "base",
+        "frame": "medical",
+        "visible": 188,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/merch.png",
+        "variant": "base",
+        "frame": "merch",
+        "visible": 204,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/missions.png",
+        "variant": "base",
+        "frame": "missions",
+        "visible": 186,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          1,
+          15,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/pass.png",
+        "variant": "base",
+        "frame": "pass",
+        "visible": 124,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          4,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/play.png",
+        "variant": "base",
+        "frame": "play",
+        "visible": 98,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          4,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/plus.png",
+        "variant": "base",
+        "frame": "plus",
+        "visible": 96,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          16,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/scout.png",
+        "variant": "base",
+        "frame": "scout",
+        "visible": 122,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/share.png",
+        "variant": "base",
+        "frame": "share",
+        "visible": 82,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          16,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/shield.png",
+        "variant": "base",
+        "frame": "shield",
+        "visible": 154,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/shoe.png",
+        "variant": "base",
+        "frame": "shoe",
+        "visible": 109,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          5,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/shop.png",
+        "variant": "base",
+        "frame": "shop",
+        "visible": 168,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/sleeve.png",
+        "variant": "base",
+        "frame": "sleeve",
+        "visible": 88,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          4,
+          2,
+          14,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/social.png",
+        "variant": "base",
+        "frame": "social",
+        "visible": 155,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/sound.png",
+        "variant": "base",
+        "frame": "sound",
+        "visible": 96,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          16,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/stadium.png",
+        "variant": "base",
+        "frame": "stadium",
+        "visible": 156,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          3,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/star.png",
+        "variant": "base",
+        "frame": "star",
+        "visible": 108,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/steal.png",
+        "variant": "base",
+        "frame": "steal",
+        "visible": 102,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          16
+        ]
+      },
+      {
+        "file": "base/frames/swap.png",
+        "variant": "base",
+        "frame": "swap",
+        "visible": 66,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          2,
+          17,
+          15
+        ]
+      },
+      {
+        "file": "base/frames/tactics.png",
+        "variant": "base",
+        "frame": "tactics",
+        "visible": 224,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 7,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          1,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/ticket.png",
+        "variant": "base",
+        "frame": "ticket",
+        "visible": 148,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 1,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          4,
+          17,
+          14
+        ]
+      },
+      {
+        "file": "base/frames/train.png",
+        "variant": "base",
+        "frame": "train",
+        "visible": 61,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/trophy.png",
+        "variant": "base",
+        "frame": "trophy",
+        "visible": 152,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/tv.png",
+        "variant": "base",
+        "frame": "tv",
+        "visible": 194,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 2,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          1,
+          1,
+          17,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/up.png",
+        "variant": "base",
+        "frame": "up",
+        "visible": 112,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          2,
+          2,
+          16,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/wrist.png",
+        "variant": "base",
+        "frame": "wrist",
+        "visible": 160,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 2,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          1,
+          15,
+          17
+        ]
+      },
+      {
+        "file": "base/frames/x.png",
+        "variant": "base",
+        "frame": "x",
+        "visible": 68,
+        "partial_alpha": 0,
+        "off_palette": 0,
+        "colors": 1,
+        "orphans": 0,
+        "l_corners": null,
+        "outline_gaps": null,
+        "bbox": [
+          3,
+          3,
+          15,
+          17
+        ]
+      }
+    ]
+  },
+  "pixelspec": {
+    "name": "icons",
+    "schema": "codeart2d.pixelspec.v1",
+    "canvas": [
+      18,
+      18
+    ],
+    "anchor_px": null,
+    "outline": "none",
+    "variants": {
+      "base": "base"
+    },
+    "frames": [
+      {
+        "index": 0,
+        "name": "academy",
+        "file": "frames/academy.png"
+      },
+      {
+        "index": 1,
+        "name": "auto",
+        "file": "frames/auto.png"
+      },
+      {
+        "index": 2,
+        "name": "ball",
+        "file": "frames/ball.png"
+      },
+      {
+        "index": 3,
+        "name": "block",
+        "file": "frames/block.png"
+      },
+      {
+        "index": 4,
+        "name": "bolt",
+        "file": "frames/bolt.png"
+      },
+      {
+        "index": 5,
+        "name": "cards",
+        "file": "frames/cards.png"
+      },
+      {
+        "index": 6,
+        "name": "cash",
+        "file": "frames/cash.png"
+      },
+      {
+        "index": 7,
+        "name": "chart",
+        "file": "frames/chart.png"
+      },
+      {
+        "index": 8,
+        "name": "check",
+        "file": "frames/check.png"
+      },
+      {
+        "index": 9,
+        "name": "clock",
+        "file": "frames/clock.png"
+      },
+      {
+        "index": 10,
+        "name": "coach",
+        "file": "frames/coach.png"
+      },
+      {
+        "index": 11,
+        "name": "coin",
+        "file": "frames/coin.png"
+      },
+      {
+        "index": 12,
+        "name": "court",
+        "file": "frames/court.png"
+      },
+      {
+        "index": 13,
+        "name": "craft",
+        "file": "frames/craft.png"
+      },
+      {
+        "index": 14,
+        "name": "daily",
+        "file": "frames/daily.png"
+      },
+      {
+        "index": 15,
+        "name": "division",
+        "file": "frames/division.png"
+      },
+      {
+        "index": 16,
+        "name": "dumbbell",
+        "file": "frames/dumbbell.png"
+      },
+      {
+        "index": 17,
+        "name": "dunk",
+        "file": "frames/dunk.png"
+      },
+      {
+        "index": 18,
+        "name": "empire",
+        "file": "frames/empire.png"
+      },
+      {
+        "index": 19,
+        "name": "events",
+        "file": "frames/events.png"
+      },
+      {
+        "index": 20,
+        "name": "ff",
+        "file": "frames/ff.png"
+      },
+      {
+        "index": 21,
+        "name": "fire",
+        "file": "frames/fire.png"
+      },
+      {
+        "index": 22,
+        "name": "gear",
+        "file": "frames/gear.png"
+      },
+      {
+        "index": 23,
+        "name": "gem",
+        "file": "frames/gem.png"
+      },
+      {
+        "index": 24,
+        "name": "gym",
+        "file": "frames/dumbbell.png",
+        "reuses": 16
+      },
+      {
+        "index": 25,
+        "name": "headband",
+        "file": "frames/headband.png"
+      },
+      {
+        "index": 26,
+        "name": "hq",
+        "file": "frames/hq.png"
+      },
+      {
+        "index": 27,
+        "name": "info",
+        "file": "frames/info.png"
+      },
+      {
+        "index": 28,
+        "name": "jersey",
+        "file": "frames/jersey.png"
+      },
+      {
+        "index": 29,
+        "name": "legacy",
+        "file": "frames/legacy.png"
+      },
+      {
+        "index": 30,
+        "name": "lock",
+        "file": "frames/lock.png"
+      },
+      {
+        "index": 31,
+        "name": "map",
+        "file": "frames/map.png"
+      },
+      {
+        "index": 32,
+        "name": "medical",
+        "file": "frames/medical.png"
+      },
+      {
+        "index": 33,
+        "name": "merch",
+        "file": "frames/merch.png"
+      },
+      {
+        "index": 34,
+        "name": "missions",
+        "file": "frames/missions.png"
+      },
+      {
+        "index": 35,
+        "name": "pass",
+        "file": "frames/pass.png"
+      },
+      {
+        "index": 36,
+        "name": "play",
+        "file": "frames/play.png"
+      },
+      {
+        "index": 37,
+        "name": "plus",
+        "file": "frames/plus.png"
+      },
+      {
+        "index": 38,
+        "name": "recruit",
+        "file": "frames/cards.png",
+        "reuses": 5
+      },
+      {
+        "index": 39,
+        "name": "scout",
+        "file": "frames/scout.png"
+      },
+      {
+        "index": 40,
+        "name": "share",
+        "file": "frames/share.png"
+      },
+      {
+        "index": 41,
+        "name": "shield",
+        "file": "frames/shield.png"
+      },
+      {
+        "index": 42,
+        "name": "shoe",
+        "file": "frames/shoe.png"
+      },
+      {
+        "index": 43,
+        "name": "shop",
+        "file": "frames/shop.png"
+      },
+      {
+        "index": 44,
+        "name": "sleeve",
+        "file": "frames/sleeve.png"
+      },
+      {
+        "index": 45,
+        "name": "social",
+        "file": "frames/social.png"
+      },
+      {
+        "index": 46,
+        "name": "sound",
+        "file": "frames/sound.png"
+      },
+      {
+        "index": 47,
+        "name": "stadium",
+        "file": "frames/stadium.png"
+      },
+      {
+        "index": 48,
+        "name": "star",
+        "file": "frames/star.png"
+      },
+      {
+        "index": 49,
+        "name": "steal",
+        "file": "frames/steal.png"
+      },
+      {
+        "index": 50,
+        "name": "swap",
+        "file": "frames/swap.png"
+      },
+      {
+        "index": 51,
+        "name": "tactics",
+        "file": "frames/tactics.png"
+      },
+      {
+        "index": 52,
+        "name": "ticket",
+        "file": "frames/ticket.png"
+      },
+      {
+        "index": 53,
+        "name": "train",
+        "file": "frames/train.png"
+      },
+      {
+        "index": 54,
+        "name": "trophy",
+        "file": "frames/trophy.png"
+      },
+      {
+        "index": 55,
+        "name": "tv",
+        "file": "frames/tv.png"
+      },
+      {
+        "index": 56,
+        "name": "up",
+        "file": "frames/up.png"
+      },
+      {
+        "index": 57,
+        "name": "whistle",
+        "file": "frames/coach.png",
+        "reuses": 10
+      },
+      {
+        "index": 58,
+        "name": "wrist",
+        "file": "frames/wrist.png"
+      },
+      {
+        "index": 59,
+        "name": "x",
+        "file": "frames/x.png"
+      }
+    ],
+    "preview": {
+      "file": "preview-x4.png",
+      "scale": 4,
+      "layout": "rows are variants, columns are distinct frames"
+    }
+  }
+}

@@ -31,3 +31,5 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
   - **Court player sprites** (`art/sprites/player/`, packed into `js/sprite-data.js`): original art authored for this
     game in `tools/sprites/player_spec.py` and rendered with codeart2d `render_pixelspec.py` v0.5.0.
     Code-drawn, no image model (`codeart-meta.json` records `"art_source": "code"`). No third-party images used.
+  - **UI icons** (`art/sprites/icons/`, packed into `js/icon-data.js`): original 16×16 icons authored in
+    `tools/sprites/icon_spec.py` and rendered with codeart2d. Code-drawn, no image model.

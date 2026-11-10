@@ -64,6 +64,9 @@
     coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.4 1.1-2 2.5-2s2.5.7 2.5 2-1.1 1.8-2.5 2.2-2.5.9-2.5 2.3 1.1 2 2.5 2 2.5-.6 2.5-2"/>',
   };
   function icon(k, cls) {
+    // 16x16 two-tone pixel icons (agent-sprite-forge codeart2d, js/icon-data.js); vector set as fallback
+    const px = BE.iconData && (BE.iconData[k] || (!P[k] && BE.iconData.ball));
+    if (px) return '<svg class="i pxi' + (cls ? ' ' + cls : '') + '" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><path d="' + px[0] + '"/>' + (px[1] ? '<path opacity=".45" d="' + px[1] + '"/>' : '') + '</svg>';
     return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[k] || P.ball) + '</svg>';
   }
   const gearIcon = (type) => icon((D.gearTypes.find((t) => t.k === type) || {}).icon || 'gear');
