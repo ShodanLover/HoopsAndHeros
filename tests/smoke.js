@@ -1,0 +1,23 @@
+const { chromium } = require('playwright');
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true });
+  const page = await ctx.newPage();
+  const errors = [];
+  page.on('pageerror', (e) => errors.push('pageerror: ' + e.message + '\n' + (e.stack || '').split('\n').slice(0, 3).join('\n')));
+  page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+  await page.goto('file://' + path.join(__dirname, '../dist/basketball-empire.html'));
+  await page.waitForTimeout(1800);
+  await page.screenshot({ path: 'tests/shots/01-splash.png' });
+  await page.click('[data-go]');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: 'tests/shots/02-intro.png' });
+  await page.click('[data-start]');
+  await page.waitForTimeout(4000);
+  await page.screenshot({ path: 'tests/shots/03-play.png' });
+  await page.waitForTimeout(8000);
+  await page.screenshot({ path: 'tests/shots/04-play.png' });
+  console.log(errors.length ? errors.join('\n') : 'NO ERRORS');
+  await browser.close();
+})();
