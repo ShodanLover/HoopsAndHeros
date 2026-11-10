@@ -164,5 +164,43 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
      stepped instead of smooth gradients, a dithered checker page background, and `steps()` timing for
      the rarity shimmer.
   5. Update the font link in `tools/build.js`, rebuild, run `node tests/e2e.js`, and check the screenshots.
+- **Resources the owner wants used.** These were investigated from a cloud session; set them up on the desktop.
+  1. **[0x0funky/agent-sprite-forge](https://github.com/0x0funky/agent-sprite-forge)** (MIT): a Claude Code plugin for
+     sprites, sprite sheets, maps and FX. Install:
+     ```bash
+     claude plugin marketplace add 0x0funky/agent-sprite-forge --sparse .claude-plugin skills
+     ```
+     ```bash
+     claude plugin install agent-sprite-forge@agent-sprite-forge
+     ```
+     ```bash
+     python -m pip install "numpy>=1.26" "Pillow>=10.1" "scipy>=1.11"
+     ```
+     Generating *new* images or animation clips needs an image route: an API key it supports (OpenAI, Gemini,
+     xAI, BytePlus, fal.ai) or a signed-in Codex or Grok CLI. Animation also needs ffmpeg 5.1+. Without a route,
+     two parts still work locally and fit this game:
+     - **`codeart2d`** draws pixel sprites from a PixelSpec JSON with no image model, which suits the
+       court players (idle, run, dribble, shoot, jump, dunk, block, celebrate frames).
+     - The **hibit finish** (`generate2dsprite/scripts/forge_hibit.py`, `finish_frames.py hibit`) turns flat,
+       lineless art into real pixel art with a learned palette, majority-vote downscale and auto outline. The
+       game's vector portraits (`BE.athletes.portraitSVGRaw`) are exactly that kind of flat art, so render them to
+       PNG and run them through hibit instead of (or to replace) the simple rasterizer in `js/pixel.js`.
+     The README also recommends [pixelfx](https://github.com/patch-gg/pixelfx) (MIT) for pixel effects such as dunk
+     impacts, sparks and confetti. Ship each tool's `CREDITS`/`LICENSE` notices with any assets made by it.
+  2. **[Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)** (MIT): a Claude
+     Code *template project*: 48 specialist agents (art-director, technical-artist, economy-designer,
+     game-designer, qa-tester and more), skills such as `/prototype`, hooks and settings. It is meant to be the
+     project root, so pick one way to use it:
+     - **(a)** clone the template, open Claude Code in it, and run `/prototype --from <path to this repo>`. It
+       brings a copy of this game in, and then `/cut`, tuning panels and its "grow" flow (Vite + TypeScript) apply.
+     - **(b)** keep this repo as the root and copy in only the agents/skills you want (for example
+       `.claude/agents/art-director.md`, `technical-artist.md`, `economy-designer.md`, `qa-tester.md`), without its
+       hooks or `project.yaml`.
+     **This is the owner's decision; ask before restructuring the repo.**
+  3. **[Angais/pixel-art-atlas-1.4m](https://huggingface.co/datasets/Angais/pixel-art-atlas-1.4m)** (Hugging Face
+     dataset, about 1.4M pixel-art images). It couldn't be opened from the cloud session (huggingface.co blocked
+     there), so its license and where its images come from have **not** been checked. Read the dataset card first.
+     Unless it clearly allows commercial use of the images, use it only as a style and palette reference (or to
+     tune the hibit palette), and don't ship its images in the game.
 - Ideas: real online leaderboards and alliances through `BE.game.social`, a store wrapper through
   `BEPlatform`, more arenas and cosmetics, localized prices, push notifications (opt-in only).
