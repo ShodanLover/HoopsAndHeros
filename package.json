@@ -1,0 +1,17 @@
+{
+  "name": "basketball-empire",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile-first idle basketball RPG in plain HTML/CSS/JS.",
+  "scripts": {
+    "build": "node tools/build.js",
+    "check": "node -e \"const fs=require('fs');const cp=require('child_process');for(const f of fs.readdirSync('js'))cp.execFileSync(process.execPath,['--check','js/'+f],{stdio:'inherit'});console.log('syntax ok')\"",
+    "test": "node tools/build.js && node tests/e2e.js",
+    "smoke": "node tools/build.js && node tests/smoke.js",
+    "balance": "node tests/progression.js 3 3",
+    "calibrate": "node tests/calibrate.js"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

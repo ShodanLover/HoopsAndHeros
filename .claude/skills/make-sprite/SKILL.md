@@ -1,0 +1,31 @@
+---
+name: make-sprite
+description: "Create 16-bit pixel art for Basketball Empire (court player sprite sheets, portraits, gear icons, effects, arena backdrops) with agent-sprite-forge or the in-code fallback, following design/art-bible.md, then wire it into the game."
+---
+
+# Make sprite
+
+1. **Read `design/art-bible.md`** for the size, frame count, palette, outline and naming rules of the asset
+   type. Confirm the spec with the owner when it's a new asset type.
+2. **Pick the route.**
+   - **agent-sprite-forge installed** (check with `/plugin`, or look for its skills such as
+     `generate2dsprite` and `codeart2d`):
+     - **`codeart2d`** (no image model, free): write a PixelSpec for court players (idle, run 2–4 frames,
+       dribble, shoot, jump, dunk, block, celebrate), gear icons and UI. Best fit for this game's small
+       sprites.
+     - **hibit finish** (free and local): render vector art to PNG (for example the portraits from
+       `BE.athletes.portraitSVGRaw`) and turn it into real pixel art with a learned palette and auto outline.
+     - **image or video generation** (`generate2dsprite`, `video2dsprite`): needs an image route (an API key
+       or a signed-in Codex or Grok CLI). **Ask the owner before using a paid API.**
+     - Effects: the forge recommends pixelfx (MIT); ship its CREDITS.
+   - **Not installed:** draw in code. Extend `js/court.js` `drawPlayer` or add a small pixel-map sprite
+     (an array of palette indices) and render it into a cached canvas.
+3. **Save** to `assets/<category>/<name>/` as PNG plus a JSON frame map (`frames`, `fps`, `anchor`).
+   Keep sheets small: court players about 24×32 px per frame at internal resolution.
+4. **Wire in** behind a fallback, so the procedural art still draws while an image loads or if it fails.
+   Remember that `tools/build.js` inlines only JS and CSS: either embed small sheets as data URIs in a
+   generated `js/assets.js`, or extend the build to inline `assets/`.
+5. **Credit**: add an entry in `THIRD_PARTY_NOTICES.md` for any tool or source whose license asks for it.
+   Never use art copied from existing games, leagues or real players. Pixel-art-atlas images are a style
+   reference only until its license is confirmed.
+6. Run `/playtest` and look at the screenshots.

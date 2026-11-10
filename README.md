@@ -11,6 +11,15 @@ to download. All art is drawn in code and all sound is synthesized with Web Audi
 
 ---
 
+## Working on it with Claude
+
+Open this folder in Claude Code (or the Code tab of Claude Desktop). `CLAUDE.md` holds the working
+rules. `.claude/agents/` has 7 specialists (art director, technical artist, game designer, economy designer,
+UI/UX, sound, QA) and `.claude/skills/` has `/playtest`, `/balance-check`, `/add-content` and `/make-sprite`.
+`design/` holds the one-page brief, the 16-bit art bible and the monetization policy. These are adapted
+from Claude Code Game Studios; see `THIRD_PARTY_NOTICES.md`. First-time setup, including the
+agent-sprite-forge plugin, is in `setup/DESKTOP-SETUP.md`.
+
 ## Play it
 
 - **Quickest:** open `dist/basketball-empire.html` in any browser. It's a single self-contained file.
@@ -187,7 +196,8 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
        PNG and run them through hibit instead of (or to replace) the simple rasterizer in `js/pixel.js`.
      The README also recommends [pixelfx](https://github.com/patch-gg/pixelfx) (MIT) for pixel effects such as dunk
      impacts, sparks and confetti. Ship each tool's `CREDITS`/`LICENSE` notices with any assets made by it.
-  2. **[Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)** (MIT): a Claude
+  2. ✅ *Done: adapted in place (option b below): agents, skills and design docs, with `CLAUDE.md`.*
+     **[Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)** (MIT): a Claude
      Code *template project*: 48 specialist agents (art-director, technical-artist, economy-designer,
      game-designer, qa-tester and more), skills such as `/prototype`, hooks and settings. It is meant to be the
      project root, so pick one way to use it:
@@ -196,7 +206,7 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
      - **(b)** keep this repo as the root and copy in only the agents/skills you want (for example
        `.claude/agents/art-director.md`, `technical-artist.md`, `economy-designer.md`, `qa-tester.md`), without its
        hooks or `project.yaml`.
-     **This is the owner's decision; ask before restructuring the repo.**
+     The owner chose to let Claude decide, and option (b) was applied.
   3. **[Angais/pixel-art-atlas-1.4m](https://huggingface.co/datasets/Angais/pixel-art-atlas-1.4m)** (Hugging Face
      dataset, about 1.4M pixel-art images). It couldn't be opened from the cloud session (huggingface.co blocked
      there), so its license and where its images come from have **not** been checked. Read the dataset card first.
