@@ -14,8 +14,9 @@ to download. All art is drawn in code (in a 16-bit pixel style) and all sound is
 ## Working on it with Claude
 
 Open this folder in Claude Code (or the Code tab of Claude Desktop). `CLAUDE.md` holds the working
-rules. `.claude/agents/` has 7 specialists (art director, technical artist, game designer, economy designer,
-UI/UX, sound, QA) and `.claude/skills/` has `/playtest`, `/balance-check`, `/add-content` and `/make-sprite`.
+rules. `.claude/agents/` has 10 specialists (art director, technical artist, game designer, economy designer,
+UI/UX, sound, QA, live ops, performance, accessibility) and `.claude/skills/` has `/playtest`,
+`/balance-check`, `/add-content`, `/make-sprite`, `/asset-audit` and `/perf-profile`.
 `design/` holds the one-page brief, the 16-bit art bible and the monetization policy. These are adapted
 from Claude Code Game Studios; see `THIRD_PARTY_NOTICES.md`. First-time setup, including the
 agent-sprite-forge plugin, is in `setup/DESKTOP-SETUP.md`.
@@ -172,7 +173,10 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
   5. Add a `prefers-reduced-motion` check that the stepped animations still respect, and profile `quantize()`
      on a low-end phone (it runs every frame on about 40k pixels).
 - **Resources the owner wants used.** These were investigated from a cloud session; set them up on the desktop.
-  1. **[0x0funky/agent-sprite-forge](https://github.com/0x0funky/agent-sprite-forge)** (MIT): a Claude Code plugin for
+  1. ✅ *Installed on the owner's desktop (v0.5.0, user scope; enabled for this project in `.claude/settings.json`).
+     Python packages and ffmpeg are present and `codeart2d` renders locally. `route_media.py` reports no image
+     route, so only the free local tools are available until an API key or a Codex/Grok CLI is added.*
+     **[0x0funky/agent-sprite-forge](https://github.com/0x0funky/agent-sprite-forge)** (MIT): a Claude Code plugin for
      sprites, sprite sheets, maps and FX. Install:
      ```bash
      claude plugin marketplace add 0x0funky/agent-sprite-forge --sparse .claude-plugin skills
@@ -204,7 +208,11 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
      - **(b)** keep this repo as the root and copy in only the agents/skills you want (for example
        `.claude/agents/art-director.md`, `technical-artist.md`, `economy-designer.md`, `qa-tester.md`), without its
        hooks or `project.yaml`.
-     The owner chose to let Claude decide, and option (b) was applied.
+     The owner chose to let Claude decide, and option (b) was applied. A second pass added the
+     `live-ops-designer`, `performance-analyst` and `accessibility-specialist` agents and the `/asset-audit`
+     and `/perf-profile` skills. Its hooks, `project.yaml`, sprint/story workflow and engine-specific
+     (Godot/Unity/Unreal) agents were left out on purpose: they assume the template is the project root and
+     a game engine.
   3. **[Angais/pixel-art-atlas-1.4m](https://huggingface.co/datasets/Angais/pixel-art-atlas-1.4m)** (Hugging Face
      dataset, about 1.4M pixel-art images). It couldn't be opened from the cloud session (huggingface.co blocked
      there), so its license and where its images come from have **not** been checked. Read the dataset card first.

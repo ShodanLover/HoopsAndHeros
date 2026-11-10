@@ -82,6 +82,9 @@ when their area is the main question. They advise, and the owner makes creative 
 | `ui-ux-designer` | Mobile UI, menus, accessibility, readability of pixel fonts |
 | `sound-designer` | Procedural audio in `js/audio.js` |
 | `qa-tester` | Running tests, reading screenshots, writing precise bug reports |
+| `live-ops-designer` | Events, season pass, tournaments, missions, login ladder (within the monetization policy) |
+| `performance-analyst` | Frame time on phones, the per-frame quantize step, measured optimizations |
+| `accessibility-specialist` | Contrast, color-blind safety, touch targets, reduced motion, screen-reader labels |
 
 ## Project skills (`.claude/skills/`)
 
@@ -89,3 +92,9 @@ when their area is the main question. They advise, and the owner makes creative 
 - `/balance-check`: run the balance tools and compare with the brief's pacing targets.
 - `/add-content`: add worlds, athletes, gear, facilities, coaches, achievements or products the data-driven way.
 - `/make-sprite`: make pixel art for the game (agent-sprite-forge, or the in-code fallback), following the art bible.
+- `/asset-audit`: check every asset's license, notice entry, art-bible size and bundle cost.
+- `/perf-profile`: measure frame time on a throttled phone viewport against the 60 fps budget.
+
+agent-sprite-forge is installed as a user-scope plugin, and `.claude/settings.json` enables it for this
+project. No image-generation route is configured, so use its free local tools (`codeart2d`, the hibit
+finish), and ask the owner before adding a paid API key.

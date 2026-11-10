@@ -1,7 +1,9 @@
 # Third-party notices
 
 ## Claude Code Game Studios
-The Claude agents in `.claude/agents/`, the skills in `.claude/skills/`, and the design-doc practice in
+The Claude agents in `.claude/agents/` (art-director, technical-artist, game-designer, economy-designer,
+ui-ux-designer, sound-designer, qa-tester, live-ops-designer, performance-analyst, accessibility-specialist),
+the skills in `.claude/skills/` (including `/asset-audit` and `/perf-profile`), and the design-doc practice in
 `design/` are adapted from **Claude Code Game Studios** (https://github.com/Donchitos/Claude-Code-Game-Studios).
 No game code comes from it.
 

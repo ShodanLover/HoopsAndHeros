@@ -1,8 +1,8 @@
 # Setting up Claude on your desktop for this game
 
 1. Clone the repo and open the folder in **Claude Code** (the Code tab in Claude Desktop, or `claude` in a
-   terminal). `CLAUDE.md`, the 7 specialist agents and the 4 skills (`/playtest`, `/balance-check`,
-   `/add-content`, `/make-sprite`) load automatically.
+   terminal). `CLAUDE.md`, the 10 specialist agents and the 6 skills (`/playtest`, `/balance-check`,
+   `/add-content`, `/make-sprite`, `/asset-audit`, `/perf-profile`) load automatically.
 2. Install the test tools once:
    ```bash
    npm install
