@@ -38,17 +38,21 @@
         '<div data-c="choice" class="row hidden"></div><div class="meter" data-c="meter"><div class="zone" data-c="zone"></div><div class="zone perfect" data-c="pz"></div><div class="needle" data-c="needle"></div></div>' +
         '<div class="row"><button class="btn ghost" data-c="quit">Quit</button><button class="btn gold grow" data-c="shoot" style="min-height:56px;font-size:20px">' + (kind === 'dunk' ? 'Choose a dunk' : 'SHOOT') + '</button></div></div>',
     });
-    const cv = $('[data-c="cv"]', m.el), g = cv.getContext('2d');
+    const cv = $('[data-c="cv"]', m.el), g = cv.getContext('2d', { willReadFrequently: true });
     const needle = $('[data-c="needle"]', m.el), zoneEl = $('[data-c="zone"]', m.el), pz = $('[data-c="pz"]', m.el);
     const shootBtn = $('[data-c="shoot"]', m.el), choice = $('[data-c="choice"]', m.el);
-    let W = 0, H = 0, raf = 0, last = performance.now();
+    let W = 0, H = 0, pix = 2, cw = 0, ch = 0, raf = 0, last = performance.now();
+    // 16-bit look: low internal resolution, upscaled pixelated by CSS, quantized each frame
     function size() {
       const r = cv.getBoundingClientRect();
-      const dpr = Math.min(2, root.devicePixelRatio || 1);
       W = r.width; H = r.height;
-      cv.width = W * dpr; cv.height = H * dpr;
-      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      pix = BE.pixel ? BE.pixel.pixFor(W) : 2;
+      cw = Math.max(1, Math.ceil(W / pix)); ch = Math.max(1, Math.ceil(H / pix));
+      cv.width = cw; cv.height = ch;
+      g.setTransform(1 / pix, 0, 0, 1 / pix, 0, 0);
+      g.imageSmoothingEnabled = false;
     }
+    const pf = (n) => (n * pix) + 'px "Press Start 2P", monospace';
     size();
 
     function newZone() {
@@ -217,7 +221,7 @@
       g.beginPath(); g.moveTo(px - 5, y0 - 30); g.lineTo(px - 7, y0 - 2); g.moveTo(px + 5, y0 - 30); g.lineTo(px + 7, y0 - 2); g.stroke();
       g.fillStyle = cos.jersey[1]; g.fillRect(px - 11, y0 - 40, 22, 14);
       g.fillStyle = cos.jersey[0]; g.fillRect(px - 11, y0 - 66, 22, 28);
-      g.fillStyle = cos.jersey[1]; g.font = '400 14px "Bebas Neue", Impact'; g.textAlign = 'center'; g.fillText(t.number, px, y0 - 46);
+      g.fillStyle = cos.jersey[1]; g.font = '400 14px "Pixelify Sans", monospace'; g.textAlign = 'center'; g.fillText(t.number, px, y0 - 46);
       g.strokeStyle = skin; g.lineWidth = 5;
       g.beginPath(); g.moveTo(px - 10, y0 - 62); g.lineTo(px - 6, y0 - 88); g.moveTo(px + 10, y0 - 62); g.lineTo(px + 6, y0 - 88); g.stroke();
       g.fillStyle = skin; g.beginPath(); g.arc(px, y0 - 74, 8, 0, 6.28); g.fill();
@@ -233,13 +237,13 @@
         }
       }
       if (st.judges.length && kind === 'dunk' && !st.anim) {
-        st.judges.forEach((v, k) => { const jx = W * (0.2 + k * 0.15); g.fillStyle = '#fff'; g.fillRect(jx - 14, H * 0.5, 28, 30); g.fillStyle = '#141a33'; g.font = '400 22px "Bebas Neue", Impact'; g.fillText(v, jx, H * 0.5 + 23); });
+        st.judges.forEach((v, k) => { const jx = W * (0.2 + k * 0.15); g.fillStyle = '#fff'; g.fillRect(jx - 14, H * 0.5, 28, 30); g.fillStyle = '#141a33'; g.font = pf(8); g.textAlign = 'center'; g.fillText(v, jx, H * 0.5 + 15 + 4 * pix); });
       }
       if (st.msgT > 0) {
         st.msgT -= dt;
         g.globalAlpha = Math.min(1, st.msgT * 2);
-        g.font = '400 34px "Bebas Neue", Impact'; g.textAlign = 'center'; g.lineWidth = 5; g.strokeStyle = 'rgba(0,0,0,.6)';
-        g.strokeText(st.msg, W / 2, H * 0.62); g.fillStyle = '#ffd23f'; g.fillText(st.msg, W / 2, H * 0.62);
+        g.font = pf(st.msg.length * 16 * pix < W * 0.94 ? 16 : 8); g.textAlign = 'center';
+        g.fillStyle = '#0c0a18'; g.fillText(st.msg, W / 2 + pix, H * 0.62 + pix); g.fillStyle = '#ffd23f'; g.fillText(st.msg, W / 2, H * 0.62);
         g.globalAlpha = 1;
       }
     }
@@ -249,6 +253,7 @@
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
       if (st.phase === 'aim') needle.style.left = 'calc(' + needlePos() * 100 + '% - 2px)';
       drawScene(dt);
+      if (BE.pixel && cw) BE.pixel.quantize(g, cw, ch);
       raf = requestAnimationFrame(loop);
     }
     shootBtn.addEventListener('click', shoot);

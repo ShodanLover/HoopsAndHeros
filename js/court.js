@@ -14,7 +14,7 @@
   };
 
   const C = {
-    canvas: null, ctx: null, W: 0, H: 0, dpr: 1, P: null,
+    canvas: null, ctx: null, W: 0, H: 0, pix: 2, cw: 0, ch: 0, P: null,
     bg: null, theme: null, world: 0, cos: null,
     players: [], ball: null, tasks: [], particles: [], floaters: [], crowd: [],
     shake: 0, excite: 0.2, time: 0, speed: 2, visible: true, match: null, flash: 0,
@@ -40,17 +40,19 @@
   // ---------- Setup ----------
   function init(canvas) {
     C.canvas = canvas;
-    C.ctx = canvas.getContext('2d');
+    C.ctx = canvas.getContext('2d', { willReadFrequently: true });
     resize();
   }
   function resize() {
     if (!C.canvas) return;
     const r = C.canvas.getBoundingClientRect();
-    const dpr = Math.min(2, root.devicePixelRatio || 1);
     const W = Math.max(200, Math.round(r.width)), H = Math.max(180, Math.round(r.height));
-    if (W === C.W && H === C.H && dpr === C.dpr && C.bg) return;
-    C.W = W; C.H = H; C.dpr = dpr;
-    C.canvas.width = W * dpr; C.canvas.height = H * dpr;
+    // 16-bit look: draw at a low internal resolution (~170px wide) and let CSS upscale it pixelated
+    const pix = BE.pixel ? BE.pixel.pixFor(W) : 2;
+    if (W === C.W && H === C.H && pix === C.pix && C.bg) return;
+    C.W = W; C.H = H; C.pix = pix;
+    C.cw = Math.ceil(W / pix); C.ch = Math.ceil(H / pix);
+    C.canvas.width = C.cw; C.canvas.height = C.ch;
     setupProjection();
     buildBackground();
   }
@@ -66,9 +68,9 @@
   function buildBackground() {
     if (!C.W || !C.theme) return;
     const cv = C.bg || document.createElement('canvas');
-    cv.width = C.W * C.dpr; cv.height = C.H * C.dpr;
+    cv.width = C.cw; cv.height = C.ch;
     const g = cv.getContext('2d');
-    g.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
+    g.setTransform(1 / C.pix, 0, 0, 1 / C.pix, 0, 0);
     drawStands(g);
     drawFloor(g);
     C.bg = cv;
@@ -153,10 +155,16 @@
     }
     // baseline ad board
     g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(0, base - 12, W, 12);
-    g.fillStyle = D.worlds[C.world].color; g.font = '700 9px "Barlow Condensed", sans-serif'; g.textAlign = 'center';
-    g.globalAlpha = 0.9;
-    const adText = ['BASKETBALL EMPIRE', D.worlds[C.world].arena.toUpperCase(), 'HUSTLE · HEART · HOOPS'];
-    for (let i = 0; i < 3; i++) g.fillText(adText[i], W * (i + 0.5) / 3, base - 3);
+    // ad panels as chunky color blocks (text this small would be unreadable at 16-bit resolution)
+    const px = C.pix, wc = D.worlds[C.world].color, adCols = [wc, '#ffd23f', '#f4f1ea', wc, '#ff5a1f'];
+    const panels = 6, pw = W / panels;
+    for (let i = 0; i < panels; i++) {
+      const x0 = Math.round((i * pw + px * 2) / px) * px, x1 = Math.round(((i + 1) * pw - px * 2) / px) * px;
+      g.fillStyle = adCols[i % adCols.length]; g.globalAlpha = 0.85;
+      g.fillRect(x0, base - 10, x1 - x0, px * 2);
+      g.globalAlpha = 0.5;
+      for (let k = 0; k < 3; k++) g.fillRect(x0 + px * 2 + k * px * 6, base - 6, px * 4, px);
+    }
     g.globalAlpha = 1;
   }
 
@@ -206,21 +214,21 @@
     g.beginPath(); cpts.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.closePath();
     g.fillStyle = T.paint; g.globalAlpha = 0.6; g.fill(); g.globalAlpha = 1;
     // lines
-    g.strokeStyle = T.line; g.lineWidth = 2; g.lineJoin = 'round';
+    g.strokeStyle = T.line; g.lineWidth = C.pix; g.lineJoin = 'miter';
     line3(g, [[-25, 0], [25, 0]]);
     line3(g, [[-25, 0], [-25, 49]]); line3(g, [[25, 0], [25, 49]]);
     line3(g, [[-25, 47], [25, 47]]);
     line3(g, [[-8, 0], [-8, 19], [8, 19], [8, 0]]);
     line3(g, [[-6, 0], [-6, 19]]); line3(g, [[6, 0], [6, 19]]);
     line3(g, arc3(0, 19, 6, 0, Math.PI, 28));
-    g.setLineDash([4, 5]); line3(g, arc3(0, 19, 6, Math.PI, 2 * Math.PI, 28)); g.setLineDash([]);
+    g.setLineDash([C.pix * 2, C.pix * 2]); line3(g, arc3(0, 19, 6, Math.PI, 2 * Math.PI, 28)); g.setLineDash([]);
     const a = Math.asin((14.2 - 5.25) / 23.75);
     line3(g, [[-22, 0], [-22, 14.2]].concat(arc3(0, 5.25, 23.75, Math.PI - a, a, 48)).concat([[22, 14.2], [22, 0]]));
     line3(g, arc3(0, 5.25, 4, Math.PI, 0, 16));
     line3(g, arc3(0, 47, 6, Math.PI, 2 * Math.PI, 24));
     // center logo text
     const lp = proj(0, 31.5);
-    g.font = '400 ' + Math.round(lp.s * 1.6) + 'px "Bebas Neue", Impact, sans-serif';
+    g.font = pixFont(Math.max(8, Math.round(lp.s * 1.2 / C.pix / 8) * 8));
     g.textAlign = 'center'; g.fillStyle = T.line; g.globalAlpha = 0.5;
     g.fillText(D.worlds[C.world].short.toUpperCase(), lp.x, lp.y);
     g.globalAlpha = 1;
@@ -631,9 +639,11 @@
   function draw() {
     const g = C.ctx;
     if (!g || !C.bg) return;
-    g.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
+    g.setTransform(1 / C.pix, 0, 0, 1 / C.pix, 0, 0);
+    g.imageSmoothingEnabled = false;
     const sh = C.reduceMotion ? 0 : C.shake;
-    const ox = (Math.random() - 0.5) * sh, oy = (Math.random() - 0.5) * sh;
+    // shake in whole internal pixels only
+    const ox = Math.round((Math.random() - 0.5) * sh / C.pix) * C.pix, oy = Math.round((Math.random() - 0.5) * sh / C.pix) * C.pix;
     g.save();
     g.translate(ox, oy);
     g.drawImage(C.bg, 0, 0, C.W, C.H);
@@ -659,12 +669,13 @@
       const k = f.t / f.life;
       const sc = (0.6 + U.easeOutBack(Math.min(1, f.t * 4)) * 0.6) * f.size;
       g.globalAlpha = k > 0.7 ? (1 - k) / 0.3 : 1;
-      g.font = '400 ' + Math.round(22 * sc) + 'px "Bebas Neue", Impact, sans-serif';
+      g.font = pixFont(sc > 1.15 ? 16 : 8);
       g.textAlign = 'center';
-      g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,.65)';
-      g.strokeText(f.text, f.x, f.y - k * 26);
+      const fy = Math.round((f.y - k * 26) / C.pix) * C.pix, fx = Math.round(f.x / C.pix) * C.pix;
+      g.fillStyle = '#0c0a18';
+      g.fillText(f.text, fx + C.pix, fy + C.pix);
       g.fillStyle = f.color;
-      g.fillText(f.text, f.x, f.y - k * 26);
+      g.fillText(f.text, fx, fy);
     }
     g.globalAlpha = 1;
     if (C.banner) {
@@ -672,16 +683,25 @@
       const a = k < 0.15 ? k / 0.15 : k > 0.8 ? (1 - k) / 0.2 : 1;
       g.globalAlpha = a;
       g.fillStyle = 'rgba(8,10,20,.72)';
-      g.fillRect(0, C.H * 0.42 - 26, C.W, 52);
-      g.font = '400 30px "Bebas Neue", Impact, sans-serif'; g.textAlign = 'center';
+      const by = Math.round(C.H * 0.42 / C.pix) * C.pix;
+      g.fillRect(0, by - 26, C.W, 52);
       g.fillStyle = bn.color || '#ffd23f';
-      g.fillText(bn.text, C.W / 2, C.H * 0.42 + 4);
-      if (bn.sub) { g.font = '600 12px "Barlow Condensed", sans-serif'; g.fillStyle = '#fff'; g.fillText(bn.sub, C.W / 2, C.H * 0.42 + 20); }
+      g.fillRect(0, by - 26, C.W, C.pix); g.fillRect(0, by + 26 - C.pix, C.W, C.pix);
+      const big = bn.text.length * 16 * C.pix < C.W * 0.94 ? 16 : 8;
+      g.font = pixFont(big); g.textAlign = 'center';
+      g.fillStyle = '#0c0a18'; g.fillText(bn.text, C.W / 2 + C.pix, by + (bn.sub ? 2 : 8) * C.pix / 2 + C.pix);
+      g.fillStyle = bn.color || '#ffd23f';
+      g.fillText(bn.text, C.W / 2, by + (bn.sub ? 2 : 8) * C.pix / 2);
+      if (bn.sub) { g.font = pixFont(8); g.fillStyle = '#fff'; g.fillText(bn.sub, C.W / 2, by + 9 * C.pix); }
       g.globalAlpha = 1;
     }
     g.restore();
     if (C.flash > 0) { g.fillStyle = 'rgba(255,240,200,' + C.flash * 0.5 + ')'; g.fillRect(0, 0, C.W, C.H); }
+    // snap the frame to a 4-bit-per-channel palette with ordered dithering
+    if (BE.pixel) BE.pixel.quantize(g, C.cw, C.ch);
   }
+  // Pixel font sized in internal pixels (multiples of 8 keep glyphs on the pixel grid)
+  function pixFont(internalPx) { return (internalPx * C.pix) + 'px "Press Start 2P", monospace'; }
   function showBanner(text, sub, color, life) { C.banner = { text, sub, color, t: 0, life: life || 1.8 }; }
 
   function drawCrowd(g) {
@@ -822,7 +842,7 @@
     g.beginPath(); g.moveTo(-s * 0.95, shoulder); g.quadraticCurveTo(0, shoulder - s * 0.3, s * 0.95, shoulder); g.lineTo(s * 0.8, hip - s * 0.35); g.lineTo(-s * 0.8, hip - s * 0.35); g.closePath(); g.fill();
     g.strokeStyle = trim; g.lineWidth = s * 0.12; g.stroke();
     if (p.facing !== 'cam') {
-      g.fillStyle = trim; g.font = '400 ' + Math.max(7, Math.round(s * 1.25)) + 'px "Bebas Neue", Impact, sans-serif'; g.textAlign = 'center';
+      g.fillStyle = trim; g.font = '400 ' + Math.max(7, Math.round(s * 1.25)) + 'px "Pixelify Sans", monospace'; g.textAlign = 'center';
       g.fillText(String(info.number), 0, shoulder + s * 1.45);
     } else {
       g.fillStyle = trim; g.globalAlpha = 0.6; g.fillRect(-s * 0.2, shoulder + s * 0.35, s * 0.4, s * 0.12); g.globalAlpha = 1;

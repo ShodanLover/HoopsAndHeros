@@ -3,7 +3,7 @@
 A mobile-first idle RPG about building a basketball dynasty: you start with one terrible player
 (Marcus "Bricks" Bell) on a cracked neighborhood court and grow into a 10-world empire, ending in the
 Basketball Multiverse. It runs as plain HTML/CSS/JavaScript with no build step, framework, or assets
-to download. All art is drawn in code and all sound is synthesized with Web Audio.
+to download. All art is drawn in code (in a 16-bit pixel style) and all sound is synthesized with Web Audio.
 
 > **Handoff note for Claude (Desktop/Code):** read this whole file first. It explains the architecture,
 > where each system lives, how to run and test it, and what is in progress. Keep the module pattern and
@@ -152,27 +152,25 @@ World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around Wo
 ## Status and next steps
 
 - ✅ Core game complete and tested end to end (`node tests/e2e.js`, no page errors).
-- 🚧 **In progress: 16-bit visual overhaul** (requested by the owner). Done so far: `js/pixel.js` (written and
-  syntax-checked, **not yet loaded** by `index.html`) provides `BE.pixel.quantize()` (4-bit-per-channel palette
-  with a Bayer 4×4 dither), `BE.pixel.pixFor()`, and pixel-sprite portraits (it wraps
-  `BE.athletes.portraitSVG` so every portrait becomes a 40×40 outlined sprite `<img class="pix">`).
-  Remaining steps:
-  1. Add `<script src="js/pixel.js">` right after `athletes.js` in `index.html`.
-  2. `court.js`: render at low internal resolution. In `resize()` set `C.pix = BE.pixel.pixFor(W)`, make the
-     canvas backing store `ceil(W/pix) × ceil(H/pix)`, use `setTransform(1/pix, 0, 0, 1/pix, 0, 0)` for the main
-     canvas and the cached background, and call `BE.pixel.quantize(ctx, cw, ch)` at the end of `draw()`.
-     Snap shake offsets to multiples of `pix`, set court line widths to about `pix`, swap canvas fonts to
-     "Press Start 2P" / "Pixelify Sans" at multiples of 8 internal px, and replace the tiny ad-board text with
-     colored blocks.
-  3. `contests.js`: apply the same low-res, quantize and pixel-font treatment to the contest canvas.
-  4. CSS: add `image-rendering: pixelated` for `canvas` and `img.pix`; let the `svg` sizing rules for
-     portraits (`.acard .pt`, `.hero .port`, `.banner-card .bart`, `.coach .face`) also cover `img.pix`; load
-     Google Fonts *Press Start 2P* (display: scores, titles, at much smaller sizes because it is wide) and
-     *Pixelify Sans* (body and labels); and restyle menus as SNES windows: notched `clip-path` corners
-     instead of border-radius, double inset borders, beveled buttons with inset highlight and shadow,
-     stepped instead of smooth gradients, a dithered checker page background, and `steps()` timing for
-     the rarity shimmer.
-  5. Update the font link in `tools/build.js`, rebuild, run `node tests/e2e.js`, and check the screenshots.
+- ✅ **16-bit visual overhaul, first pass** (requested by the owner). `js/pixel.js` is loaded after `athletes.js`
+  and turns every portrait into a 40×40 outlined pixel sprite (`<img class="pix">`). The court (`court.js`) and
+  contest (`contests.js`) canvases draw at about 170 internal px wide (`C.pix = BE.pixel.pixFor(W)`), are upscaled
+  with `image-rendering: pixelated`, and every frame goes through `BE.pixel.quantize()` (4 bits per channel, Bayer
+  4×4 dither). Shake snaps to whole pixels, court lines are 1 internal px, canvas text uses *Press Start 2P* at
+  8 or 16 internal px with a hard drop shadow, and the ad boards are color blocks. The UI uses *Press Start 2P*
+  for display text and *Pixelify Sans* for body text. A "16-BIT SKIN" section at the end of `css/style.css` gives
+  notched SNES windows with double borders, beveled buttons, stepped gradients, a dithered page background and
+  `steps()` animation. `e2e` passes with no errors.
+  Next steps:
+  1. Court player sprites: replace the vector stick figures in `court.js` `drawPlayer()` with 24×32 pixel sprite
+     frames (idle, run, dribble, shoot, jump/dunk, block, celebrate), ideally from sprite-forge `codeart2d`.
+  2. Portraits: upgrade `js/pixel.js`'s simple rasterizer with the sprite-forge hibit finish (render
+     `BE.athletes.portraitSVGRaw` to PNG, then run `forge_hibit.py`).
+  3. Pixel icons: the UI icons in `ui-core.js` are still smooth vector SVGs. Redraw them as 16×16 pixel icons.
+  4. Art-director review of every screen. Small text in Pixelify Sans below 12px (chips, `.sb-pow`, `.p`) is
+     readable but under the art bible's 13px minimum.
+  5. Add a `prefers-reduced-motion` check that the stepped animations still respect, and profile `quantize()`
+     on a low-end phone (it runs every frame on about 40k pixels).
 - **Resources the owner wants used.** These were investigated from a cloud session; set them up on the desktop.
   1. **[0x0funky/agent-sprite-forge](https://github.com/0x0funky/agent-sprite-forge)** (MIT): a Claude Code plugin for
      sprites, sprite sheets, maps and FX. Install:

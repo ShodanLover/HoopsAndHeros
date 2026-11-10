@@ -8,7 +8,7 @@ const css = fs.readFileSync(path.join(root, 'css/style.css'), 'utf8');
 const scripts = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
 const js = scripts.map((f) => '/* ' + f + ' */\n' + fs.readFileSync(path.join(root, f), 'utf8')).join('\n');
 const safeJs = js.replace(/<\/script/gi, '<\\/script');
-const fonts = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=Bebas+Neue&display=swap">';
+const fonts = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap">';
 const body = '<div id="app"></div>\n<div id="modal-root"></div>\n<div id="toast-root"></div>\n<div id="coach-root"></div>\n<div id="fx-root"></div>';
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 const full = html

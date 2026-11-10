@@ -8,7 +8,7 @@
 <title>Basketball Empire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap">
 <style>
 /* Basketball Empire — arena-night visual system.
    Layout: one-column mobile game shell — HUD / screen / tab bar; modals rise as bottom sheets. */
@@ -463,6 +463,143 @@ textarea.textin { min-height: 90px; font-family: ui-monospace, monospace; font-s
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+
+/* =====================================================================================================
+   16-BIT SKIN (design/art-bible.md). Overrides the base system above: pixel fonts, notched SNES-style
+   windows with double borders, beveled buttons, stepped gradients, dithered page background, steps()
+   animation, and crisp upscaling for canvases and pixel sprites.
+   ===================================================================================================== */
+:root {
+  --display: 'Press Start 2P', 'Courier New', monospace;
+  --body: 'Pixelify Sans', system-ui, sans-serif;
+  --cond: 'Pixelify Sans', 'Arial Narrow', system-ui, sans-serif;
+  --radius: 0;
+  --ink: #0c0a18;
+  --hi: rgba(214, 226, 255, 0.32);
+  --notch: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%,
+    4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px),
+    0 4px, 2px 4px, 2px 2px, 4px 2px);
+  --shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+}
+canvas, img.pix { image-rendering: pixelated; }
+body { font-size: 15px; -webkit-font-smoothing: none; }
+
+/* dithered checker page background with stepped (hard-stop) glows */
+body::before {
+  background:
+    radial-gradient(1200px 500px at 50% -10%, rgba(255, 122, 47, 0.16) 0 25%, rgba(255, 122, 47, 0.08) 25% 45%, transparent 45%),
+    radial-gradient(800px 400px at 50% 110%, rgba(58, 168, 255, 0.12) 0 30%, rgba(58, 168, 255, 0.05) 30% 50%, transparent 50%),
+    conic-gradient(#0d1226 25%, #0a0e1d 0 50%, #0d1226 0 75%, #0a0e1d 0) 0 0 / 4px 4px;
+}
+#app { background: linear-gradient(180deg, rgba(16, 22, 44, 0.9) 0 30%, rgba(13, 18, 37, 0.93) 30% 65%, rgba(10, 14, 29, 0.96) 65%); box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px #1d2750; }
+#hud { background: #121a36; border-bottom: 2px solid var(--ink); box-shadow: inset 0 -2px 0 var(--hi); }
+
+/* pixel display font is wide: smaller sizes on the 4px grid */
+.crest { font-size: 12px; letter-spacing: 0; }
+.h1 { font-size: 18px; letter-spacing: 0; line-height: 1.2; }
+.h2 { font-size: 14px; letter-spacing: 0; line-height: 1.25; }
+.stagebar .wname { font-size: 12px; letter-spacing: 0; line-height: 1.3; }
+.sb-score { font-size: 20px; min-width: 44px; }
+.result-pop .rp .big { font-size: 32px; letter-spacing: 0; line-height: 1.1; text-shadow: 4px 4px 0 var(--ink); }
+.acard .ovr { font-size: 12px; line-height: 1.1; text-shadow: 2px 2px 0 var(--ink); }
+.floatnum { font-size: 14px; text-shadow: 2px 2px 0 var(--ink); }
+.banner-card .bt { font-size: 16px; letter-spacing: 0; line-height: 1.3; }
+.rar-name { font-size: 20px; letter-spacing: 0; text-shadow: 3px 3px 0 var(--ink); }
+.big-ovr { font-size: 24px; line-height: 1.1; }
+.power-num { font-size: 16px; }
+.wnode .wn { font-size: 12px; }
+.pass-tier { font-size: 12px; }
+.lb-row .rk { font-size: 12px; }
+.splash .logo .t1 { font-size: 30px; letter-spacing: 0; line-height: 1.2; background: linear-gradient(180deg, #ffd23f 0 45%, #ff7a2f 45% 75%, #c9481a 75%); -webkit-background-clip: text; background-clip: text; filter: drop-shadow(4px 4px 0 var(--ink)); }
+.splash .logo .t2 { font-size: 20px; letter-spacing: 6px; text-shadow: 4px 4px 0 var(--ink); }
+.splash { background: radial-gradient(circle at 50% 40%, #2a1b4d 0 25%, #1d1438 25% 45%, #0a0e1d 45%); }
+.label { font-size: 12px; letter-spacing: 0.5px; }
+.nav-btn { font-size: 12px; letter-spacing: 0.3px; border-radius: 0; }
+
+/* ---------- SNES windows: notched corners + double border (dark outer, light inner) ---------- */
+.card, .sheet, .urow, .toast, .offer, .wnode, .mission, .lday, .pass-cell, .lb-row, .banner-card, .court-wrap, .scoreboard,
+.objective, .wall-hint, .ticker, .tabs, .hub-btn, .abil, .acard, .acard .in, .hero .port, .coach .bubble, .textin, .contest-canvas, .meter, .slot-empty {
+  border-radius: 0 !important; clip-path: var(--notch);
+}
+.card, .sheet, .urow, .offer, .wnode, .mission, .lday, .pass-cell, .banner-card, .toast, .objective, .wall-hint {
+  border: 2px solid var(--ink); box-shadow: inset 0 0 0 2px var(--hi);
+}
+.card { background: linear-gradient(180deg, var(--panel) 0 55%, #131a35 55%); }
+.urow { background: linear-gradient(180deg, var(--panel) 0 55%, #131a35 55%); }
+.sheet { background: linear-gradient(180deg, #1b2349 0 40%, #161d3e 40% 75%, #10162f 75%); border-bottom: 0; }
+.modal.center .sheet { border-bottom: 2px solid var(--ink); }
+.offer { background: linear-gradient(135deg, var(--panel2) 0 50%, var(--panel) 50%); }
+.offer.feature { background: linear-gradient(135deg, #4a2a10 0 35%, #2a1640 35% 70%, #1b2349 70%); box-shadow: inset 0 0 0 2px rgba(255, 210, 63, 0.5); }
+.wnode.current { box-shadow: inset 0 0 0 2px var(--wc); }
+.lday.today { box-shadow: inset 0 0 0 2px var(--gold); }
+.court-wrap { border: 2px solid var(--ink); box-shadow: none; }
+.court-wrap::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 2px var(--hi); }
+.scoreboard { backdrop-filter: none; background: rgba(6, 8, 18, 0.88); border: 2px solid var(--ink); box-shadow: inset 0 0 0 2px var(--hi); }
+.tabs { backdrop-filter: none; background: var(--ink); }
+.tab { border-radius: 0; }
+.hub-btn { background: linear-gradient(180deg, var(--panel2) 0 50%, var(--panel) 50%); border: 2px solid var(--ink); box-shadow: inset 0 2px 0 var(--hi); }
+.abil { background: linear-gradient(180deg, var(--panel3) 0 50%, var(--panel2) 50%); border: 2px solid var(--ink); box-shadow: inset 0 2px 0 var(--hi), inset 0 -3px 0 rgba(0, 0, 0, 0.35); }
+.abil.active::after { inset: 0; border-radius: 0; animation: blink 0.8s steps(2) infinite; }
+.coach .bubble { border: 2px solid var(--ink); box-shadow: inset 0 0 0 2px #c9cfe8; }
+:where(.card, .sheet, .urow, .hub-btn, .abil, .acard, .tab, .btn, .lday, .wnode, .icon-btn, .hud-btn, .close-x):focus-visible { outline-offset: -4px; }
+
+/* ---------- Buttons: solid fill, 3px top highlight, 4px bottom shadow, press moves 2px ---------- */
+.btn {
+  border-radius: 0; clip-path: var(--notch); font-weight: 700; letter-spacing: 0.3px;
+  background: linear-gradient(180deg, var(--c1) 0 55%, var(--c2) 55%);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.35), inset 0 0 0 2px var(--ink);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+.btn:active:not([disabled]) { transform: translateY(2px); box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.35), inset 0 0 0 2px var(--ink); }
+.btn.gold { text-shadow: none; }
+.btn.ghost { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 2px var(--hi); }
+.btn.sm, .btn.xs { border-radius: 0; }
+@keyframes pulse { 50% { box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.35), inset 0 0 0 4px var(--gold); } }
+.btn.pulse { animation: pulse 1.2s steps(2) infinite; }
+.icon-btn, .hud-btn, .close-x { border-radius: 0; clip-path: var(--notch); box-shadow: inset 0 0 0 2px var(--hi); }
+.cur { border-radius: 0; clip-path: var(--notch); border: 2px solid var(--ink); }
+.chip, .badge, .acard .lv, .acard .newtag, .odds-mini span, .offer .tag, .gicon .glv { border-radius: 0; }
+.gicon, .urow .uic, .offer .oico, .objective .oi, .toast .ti, .pip, .sb-sw, .cos-swatch { border-radius: 0; }
+.toggle, .toggle::after { border-radius: 0; }
+.toggle, .toggle::after { transition-timing-function: steps(3); }
+
+/* ---------- Bars and meters: stepped fills ---------- */
+.bar, .bar > i, .meter, .meter .needle { border-radius: 0; }
+.bar { box-shadow: inset 0 0 0 1px var(--ink); }
+.bar > i { background: linear-gradient(90deg, var(--accent) 0 50%, var(--gold) 50%); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3); transition-timing-function: steps(6); }
+.bar.green > i { background: linear-gradient(90deg, #149a63 0 50%, var(--good) 50%); }
+.bar.blue > i { background: linear-gradient(90deg, #1866c9 0 50%, var(--info) 50%); }
+.bar.purple > i { background: linear-gradient(90deg, #7b35d6 0 50%, var(--gem) 50%); }
+.energy .bar > i { background: linear-gradient(90deg, #ff7a2f 0 50%, #ffd23f 50%); }
+.meter .needle { box-shadow: 0 0 0 2px var(--ink); }
+
+/* ---------- Athlete cards and portraits ---------- */
+.acard { background: linear-gradient(160deg, var(--rc) 0 25%, rgba(0, 0, 0, 0.3) 25% 75%, var(--rc) 75%); }
+.acard .in { background: linear-gradient(180deg, #1c254a 0 50%, #121935 50%); }
+.acard .pt { background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--rc) 45%, transparent) 0 35%, color-mix(in srgb, var(--rc) 20%, transparent) 35% 60%, transparent 60%), linear-gradient(180deg, #232d5c 0 50%, #141a37 50%); }
+.acard.r4, .acard.r5 { background-size: 220% 220%; animation: shimmer 3.2s steps(16) infinite; }
+.acard.inlineup .in::after { border-radius: 0; }
+.hero .port { background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--rc) 50%, transparent) 0 40%, #141a37 40%); }
+.reveal-card .face-b, .reveal-card .face-f { border-radius: 0; }
+.reveal-card .face-b { background: radial-gradient(circle at 50% 40%, var(--rc) 0 30%, color-mix(in srgb, var(--rc) 35%, #10162f) 30% 55%, #10162f 55%); box-shadow: 0 0 0 4px var(--ink); }
+.reveal-card .face-b .ballart { animation-timing-function: steps(8); }
+.coach .face { border-radius: 0; clip-path: var(--notch); box-shadow: none; }
+.wnode .wn { border-radius: 0; clip-path: var(--notch); box-shadow: none; }
+
+img.pix { display: block; width: 100%; height: 100%; object-fit: contain; }
+.acard .pt img.pix { position: absolute; inset: 6% 6% 0; width: 88%; height: 94%; }
+.hero .port img.pix { position: absolute; inset: 4% 4% 0; width: 92%; height: 96%; }
+.banner-card .bart img.pix { width: 100%; height: auto; aspect-ratio: 1; }
+.acard.silhouette .pt img.pix { filter: brightness(0) opacity(0.45); }
+
+/* stepped motion for blinking and floating */
+@keyframes blink { 50% { opacity: 0.4; } }
+.trophy-hero svg { filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.5)); animation-timing-function: steps(4); }
+.splash .logo .ballart { animation-timing-function: steps(5); }
+.banner-card > :not(.bart) { position: relative; z-index: 1; }
+.banner-card .pity, .banner-card .odds-mini { text-shadow: 2px 2px 0 var(--ink); }
+.btn { padding-left: 12px; padding-right: 12px; white-space: normal; text-align: center; line-height: 1.1; }
 
 </style>
 </head>
@@ -1318,6 +1455,129 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   }
 
   BE.athletes = { catalog, byId, tpl, displayName, ovrFromAttrs, effAttrs, trainCap, opponentTeam, portraitSVG, shade, ATTR_KEYS, PER_WORLD };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* js/pixel.js */
+/* Basketball Empire — 16-bit look: palette quantization with ordered dithering, and pixel-art portraits.
+ * Canvases are drawn at a low internal resolution, upscaled with `image-rendering: pixelated`, and every
+ * frame is snapped to a 4-bit-per-channel palette with a Bayer 4x4 dither, like SNES-era gradients.
+ * Portraits are rasterized from the vector generator into 40x40 sprites with hard alpha, a reduced
+ * palette and a 1px dark outline. */
+(function (root) {
+  'use strict';
+  const BE = (root.BE = root.BE || {});
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16 - 0.5);
+  const LEVELS = 16;
+  const STEP = 255 / (LEVELS - 1);
+  // precomputed lookup: [ditherIndex][value] -> quantized
+  const LUT = BAYER.map((t) => {
+    const a = new Uint8ClampedArray(256);
+    for (let v = 0; v < 256; v++) a[v] = Math.round(v / STEP + t) * STEP;
+    return a;
+  });
+  const LUT_FLAT = (() => { const a = new Uint8ClampedArray(256); for (let v = 0; v < 256; v++) a[v] = Math.round(v / STEP) * STEP; return a; })();
+
+  function quantize(ctx, w, h, dither) {
+    let img;
+    try { img = ctx.getImageData(0, 0, w, h); } catch (e) { return; }
+    const d = img.data;
+    for (let y = 0; y < h; y++) {
+      const row = (y & 3) * 4;
+      let i = y * w * 4;
+      for (let x = 0; x < w; x++, i += 4) {
+        const L = dither === false ? LUT_FLAT : LUT[row + (x & 3)];
+        d[i] = L[d[i]]; d[i + 1] = L[d[i + 1]]; d[i + 2] = L[d[i + 2]];
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  // Integer upscale factor so a canvas of css width w is ~targetWidth internal pixels wide
+  function pixFor(w, target) { return Math.max(2, Math.round(w / (target || 170))); }
+
+  // ---------- Pixel portraits ----------
+  const SIZE = 40;
+  const cache = new Map();
+  const pending = new Map();
+  const queue = [];
+  let running = 0;
+  const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+  function keyOf(svg) { return 'p' + BE.util.hashStr(svg).toString(36) + svg.length.toString(36); }
+
+  function pixelate(img) {
+    const cv = document.createElement('canvas');
+    cv.width = SIZE; cv.height = SIZE;
+    const g = cv.getContext('2d');
+    g.imageSmoothingEnabled = true;
+    g.drawImage(img, 0, 0, SIZE, SIZE);
+    const id = g.getImageData(0, 0, SIZE, SIZE);
+    const d = id.data;
+    const solid = new Uint8Array(SIZE * SIZE);
+    for (let p = 0, i = 0; p < SIZE * SIZE; p++, i += 4) {
+      if (d[i + 3] < 110) { d[i + 3] = 0; continue; }
+      solid[p] = 1;
+      const a = d[i + 3] / 255;
+      // un-premultiply edge pixels toward their own color, then snap to the palette
+      d[i] = LUT_FLAT[Math.min(255, d[i] / a)]; d[i + 1] = LUT_FLAT[Math.min(255, d[i + 1] / a)]; d[i + 2] = LUT_FLAT[Math.min(255, d[i + 2] / a)];
+      d[i + 3] = 255;
+    }
+    // 1px outline around the silhouette
+    for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+      const p = y * SIZE + x;
+      if (solid[p]) continue;
+      if ((x > 0 && solid[p - 1]) || (x < SIZE - 1 && solid[p + 1]) || (y > 0 && solid[p - SIZE]) || (y < SIZE - 1 && solid[p + SIZE])) {
+        const i = p * 4; d[i] = 12; d[i + 1] = 10; d[i + 2] = 24; d[i + 3] = 255;
+      }
+    }
+    g.putImageData(id, 0, 0);
+    return cv.toDataURL('image/png');
+  }
+
+  function pump() {
+    while (running < 4 && queue.length) {
+      const job = queue.shift();
+      running++;
+      const img = new Image();
+      img.onload = () => {
+        let url = BLANK;
+        try { url = pixelate(img); } catch (e) { url = job.src; }
+        finish(job.key, url);
+      };
+      img.onerror = () => finish(job.key, job.src);
+      img.src = job.src;
+    }
+  }
+  function finish(key, url) {
+    running--;
+    cache.set(key, url);
+    pending.delete(key);
+    if (typeof document !== 'undefined') document.querySelectorAll('img[data-pk="' + key + '"]').forEach((el) => { el.src = url; });
+    pump();
+  }
+
+  // Returns an <img> tag that resolves to the pixel sprite (generated asynchronously, then cached)
+  function portrait(svg) {
+    if (typeof document === 'undefined') return svg;
+    const key = keyOf(svg);
+    const hit = cache.get(key);
+    if (hit) return '<img class="pix portrait" alt="" src="' + hit + '" data-pk="' + key + '">';
+    if (!pending.has(key)) {
+      pending.set(key, true);
+      queue.push({ key, src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) });
+      setTimeout(pump, 0);
+    }
+    return '<img class="pix portrait" alt="" src="' + BLANK + '" data-pk="' + key + '">';
+  }
+
+  // Wrap the vector portrait generator so every portrait in the UI becomes a pixel sprite
+  if (BE.athletes && !BE.athletes.portraitSVGRaw) {
+    const raw = BE.athletes.portraitSVG;
+    BE.athletes.portraitSVGRaw = raw;
+    BE.athletes.portraitSVG = (t, opts) => portrait(raw(t, opts));
+  }
+
+  BE.pixel = { quantize, pixFor, portrait, cache };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 /* js/state.js */
@@ -3031,7 +3291,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   };
 
   const C = {
-    canvas: null, ctx: null, W: 0, H: 0, dpr: 1, P: null,
+    canvas: null, ctx: null, W: 0, H: 0, pix: 2, cw: 0, ch: 0, P: null,
     bg: null, theme: null, world: 0, cos: null,
     players: [], ball: null, tasks: [], particles: [], floaters: [], crowd: [],
     shake: 0, excite: 0.2, time: 0, speed: 2, visible: true, match: null, flash: 0,
@@ -3057,17 +3317,19 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   // ---------- Setup ----------
   function init(canvas) {
     C.canvas = canvas;
-    C.ctx = canvas.getContext('2d');
+    C.ctx = canvas.getContext('2d', { willReadFrequently: true });
     resize();
   }
   function resize() {
     if (!C.canvas) return;
     const r = C.canvas.getBoundingClientRect();
-    const dpr = Math.min(2, root.devicePixelRatio || 1);
     const W = Math.max(200, Math.round(r.width)), H = Math.max(180, Math.round(r.height));
-    if (W === C.W && H === C.H && dpr === C.dpr && C.bg) return;
-    C.W = W; C.H = H; C.dpr = dpr;
-    C.canvas.width = W * dpr; C.canvas.height = H * dpr;
+    // 16-bit look: draw at a low internal resolution (~170px wide) and let CSS upscale it pixelated
+    const pix = BE.pixel ? BE.pixel.pixFor(W) : 2;
+    if (W === C.W && H === C.H && pix === C.pix && C.bg) return;
+    C.W = W; C.H = H; C.pix = pix;
+    C.cw = Math.ceil(W / pix); C.ch = Math.ceil(H / pix);
+    C.canvas.width = C.cw; C.canvas.height = C.ch;
     setupProjection();
     buildBackground();
   }
@@ -3083,9 +3345,9 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   function buildBackground() {
     if (!C.W || !C.theme) return;
     const cv = C.bg || document.createElement('canvas');
-    cv.width = C.W * C.dpr; cv.height = C.H * C.dpr;
+    cv.width = C.cw; cv.height = C.ch;
     const g = cv.getContext('2d');
-    g.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
+    g.setTransform(1 / C.pix, 0, 0, 1 / C.pix, 0, 0);
     drawStands(g);
     drawFloor(g);
     C.bg = cv;
@@ -3170,10 +3432,16 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     }
     // baseline ad board
     g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(0, base - 12, W, 12);
-    g.fillStyle = D.worlds[C.world].color; g.font = '700 9px "Barlow Condensed", sans-serif'; g.textAlign = 'center';
-    g.globalAlpha = 0.9;
-    const adText = ['BASKETBALL EMPIRE', D.worlds[C.world].arena.toUpperCase(), 'HUSTLE · HEART · HOOPS'];
-    for (let i = 0; i < 3; i++) g.fillText(adText[i], W * (i + 0.5) / 3, base - 3);
+    // ad panels as chunky color blocks (text this small would be unreadable at 16-bit resolution)
+    const px = C.pix, wc = D.worlds[C.world].color, adCols = [wc, '#ffd23f', '#f4f1ea', wc, '#ff5a1f'];
+    const panels = 6, pw = W / panels;
+    for (let i = 0; i < panels; i++) {
+      const x0 = Math.round((i * pw + px * 2) / px) * px, x1 = Math.round(((i + 1) * pw - px * 2) / px) * px;
+      g.fillStyle = adCols[i % adCols.length]; g.globalAlpha = 0.85;
+      g.fillRect(x0, base - 10, x1 - x0, px * 2);
+      g.globalAlpha = 0.5;
+      for (let k = 0; k < 3; k++) g.fillRect(x0 + px * 2 + k * px * 6, base - 6, px * 4, px);
+    }
     g.globalAlpha = 1;
   }
 
@@ -3223,21 +3491,21 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     g.beginPath(); cpts.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.closePath();
     g.fillStyle = T.paint; g.globalAlpha = 0.6; g.fill(); g.globalAlpha = 1;
     // lines
-    g.strokeStyle = T.line; g.lineWidth = 2; g.lineJoin = 'round';
+    g.strokeStyle = T.line; g.lineWidth = C.pix; g.lineJoin = 'miter';
     line3(g, [[-25, 0], [25, 0]]);
     line3(g, [[-25, 0], [-25, 49]]); line3(g, [[25, 0], [25, 49]]);
     line3(g, [[-25, 47], [25, 47]]);
     line3(g, [[-8, 0], [-8, 19], [8, 19], [8, 0]]);
     line3(g, [[-6, 0], [-6, 19]]); line3(g, [[6, 0], [6, 19]]);
     line3(g, arc3(0, 19, 6, 0, Math.PI, 28));
-    g.setLineDash([4, 5]); line3(g, arc3(0, 19, 6, Math.PI, 2 * Math.PI, 28)); g.setLineDash([]);
+    g.setLineDash([C.pix * 2, C.pix * 2]); line3(g, arc3(0, 19, 6, Math.PI, 2 * Math.PI, 28)); g.setLineDash([]);
     const a = Math.asin((14.2 - 5.25) / 23.75);
     line3(g, [[-22, 0], [-22, 14.2]].concat(arc3(0, 5.25, 23.75, Math.PI - a, a, 48)).concat([[22, 14.2], [22, 0]]));
     line3(g, arc3(0, 5.25, 4, Math.PI, 0, 16));
     line3(g, arc3(0, 47, 6, Math.PI, 2 * Math.PI, 24));
     // center logo text
     const lp = proj(0, 31.5);
-    g.font = '400 ' + Math.round(lp.s * 1.6) + 'px "Bebas Neue", Impact, sans-serif';
+    g.font = pixFont(Math.max(8, Math.round(lp.s * 1.2 / C.pix / 8) * 8));
     g.textAlign = 'center'; g.fillStyle = T.line; g.globalAlpha = 0.5;
     g.fillText(D.worlds[C.world].short.toUpperCase(), lp.x, lp.y);
     g.globalAlpha = 1;
@@ -3648,9 +3916,11 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   function draw() {
     const g = C.ctx;
     if (!g || !C.bg) return;
-    g.setTransform(C.dpr, 0, 0, C.dpr, 0, 0);
+    g.setTransform(1 / C.pix, 0, 0, 1 / C.pix, 0, 0);
+    g.imageSmoothingEnabled = false;
     const sh = C.reduceMotion ? 0 : C.shake;
-    const ox = (Math.random() - 0.5) * sh, oy = (Math.random() - 0.5) * sh;
+    // shake in whole internal pixels only
+    const ox = Math.round((Math.random() - 0.5) * sh / C.pix) * C.pix, oy = Math.round((Math.random() - 0.5) * sh / C.pix) * C.pix;
     g.save();
     g.translate(ox, oy);
     g.drawImage(C.bg, 0, 0, C.W, C.H);
@@ -3676,12 +3946,13 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       const k = f.t / f.life;
       const sc = (0.6 + U.easeOutBack(Math.min(1, f.t * 4)) * 0.6) * f.size;
       g.globalAlpha = k > 0.7 ? (1 - k) / 0.3 : 1;
-      g.font = '400 ' + Math.round(22 * sc) + 'px "Bebas Neue", Impact, sans-serif';
+      g.font = pixFont(sc > 1.15 ? 16 : 8);
       g.textAlign = 'center';
-      g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,.65)';
-      g.strokeText(f.text, f.x, f.y - k * 26);
+      const fy = Math.round((f.y - k * 26) / C.pix) * C.pix, fx = Math.round(f.x / C.pix) * C.pix;
+      g.fillStyle = '#0c0a18';
+      g.fillText(f.text, fx + C.pix, fy + C.pix);
       g.fillStyle = f.color;
-      g.fillText(f.text, f.x, f.y - k * 26);
+      g.fillText(f.text, fx, fy);
     }
     g.globalAlpha = 1;
     if (C.banner) {
@@ -3689,16 +3960,25 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       const a = k < 0.15 ? k / 0.15 : k > 0.8 ? (1 - k) / 0.2 : 1;
       g.globalAlpha = a;
       g.fillStyle = 'rgba(8,10,20,.72)';
-      g.fillRect(0, C.H * 0.42 - 26, C.W, 52);
-      g.font = '400 30px "Bebas Neue", Impact, sans-serif'; g.textAlign = 'center';
+      const by = Math.round(C.H * 0.42 / C.pix) * C.pix;
+      g.fillRect(0, by - 26, C.W, 52);
       g.fillStyle = bn.color || '#ffd23f';
-      g.fillText(bn.text, C.W / 2, C.H * 0.42 + 4);
-      if (bn.sub) { g.font = '600 12px "Barlow Condensed", sans-serif'; g.fillStyle = '#fff'; g.fillText(bn.sub, C.W / 2, C.H * 0.42 + 20); }
+      g.fillRect(0, by - 26, C.W, C.pix); g.fillRect(0, by + 26 - C.pix, C.W, C.pix);
+      const big = bn.text.length * 16 * C.pix < C.W * 0.94 ? 16 : 8;
+      g.font = pixFont(big); g.textAlign = 'center';
+      g.fillStyle = '#0c0a18'; g.fillText(bn.text, C.W / 2 + C.pix, by + (bn.sub ? 2 : 8) * C.pix / 2 + C.pix);
+      g.fillStyle = bn.color || '#ffd23f';
+      g.fillText(bn.text, C.W / 2, by + (bn.sub ? 2 : 8) * C.pix / 2);
+      if (bn.sub) { g.font = pixFont(8); g.fillStyle = '#fff'; g.fillText(bn.sub, C.W / 2, by + 9 * C.pix); }
       g.globalAlpha = 1;
     }
     g.restore();
     if (C.flash > 0) { g.fillStyle = 'rgba(255,240,200,' + C.flash * 0.5 + ')'; g.fillRect(0, 0, C.W, C.H); }
+    // snap the frame to a 4-bit-per-channel palette with ordered dithering
+    if (BE.pixel) BE.pixel.quantize(g, C.cw, C.ch);
   }
+  // Pixel font sized in internal pixels (multiples of 8 keep glyphs on the pixel grid)
+  function pixFont(internalPx) { return (internalPx * C.pix) + 'px "Press Start 2P", monospace'; }
   function showBanner(text, sub, color, life) { C.banner = { text, sub, color, t: 0, life: life || 1.8 }; }
 
   function drawCrowd(g) {
@@ -3839,7 +4119,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     g.beginPath(); g.moveTo(-s * 0.95, shoulder); g.quadraticCurveTo(0, shoulder - s * 0.3, s * 0.95, shoulder); g.lineTo(s * 0.8, hip - s * 0.35); g.lineTo(-s * 0.8, hip - s * 0.35); g.closePath(); g.fill();
     g.strokeStyle = trim; g.lineWidth = s * 0.12; g.stroke();
     if (p.facing !== 'cam') {
-      g.fillStyle = trim; g.font = '400 ' + Math.max(7, Math.round(s * 1.25)) + 'px "Bebas Neue", Impact, sans-serif'; g.textAlign = 'center';
+      g.fillStyle = trim; g.font = '400 ' + Math.max(7, Math.round(s * 1.25)) + 'px "Pixelify Sans", monospace'; g.textAlign = 'center';
       g.fillText(String(info.number), 0, shoulder + s * 1.45);
     } else {
       g.fillStyle = trim; g.globalAlpha = 0.6; g.fillRect(-s * 0.2, shoulder + s * 0.35, s * 0.4, s * 0.12); g.globalAlpha = 1;
@@ -6569,17 +6849,21 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
         '<div data-c="choice" class="row hidden"></div><div class="meter" data-c="meter"><div class="zone" data-c="zone"></div><div class="zone perfect" data-c="pz"></div><div class="needle" data-c="needle"></div></div>' +
         '<div class="row"><button class="btn ghost" data-c="quit">Quit</button><button class="btn gold grow" data-c="shoot" style="min-height:56px;font-size:20px">' + (kind === 'dunk' ? 'Choose a dunk' : 'SHOOT') + '</button></div></div>',
     });
-    const cv = $('[data-c="cv"]', m.el), g = cv.getContext('2d');
+    const cv = $('[data-c="cv"]', m.el), g = cv.getContext('2d', { willReadFrequently: true });
     const needle = $('[data-c="needle"]', m.el), zoneEl = $('[data-c="zone"]', m.el), pz = $('[data-c="pz"]', m.el);
     const shootBtn = $('[data-c="shoot"]', m.el), choice = $('[data-c="choice"]', m.el);
-    let W = 0, H = 0, raf = 0, last = performance.now();
+    let W = 0, H = 0, pix = 2, cw = 0, ch = 0, raf = 0, last = performance.now();
+    // 16-bit look: low internal resolution, upscaled pixelated by CSS, quantized each frame
     function size() {
       const r = cv.getBoundingClientRect();
-      const dpr = Math.min(2, root.devicePixelRatio || 1);
       W = r.width; H = r.height;
-      cv.width = W * dpr; cv.height = H * dpr;
-      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      pix = BE.pixel ? BE.pixel.pixFor(W) : 2;
+      cw = Math.max(1, Math.ceil(W / pix)); ch = Math.max(1, Math.ceil(H / pix));
+      cv.width = cw; cv.height = ch;
+      g.setTransform(1 / pix, 0, 0, 1 / pix, 0, 0);
+      g.imageSmoothingEnabled = false;
     }
+    const pf = (n) => (n * pix) + 'px "Press Start 2P", monospace';
     size();
 
     function newZone() {
@@ -6748,7 +7032,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       g.beginPath(); g.moveTo(px - 5, y0 - 30); g.lineTo(px - 7, y0 - 2); g.moveTo(px + 5, y0 - 30); g.lineTo(px + 7, y0 - 2); g.stroke();
       g.fillStyle = cos.jersey[1]; g.fillRect(px - 11, y0 - 40, 22, 14);
       g.fillStyle = cos.jersey[0]; g.fillRect(px - 11, y0 - 66, 22, 28);
-      g.fillStyle = cos.jersey[1]; g.font = '400 14px "Bebas Neue", Impact'; g.textAlign = 'center'; g.fillText(t.number, px, y0 - 46);
+      g.fillStyle = cos.jersey[1]; g.font = '400 14px "Pixelify Sans", monospace'; g.textAlign = 'center'; g.fillText(t.number, px, y0 - 46);
       g.strokeStyle = skin; g.lineWidth = 5;
       g.beginPath(); g.moveTo(px - 10, y0 - 62); g.lineTo(px - 6, y0 - 88); g.moveTo(px + 10, y0 - 62); g.lineTo(px + 6, y0 - 88); g.stroke();
       g.fillStyle = skin; g.beginPath(); g.arc(px, y0 - 74, 8, 0, 6.28); g.fill();
@@ -6764,13 +7048,13 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
         }
       }
       if (st.judges.length && kind === 'dunk' && !st.anim) {
-        st.judges.forEach((v, k) => { const jx = W * (0.2 + k * 0.15); g.fillStyle = '#fff'; g.fillRect(jx - 14, H * 0.5, 28, 30); g.fillStyle = '#141a33'; g.font = '400 22px "Bebas Neue", Impact'; g.fillText(v, jx, H * 0.5 + 23); });
+        st.judges.forEach((v, k) => { const jx = W * (0.2 + k * 0.15); g.fillStyle = '#fff'; g.fillRect(jx - 14, H * 0.5, 28, 30); g.fillStyle = '#141a33'; g.font = pf(8); g.textAlign = 'center'; g.fillText(v, jx, H * 0.5 + 15 + 4 * pix); });
       }
       if (st.msgT > 0) {
         st.msgT -= dt;
         g.globalAlpha = Math.min(1, st.msgT * 2);
-        g.font = '400 34px "Bebas Neue", Impact'; g.textAlign = 'center'; g.lineWidth = 5; g.strokeStyle = 'rgba(0,0,0,.6)';
-        g.strokeText(st.msg, W / 2, H * 0.62); g.fillStyle = '#ffd23f'; g.fillText(st.msg, W / 2, H * 0.62);
+        g.font = pf(st.msg.length * 16 * pix < W * 0.94 ? 16 : 8); g.textAlign = 'center';
+        g.fillStyle = '#0c0a18'; g.fillText(st.msg, W / 2 + pix, H * 0.62 + pix); g.fillStyle = '#ffd23f'; g.fillText(st.msg, W / 2, H * 0.62);
         g.globalAlpha = 1;
       }
     }
@@ -6780,6 +7064,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
       if (st.phase === 'aim') needle.style.left = 'calc(' + needlePos() * 100 + '% - 2px)';
       drawScene(dt);
+      if (BE.pixel && cw) BE.pixel.quantize(g, cw, ch);
       raf = requestAnimationFrame(loop);
     }
     shootBtn.addEventListener('click', shoot);
