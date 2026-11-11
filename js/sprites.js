@@ -124,5 +124,5 @@
   // Hand positions in sprite pixels relative to the feet (x right, y up), for lining the ball up
   const HANDS = { idle: [7.5, 10], shoot: [0.5, 30], dunk: [4.5, 31], pass: [9.5, 18] };
 
-  BE.sprites = { available, player, HANDS, size: () => (data() ? [data().w, data().h] : [0, 0]) };
+  BE.sprites = { enabled: false, available, player, HANDS, size: () => (data() ? [data().w, data().h] : [0, 0]) };
 })(typeof window !== 'undefined' ? window : globalThis);
