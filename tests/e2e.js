@@ -68,7 +68,7 @@ const shot = (p, n) => p.screenshot({ path: 'tests/shots/' + n + '.png' });
   await page.click('[data-act="adticket"]'); await page.waitForTimeout(5600); await page.click('[data-ad="done"]'); await page.waitForTimeout(300);
   // Team
   await page.click('[data-nav="team"]'); await page.waitForTimeout(300);
-  await page.click('[data-act="autolineup"]'); await page.click('[data-act="levelall"]'); await page.waitForTimeout(300); await shot(page, 'm1-lineup');
+  await page.click('[data-act="autolineup"]'); await page.click('[data-act="levelall"]'); await page.click('[data-act="autoequip"]').catch(() => {}); await page.waitForTimeout(300); await shot(page, 'm1-lineup');
   await page.click('#scr-team [data-act="athlete"]'); await page.waitForTimeout(300);
   await page.click('.modal [data-act="lvl"][data-n="10"]'); await page.click('.modal [data-act="lvl"][data-n="max"]');
   await page.click('.modal [data-act="train"]'); await page.waitForTimeout(300); await shot(page, 'm2-athlete');

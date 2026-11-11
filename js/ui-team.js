@@ -35,7 +35,7 @@
     let html = '<div class="card"><div class="row between"><div><div class="label">Starting ' + size + ' power</div><div class="power-num">⚡ ' + U.fmt(tp) + '</div></div>' +
       '<div style="text-align:right"><div class="label">Next opponent</div><div class="num" style="font-size:18px">⚡ ' + U.fmt(opp) + '</div><span class="chip ' + status[1] + '">' + status[0] + '</span></div></div>' +
       '<div class="bar ' + (ratio >= 1 ? 'green' : '') + '" style="margin-top:8px"><i style="width:' + Math.min(100, ratio * 50) + '%"></i></div>' +
-      '<div class="row" style="margin-top:10px"><button class="btn sm ghost grow" data-act="autolineup">' + icon('swap') + ' Best lineup</button><button class="btn sm grow" data-act="levelall">' + icon('up') + ' Level all starters</button></div></div>';
+      '<div class="row" style="margin-top:10px"><button class="btn sm ghost grow" data-act="autolineup">' + icon('swap') + ' Best lineup</button>' + (E.unlocked(s, 'gear') ? '<button class="btn sm blue grow" data-act="autoequip">' + icon('gear') + ' Auto-equip</button>' : '') + '<button class="btn sm grow" data-act="levelall">' + icon('up') + ' Level all</button></div></div>';
     html += '<div class="sec-title"><span class="h3">Starters</span><span class="label">' + D.formats[E.formatOf(g)].label + '</span></div><div class="lineup">';
     for (let i = 0; i < 5; i++) {
       const uid = s.lineup[i];
@@ -53,6 +53,8 @@
       html += '<div class="sec-title"><span class="h3">Team equipment</span><span class="label">Boosts every starter</span></div><div class="row" style="gap:16px">';
       for (const slot of ['ball', 'trainer']) {
         const it = s.teamGear[slot] && s.gearById[s.teamGear[slot]];
+        const gt = D.gearTypes.find((x) => x.k === slot);
+        if (!E.gearTypeUnlocked(s, slot)) { html += '<div class="gslot slot-locked"><div class="gicon empty">' + icon('lock') + '</div>' + (slot === 'ball' ? 'Basketball' : 'Training') + '<br>W' + (E.worldOf(gt.unlock) + 1) + '</div>'; continue; }
         html += '<button class="gslot" data-act="teamslot" data-slot="' + slot + '">' + ui.gearBadge(it) + (slot === 'ball' ? 'Basketball' : 'Training') + '</button>';
       }
       html += '<div class="grow small muted">Team gear adds half its power bonus to every athlete.</div></div>';
@@ -125,11 +127,16 @@
     // Signature
     html += '<div class="card flat" style="margin-top:10px"><div class="row" style="align-items:flex-start"><span style="color:var(--gold);font-size:20px">' + icon('star') + '</span><div class="grow"><b>' + arch.ability.name + '</b> <span class="muted small">· ' + arch.name + '</span><div class="small muted">' + arch.ability.desc + '</div></div></div>' +
       '<div class="row" style="align-items:flex-start;margin-top:8px"><span style="color:var(--info);font-size:20px">' + icon('social') + '</span><div class="grow"><b>' + pers.name + '</b> <span class="muted small">· Personality</span><div class="small muted">' + pers.desc + ' · Celebration: ' + t.celebration + '</div></div></div></div>';
-    // Gear slots
+    // Milestones (owned effects that count even on the bench)
+    const ms = D.owned.milestones;
+    html += '<div class="card flat" style="margin-top:10px"><div class="row between"><span class="h3">Milestones</span><span class="label">Owned bonus: +' + (E.athleteOwnedPower(a) * 100).toFixed(1) + '% team power</span></div><div class="row wrap" style="gap:4px;margin-top:6px">' +
+      ms.map((lv) => '<span class="chip ' + (a.lvl >= lv ? 'good' : '') + '">Lv ' + lv + ' · +' + Math.round(D.owned.milestoneBonus * 100) + '%</span>').join('') + '</div><div class="small muted" style="margin-top:4px">Every athlete you own adds power to the whole franchise, bench included. Levels 10, 25, 50, 75 and 100 add more.</div></div>';
+    // Accessory slots
     if (E.unlocked(s, 'gear')) {
-      html += '<div class="sec-title"><span class="h3">Equipment</span><span class="label">+' + Math.round(E.gearPct(s, a) * 100) + '% power</span></div><div class="row wrap" style="gap:12px;justify-content:space-between">';
+      html += '<div class="sec-title"><span class="h3">Accessories</span><span class="label">+' + Math.round(E.gearPct(s, a) * 100) + '% power</span></div><div class="row wrap" style="gap:12px;justify-content:space-between">';
       for (const gt of D.gearTypes.filter((x) => x.slot === 'athlete')) {
         const it = a.gear[gt.k] && s.gearById[a.gear[gt.k]];
+        if (!E.gearTypeUnlocked(s, gt.k)) { html += '<div class="gslot slot-locked"><div class="gicon empty">' + icon('lock') + '</div>' + gt.name.split(' ')[0] + '<br>W' + (E.worldOf(gt.unlock) + 1) + '</div>'; continue; }
         html += '<button class="gslot" data-act="slot" data-slot="' + gt.k + '">' + ui.gearBadge(it) + gt.name.split(' ')[0] + '</button>';
       }
       html += '</div>';
@@ -254,7 +261,9 @@
     } else html += '<div class="lock-note" style="margin-top:8px">' + icon('lock') + ' Crafting unlocks at ' + ui.stageName(D.features.craft.g) + '</div>';
     html += '</div>';
     const coll = Object.keys(s.gearSeen).length;
-    html += '<div class="sec-title"><span class="h3">Inventory (' + s.gear.length + ')</span><span class="label">Gear collection ' + coll + '/70 · +' + coll + '% power</span></div>';
+    html += '<div class="card flat" style="margin-top:10px"><div class="row between"><div><div class="label">Owned bonus</div><div class="num" style="color:var(--good);font-size:18px">+' + (E.gearOwnedBonus(s) * 100).toFixed(1) + '% power</div></div><div class="small muted" style="max-width:58%;text-align:right">Every piece you own adds power, equipped or not (more for rarer and higher-level gear). Sets found: ' + coll + '/70 · +' + coll + '%</div></div>' +
+      '<button class="btn sm blue wide" style="margin-top:8px" data-act="autoequip">' + icon('gear') + ' Auto-equip best on starters</button></div>';
+    html += '<div class="sec-title"><span class="h3">Inventory (' + s.gear.length + ')</span><span class="label">Slots open by world: ' + D.gearTypes.filter((t) => E.gearTypeUnlocked(s, t.k)).length + '/' + D.gearTypes.length + '</span></div>';
     if (!s.gear.length) return html + '<div class="card flat empty">No gear yet — wins sometimes drop equipment, and championships always do.</div>';
     const sorted = s.gear.slice().sort((x, y) => y.rarity - x.rarity || y.set - x.set || y.lvl - x.lvl);
     html += '<div class="ggrid">' + sorted.map((it) => '<button class="gslot" data-act="gear" data-id="' + it.id + '" style="position:relative">' + ui.gearBadge(it) + (E.gearOwner(s, it.id) ? '<span style="color:var(--good)">equipped</span>' : it.isNew ? '<span style="color:var(--bad)">new</span>' : '&nbsp;') + '</button>').join('') + '</div>';
@@ -328,14 +337,17 @@
     const n = s.stats.unique;
     const total = A.catalog.length + 1;
     const cb = E.collectionBonus(s);
-    let html = '<div class="card"><div class="row between"><div><div class="label">Athletes discovered</div><div class="power-num">' + n + ' / ' + total + '</div></div><div style="text-align:right"><div class="label">Collection bonus</div><div class="num" style="color:var(--good)">+' + Math.round(cb.power * 100) + '% power · +' + Math.round(cb.cash * 100) + '% cash</div></div></div>' +
-      '<div class="bar green" style="margin-top:8px"><i style="width:' + (n / total * 100) + '%"></i></div><div class="row wrap" style="margin-top:8px;gap:5px">' +
-      E.collectionMilestones.map((m) => '<span class="chip ' + (n >= m.n ? 'good' : '') + '">' + m.n + ': +' + Math.round(m.power * 100) + '%</span>').join('') + '</div></div>';
+    const own = E.ownedBonus(s), sets = E.worldSetBonus(s);
+    let html = '<div class="card"><div class="row between"><div><div class="label">Collection book</div><div class="power-num">' + n + ' / ' + total + '</div></div><div style="text-align:right"><div class="label">Total collection power</div><div class="num" style="color:var(--good)">+' + Math.round((cb.power + own.power + sets.power) * 100) + '% power · +' + Math.round((cb.cash + own.cash) * 100) + '% cash</div></div></div>' +
+      '<div class="bar green" style="margin-top:8px"><i style="width:' + (n / total * 100) + '%"></i></div>' +
+      '<div class="kv" style="margin-top:8px"><span>Owned effects (' + own.n + ' athletes, ' + own.milestones + ' milestones)</span><span style="color:var(--good)">+' + (own.power * 100).toFixed(1) + '%</span><span>World set bonuses</span><span style="color:var(--good)">+' + Math.round(sets.power * 100) + '%</span><span>Discovery milestones</span><span style="color:var(--good)">+' + Math.round(cb.power * 100) + '%</span></div>' +
+      '<div class="row wrap" style="margin-top:8px;gap:5px">' + E.collectionMilestones.map((m) => '<span class="chip ' + (n >= m.n ? 'good' : '') + '">' + m.n + ': +' + Math.round(m.power * 100) + '%</span>').join('') + '</div></div>';
     const maxW = E.worldOf(s.best);
     for (let w = 0; w < D.worlds.length; w++) {
       const list = A.catalog.filter((t) => t.world === w);
       const got = list.filter((t) => s.collection[t.id]).length;
-      html += '<div class="sec-title"><span class="h3" style="color:' + D.worlds[w].color + '">W' + (w + 1) + ' · ' + D.worlds[w].short + '</span><span class="label">' + got + '/' + list.length + (w > maxW ? ' · scouted from World ' + (w + 1) : '') + '</span></div>';
+      const setChips = D.owned.worldSets.map((ws) => '<span class="chip ' + (got >= ws[0] ? 'good' : '') + '" style="padding:1px 6px">' + ws[0] + ': +' + Math.round(ws[1] * 100) + '%</span>').join(' ');
+      html += '<div class="sec-title"><span class="h3" style="color:' + D.worlds[w].color + '">W' + (w + 1) + ' · ' + D.worlds[w].short + '</span><span class="label">' + got + '/' + list.length + ' ' + setChips + (w > maxW ? ' · from World ' + (w + 1) : '') + '</span></div>';
       if (w > maxW + 1) { html += '<div class="card flat lock-note">' + icon('lock') + ' Reach World ' + (w + 1) + ' to scout these athletes.</div>'; continue; }
       html += '<div class="agrid compact">' + list.map((t) => ui.templateCard(t, !!s.collection[t.id])).join('') + '</div>';
     }
@@ -372,6 +384,14 @@
       BE.bus.emit('levelup', { n }); BE.bus.emit('changed'); renderTeam();
     },
     teamslot: (d) => pickGear(d.slot, null, renderTeam),
+    autoequip: (d, el) => {
+      const s = S();
+      const n = E.autoEquip(s);
+      if (!n) { ui.toast('Your starters already wear the best gear you own', '', 'check'); return; }
+      BE.audio.play('upgrade', { combo: 3 }); if (el) ui.sparks(el, '#48b2ff', 14);
+      ui.toast(n + ' piece' + (n === 1 ? '' : 's') + ' of gear equipped on your starters', 'good', 'gear');
+      BE.bus.emit('changed'); renderTeam();
+    },
     gear: (d) => openGear(d.id),
     craft: (d, el) => {
       const s = S();

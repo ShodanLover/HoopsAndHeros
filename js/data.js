@@ -287,15 +287,28 @@
     { k: 'recruiting', name: 'Recruiting Director', who: 'Sly Bentley', desc: '+10% shards; +1 free Pro Scout ticket daily at Lv 5', per: 0.1, base: 1.5e5, growth: 1.80, unlock: 25, max: 25 },
   ];
 
+  // Accessory slots open by lifetime best stage (unlock). Drops only roll unlocked types.
   const gearTypes = [
-    { k: 'shoes', name: 'Sneakers', slot: 'athlete', attr: 'spd', icon: 'shoe' },
-    { k: 'jersey', name: 'Jersey', slot: 'athlete', attr: 'sta', icon: 'jersey' },
-    { k: 'headband', name: 'Headband', slot: 'athlete', attr: 'sht', icon: 'headband' },
-    { k: 'wristband', name: 'Wristband', slot: 'athlete', attr: 'hnd', icon: 'wrist' },
-    { k: 'compression', name: 'Compression Sleeve', slot: 'athlete', attr: 'str', icon: 'sleeve' },
-    { k: 'ball', name: 'Basketball', slot: 'team', attr: 'thr', icon: 'ball' },
-    { k: 'trainer', name: 'Training Equipment', slot: 'team', attr: 'iq', icon: 'dumbbell' },
+    { k: 'shoes', name: 'Sneakers', slot: 'athlete', attr: 'spd', icon: 'shoe', unlock: 5 },
+    { k: 'jersey', name: 'Jersey', slot: 'athlete', attr: 'sta', icon: 'jersey', unlock: 5 },
+    { k: 'headband', name: 'Headband', slot: 'athlete', attr: 'sht', icon: 'headband', unlock: 10 },
+    { k: 'wristband', name: 'Wristband', slot: 'athlete', attr: 'hnd', icon: 'wrist', unlock: 20 },
+    { k: 'compression', name: 'Compression Sleeve', slot: 'athlete', attr: 'str', icon: 'sleeve', unlock: 30 },
+    { k: 'ball', name: 'Basketball', slot: 'team', attr: 'thr', icon: 'ball', unlock: 15 },
+    { k: 'trainer', name: 'Training Equipment', slot: 'team', attr: 'iq', icon: 'dumbbell', unlock: 25 },
   ];
+  // Owned effects: power from the whole collection, even on the bench (per athlete, by rarity, x stars),
+  // milestone bonuses per athlete level, world set bonuses by athletes discovered per world, and per gear piece.
+  const owned = {
+    athlete: [0.002, 0.003, 0.005, 0.008, 0.012, 0.02],
+    starStep: 0.1,
+    milestones: [10, 25, 50, 75, 100],
+    milestoneBonus: 0.01,
+    worldSets: [[10, 0.03], [20, 0.06], [30, 0.12]],
+    gearPerRarity: 0.002,
+    gearLevelStep: 0.05,
+    gearCap: 1.0,
+  };
   const gearRarityPct = [0.04, 0.07, 0.11, 0.17, 0.26, 0.4];
   const gearRarityAttr = [1, 2, 3, 4, 6, 8];
 
@@ -456,7 +469,7 @@
   BE.data = {
     balance, attrs, positions, rarities, archetypes, personalities, celebrations, firstNames, lastNames, nicknames, opponentNicks,
     skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, growth, questLine, facilities, coaches, gearTypes, gearRarityPct,
-    gearRarityAttr, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
+    gearRarityAttr, owned, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
     achievements, achievementGems, products, gemShop, ads, alliances, aiFranchiseNames, franchiseAdjectives, franchiseNouns,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

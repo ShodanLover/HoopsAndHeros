@@ -40,7 +40,8 @@
   // ---------- Modifiers (cached) ----------
   let modsCache = null, modsKey = '';
   function modsSignature(s) {
-    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0]);
+    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0,
+      Math.round(ownedBonus(s).power * 1e5), Math.round(gearOwnedBonus(s) * 1e5), worldSetBonus(s).counts.join(',')]);
   }
   function mods(s) {
     const sig = modsSignature(s);
@@ -53,11 +54,14 @@
     const gearColl = 1 + 0.01 * Object.keys(s.gearSeen).length;
     const fansMult = 1 + Math.log10(1 + s.fans) * 0.06;
     const gfx = growthFx(s);
+    const own = ownedBonus(s), sets = worldSetBonus(s), gOwn = gearOwnedBonus(s);
     const m = {
       aura,
       powerMult: aura * (1 + 0.2 * p('power')) * (1 + 0.07 * f('gym')) * (1 + 0.04 * f('training')) * (1 + 0.06 * f('hq')) *
-        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power),
-      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash),
+        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power) *
+        (1 + own.power) * (1 + sets.power) * (1 + gOwn),
+      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash) * (1 + own.cash),
+      owned: own, sets, gearOwned: gOwn,
       winCashMult: 1 + 0.15 * f('court'),
       passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult * (1 + gfx.passive),
       fanMult: (1 + 0.12 * f('stadium')) * (1 + gfx.fans),
@@ -146,6 +150,34 @@
     if (f.def) parts.push('+' + pct(f.def * n) + ' defense');
     if (f.reb) parts.push('+' + pct(f.reb * n) + ' boards');
     return (lvl ? '' : 'Per level: ') + parts.join(' · ');
+  }
+
+  // ---------- Owned effects ----------
+  function athleteMilestones(lvl) { let n = 0; for (const m of D.owned.milestones) if (lvl >= m) n++; return n; }
+  function athleteOwnedPower(a) {
+    const t = A.tpl(a.cid);
+    return D.owned.athlete[t.rarity] * (1 + D.owned.starStep * (a.stars - 1)) + D.owned.milestoneBonus * athleteMilestones(a.lvl);
+  }
+  function ownedBonus(s) {
+    let power = 0, milestones = 0;
+    for (const a of s.roster) { power += athleteOwnedPower(a); milestones += athleteMilestones(a.lvl); }
+    return { power, cash: power * 0.5, n: s.roster.length, milestones };
+  }
+  function worldSetBonus(s) {
+    const counts = new Array(D.worlds.length).fill(0);
+    for (const id in s.collection) { const t = A.tpl(id); if (t && !t.starter) counts[t.world]++; }
+    let power = 0;
+    const tiers = counts.map((n) => { let tier = 0; for (let i = 0; i < D.owned.worldSets.length; i++) if (n >= D.owned.worldSets[i][0]) tier = i + 1; if (tier) power += D.owned.worldSets[tier - 1][1]; return tier; });
+    return { counts, tiers, power };
+  }
+  function gearOwnedBonus(s) {
+    let v = 0;
+    for (const it of s.gear) v += D.owned.gearPerRarity * (it.rarity + 1) * (1 + D.owned.gearLevelStep * (it.lvl - 1));
+    return Math.min(D.owned.gearCap, v);
+  }
+  function gearTypeUnlocked(s, k) {
+    const t = D.gearTypes.find((x) => x.k === k);
+    return !!t && s.best >= (t.unlock || 0);
   }
 
   const collectionMilestones = [
@@ -350,7 +382,8 @@
   }
   function randomGear(s, minRarity, rng) {
     rng = rng || Math.random;
-    const type = U.pick(D.gearTypes, rng).k;
+    const types = D.gearTypes.filter((t) => gearTypeUnlocked(s, t.k));
+    const type = U.pick(types.length ? types : D.gearTypes, rng).k;
     let r = rollGearRarity(rng, 1);
     r = Math.max(r, minRarity || 0);
     return makeGear(s, type, r, worldOf(s.best), rng);
@@ -428,7 +461,32 @@
     s.scrap -= cost;
     const rng = Math.random;
     const r = Math.max(1, rollGearRarity(rng, 1.5));
-    return { ok: true, item: makeGear(s, type || U.pick(D.gearTypes, rng).k, Math.min(5, r), worldOf(s.best), rng) };
+    const types = D.gearTypes.filter((t) => gearTypeUnlocked(s, t.k));
+    return { ok: true, item: makeGear(s, type || U.pick(types.length ? types : D.gearTypes, rng).k, Math.min(5, r), worldOf(s.best), rng) };
+  }
+  // One tap: strongest starters get the strongest unlocked gear of each type; best team gear too
+  function autoEquip(s, size) {
+    size = size || sizeOf(Math.min(s.run.cleared, 99));
+    const m = mods(s);
+    const starters = lineupAthletes(s).slice(0, size).sort((a, b) => athletePower(s, b, m) - athletePower(s, a, m));
+    const byType = {};
+    for (const it of s.gear) (byType[it.type] = byType[it.type] || []).push(it);
+    for (const k in byType) byType[k].sort((x, y) => gearMain(y) - gearMain(x));
+    const used = new Set();
+    let changes = 0;
+    for (const a of starters) for (const t of D.gearTypes) {
+      if (t.slot !== 'athlete' || !gearTypeUnlocked(s, t.k)) continue;
+      const best = (byType[t.k] || []).find((it) => !used.has(it.id));
+      if (!best) continue;
+      used.add(best.id);
+      if (a.gear[t.k] !== best.id) { equipGear(s, best.id, a); changes++; }
+    }
+    for (const slot of ['ball', 'trainer']) {
+      if (!gearTypeUnlocked(s, slot)) continue;
+      const best = (byType[slot] || [])[0];
+      if (best && s.teamGear[slot] !== best.id) { equipGear(s, best.id, null); changes++; }
+    }
+    return changes;
   }
 
   // ---------- Recruitment ----------
@@ -623,6 +681,6 @@
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
     eventFeatured, pullOne, recruit, addAthlete, shardExchange, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
-    doPrestige, gearPct, teamGearPct, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
+    doPrestige, gearPct, teamGearPct, athleteMilestones, athleteOwnedPower, ownedBonus, worldSetBonus, gearOwnedBonus, gearTypeUnlocked, autoEquip, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -970,15 +970,28 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     { k: 'recruiting', name: 'Recruiting Director', who: 'Sly Bentley', desc: '+10% shards; +1 free Pro Scout ticket daily at Lv 5', per: 0.1, base: 1.5e5, growth: 1.80, unlock: 25, max: 25 },
   ];
 
+  // Accessory slots open by lifetime best stage (unlock). Drops only roll unlocked types.
   const gearTypes = [
-    { k: 'shoes', name: 'Sneakers', slot: 'athlete', attr: 'spd', icon: 'shoe' },
-    { k: 'jersey', name: 'Jersey', slot: 'athlete', attr: 'sta', icon: 'jersey' },
-    { k: 'headband', name: 'Headband', slot: 'athlete', attr: 'sht', icon: 'headband' },
-    { k: 'wristband', name: 'Wristband', slot: 'athlete', attr: 'hnd', icon: 'wrist' },
-    { k: 'compression', name: 'Compression Sleeve', slot: 'athlete', attr: 'str', icon: 'sleeve' },
-    { k: 'ball', name: 'Basketball', slot: 'team', attr: 'thr', icon: 'ball' },
-    { k: 'trainer', name: 'Training Equipment', slot: 'team', attr: 'iq', icon: 'dumbbell' },
+    { k: 'shoes', name: 'Sneakers', slot: 'athlete', attr: 'spd', icon: 'shoe', unlock: 5 },
+    { k: 'jersey', name: 'Jersey', slot: 'athlete', attr: 'sta', icon: 'jersey', unlock: 5 },
+    { k: 'headband', name: 'Headband', slot: 'athlete', attr: 'sht', icon: 'headband', unlock: 10 },
+    { k: 'wristband', name: 'Wristband', slot: 'athlete', attr: 'hnd', icon: 'wrist', unlock: 20 },
+    { k: 'compression', name: 'Compression Sleeve', slot: 'athlete', attr: 'str', icon: 'sleeve', unlock: 30 },
+    { k: 'ball', name: 'Basketball', slot: 'team', attr: 'thr', icon: 'ball', unlock: 15 },
+    { k: 'trainer', name: 'Training Equipment', slot: 'team', attr: 'iq', icon: 'dumbbell', unlock: 25 },
   ];
+  // Owned effects: power from the whole collection, even on the bench (per athlete, by rarity, x stars),
+  // milestone bonuses per athlete level, world set bonuses by athletes discovered per world, and per gear piece.
+  const owned = {
+    athlete: [0.002, 0.003, 0.005, 0.008, 0.012, 0.02],
+    starStep: 0.1,
+    milestones: [10, 25, 50, 75, 100],
+    milestoneBonus: 0.01,
+    worldSets: [[10, 0.03], [20, 0.06], [30, 0.12]],
+    gearPerRarity: 0.002,
+    gearLevelStep: 0.05,
+    gearCap: 1.0,
+  };
   const gearRarityPct = [0.04, 0.07, 0.11, 0.17, 0.26, 0.4];
   const gearRarityAttr = [1, 2, 3, 4, 6, 8];
 
@@ -1139,7 +1152,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   BE.data = {
     balance, attrs, positions, rarities, archetypes, personalities, celebrations, firstNames, lastNames, nicknames, opponentNicks,
     skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, growth, questLine, facilities, coaches, gearTypes, gearRarityPct,
-    gearRarityAttr, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
+    gearRarityAttr, owned, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
     achievements, achievementGems, products, gemShop, ads, alliances, aiFranchiseNames, franchiseAdjectives, franchiseNouns,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
@@ -1872,7 +1885,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   // ---------- Modifiers (cached) ----------
   let modsCache = null, modsKey = '';
   function modsSignature(s) {
-    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0]);
+    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0,
+      Math.round(ownedBonus(s).power * 1e5), Math.round(gearOwnedBonus(s) * 1e5), worldSetBonus(s).counts.join(',')]);
   }
   function mods(s) {
     const sig = modsSignature(s);
@@ -1885,11 +1899,14 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     const gearColl = 1 + 0.01 * Object.keys(s.gearSeen).length;
     const fansMult = 1 + Math.log10(1 + s.fans) * 0.06;
     const gfx = growthFx(s);
+    const own = ownedBonus(s), sets = worldSetBonus(s), gOwn = gearOwnedBonus(s);
     const m = {
       aura,
       powerMult: aura * (1 + 0.2 * p('power')) * (1 + 0.07 * f('gym')) * (1 + 0.04 * f('training')) * (1 + 0.06 * f('hq')) *
-        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power),
-      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash),
+        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power) *
+        (1 + own.power) * (1 + sets.power) * (1 + gOwn),
+      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash) * (1 + own.cash),
+      owned: own, sets, gearOwned: gOwn,
       winCashMult: 1 + 0.15 * f('court'),
       passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult * (1 + gfx.passive),
       fanMult: (1 + 0.12 * f('stadium')) * (1 + gfx.fans),
@@ -1978,6 +1995,34 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     if (f.def) parts.push('+' + pct(f.def * n) + ' defense');
     if (f.reb) parts.push('+' + pct(f.reb * n) + ' boards');
     return (lvl ? '' : 'Per level: ') + parts.join(' · ');
+  }
+
+  // ---------- Owned effects ----------
+  function athleteMilestones(lvl) { let n = 0; for (const m of D.owned.milestones) if (lvl >= m) n++; return n; }
+  function athleteOwnedPower(a) {
+    const t = A.tpl(a.cid);
+    return D.owned.athlete[t.rarity] * (1 + D.owned.starStep * (a.stars - 1)) + D.owned.milestoneBonus * athleteMilestones(a.lvl);
+  }
+  function ownedBonus(s) {
+    let power = 0, milestones = 0;
+    for (const a of s.roster) { power += athleteOwnedPower(a); milestones += athleteMilestones(a.lvl); }
+    return { power, cash: power * 0.5, n: s.roster.length, milestones };
+  }
+  function worldSetBonus(s) {
+    const counts = new Array(D.worlds.length).fill(0);
+    for (const id in s.collection) { const t = A.tpl(id); if (t && !t.starter) counts[t.world]++; }
+    let power = 0;
+    const tiers = counts.map((n) => { let tier = 0; for (let i = 0; i < D.owned.worldSets.length; i++) if (n >= D.owned.worldSets[i][0]) tier = i + 1; if (tier) power += D.owned.worldSets[tier - 1][1]; return tier; });
+    return { counts, tiers, power };
+  }
+  function gearOwnedBonus(s) {
+    let v = 0;
+    for (const it of s.gear) v += D.owned.gearPerRarity * (it.rarity + 1) * (1 + D.owned.gearLevelStep * (it.lvl - 1));
+    return Math.min(D.owned.gearCap, v);
+  }
+  function gearTypeUnlocked(s, k) {
+    const t = D.gearTypes.find((x) => x.k === k);
+    return !!t && s.best >= (t.unlock || 0);
   }
 
   const collectionMilestones = [
@@ -2182,7 +2227,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   }
   function randomGear(s, minRarity, rng) {
     rng = rng || Math.random;
-    const type = U.pick(D.gearTypes, rng).k;
+    const types = D.gearTypes.filter((t) => gearTypeUnlocked(s, t.k));
+    const type = U.pick(types.length ? types : D.gearTypes, rng).k;
     let r = rollGearRarity(rng, 1);
     r = Math.max(r, minRarity || 0);
     return makeGear(s, type, r, worldOf(s.best), rng);
@@ -2260,7 +2306,32 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     s.scrap -= cost;
     const rng = Math.random;
     const r = Math.max(1, rollGearRarity(rng, 1.5));
-    return { ok: true, item: makeGear(s, type || U.pick(D.gearTypes, rng).k, Math.min(5, r), worldOf(s.best), rng) };
+    const types = D.gearTypes.filter((t) => gearTypeUnlocked(s, t.k));
+    return { ok: true, item: makeGear(s, type || U.pick(types.length ? types : D.gearTypes, rng).k, Math.min(5, r), worldOf(s.best), rng) };
+  }
+  // One tap: strongest starters get the strongest unlocked gear of each type; best team gear too
+  function autoEquip(s, size) {
+    size = size || sizeOf(Math.min(s.run.cleared, 99));
+    const m = mods(s);
+    const starters = lineupAthletes(s).slice(0, size).sort((a, b) => athletePower(s, b, m) - athletePower(s, a, m));
+    const byType = {};
+    for (const it of s.gear) (byType[it.type] = byType[it.type] || []).push(it);
+    for (const k in byType) byType[k].sort((x, y) => gearMain(y) - gearMain(x));
+    const used = new Set();
+    let changes = 0;
+    for (const a of starters) for (const t of D.gearTypes) {
+      if (t.slot !== 'athlete' || !gearTypeUnlocked(s, t.k)) continue;
+      const best = (byType[t.k] || []).find((it) => !used.has(it.id));
+      if (!best) continue;
+      used.add(best.id);
+      if (a.gear[t.k] !== best.id) { equipGear(s, best.id, a); changes++; }
+    }
+    for (const slot of ['ball', 'trainer']) {
+      if (!gearTypeUnlocked(s, slot)) continue;
+      const best = (byType[slot] || [])[0];
+      if (best && s.teamGear[slot] !== best.id) { equipGear(s, best.id, null); changes++; }
+    }
+    return changes;
   }
 
   // ---------- Recruitment ----------
@@ -2455,7 +2526,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
     eventFeatured, pullOne, recruit, addAthlete, shardExchange, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
-    doPrestige, gearPct, teamGearPct, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
+    doPrestige, gearPct, teamGearPct, athleteMilestones, athleteOwnedPower, ownedBonus, worldSetBonus, gearOwnedBonus, gearTypeUnlocked, autoEquip, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -5590,7 +5661,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     let html = '<div class="card"><div class="row between"><div><div class="label">Starting ' + size + ' power</div><div class="power-num">⚡ ' + U.fmt(tp) + '</div></div>' +
       '<div style="text-align:right"><div class="label">Next opponent</div><div class="num" style="font-size:18px">⚡ ' + U.fmt(opp) + '</div><span class="chip ' + status[1] + '">' + status[0] + '</span></div></div>' +
       '<div class="bar ' + (ratio >= 1 ? 'green' : '') + '" style="margin-top:8px"><i style="width:' + Math.min(100, ratio * 50) + '%"></i></div>' +
-      '<div class="row" style="margin-top:10px"><button class="btn sm ghost grow" data-act="autolineup">' + icon('swap') + ' Best lineup</button><button class="btn sm grow" data-act="levelall">' + icon('up') + ' Level all starters</button></div></div>';
+      '<div class="row" style="margin-top:10px"><button class="btn sm ghost grow" data-act="autolineup">' + icon('swap') + ' Best lineup</button>' + (E.unlocked(s, 'gear') ? '<button class="btn sm blue grow" data-act="autoequip">' + icon('gear') + ' Auto-equip</button>' : '') + '<button class="btn sm grow" data-act="levelall">' + icon('up') + ' Level all</button></div></div>';
     html += '<div class="sec-title"><span class="h3">Starters</span><span class="label">' + D.formats[E.formatOf(g)].label + '</span></div><div class="lineup">';
     for (let i = 0; i < 5; i++) {
       const uid = s.lineup[i];
@@ -5608,6 +5679,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       html += '<div class="sec-title"><span class="h3">Team equipment</span><span class="label">Boosts every starter</span></div><div class="row" style="gap:16px">';
       for (const slot of ['ball', 'trainer']) {
         const it = s.teamGear[slot] && s.gearById[s.teamGear[slot]];
+        const gt = D.gearTypes.find((x) => x.k === slot);
+        if (!E.gearTypeUnlocked(s, slot)) { html += '<div class="gslot slot-locked"><div class="gicon empty">' + icon('lock') + '</div>' + (slot === 'ball' ? 'Basketball' : 'Training') + '<br>W' + (E.worldOf(gt.unlock) + 1) + '</div>'; continue; }
         html += '<button class="gslot" data-act="teamslot" data-slot="' + slot + '">' + ui.gearBadge(it) + (slot === 'ball' ? 'Basketball' : 'Training') + '</button>';
       }
       html += '<div class="grow small muted">Team gear adds half its power bonus to every athlete.</div></div>';
@@ -5680,11 +5753,16 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     // Signature
     html += '<div class="card flat" style="margin-top:10px"><div class="row" style="align-items:flex-start"><span style="color:var(--gold);font-size:20px">' + icon('star') + '</span><div class="grow"><b>' + arch.ability.name + '</b> <span class="muted small">· ' + arch.name + '</span><div class="small muted">' + arch.ability.desc + '</div></div></div>' +
       '<div class="row" style="align-items:flex-start;margin-top:8px"><span style="color:var(--info);font-size:20px">' + icon('social') + '</span><div class="grow"><b>' + pers.name + '</b> <span class="muted small">· Personality</span><div class="small muted">' + pers.desc + ' · Celebration: ' + t.celebration + '</div></div></div></div>';
-    // Gear slots
+    // Milestones (owned effects that count even on the bench)
+    const ms = D.owned.milestones;
+    html += '<div class="card flat" style="margin-top:10px"><div class="row between"><span class="h3">Milestones</span><span class="label">Owned bonus: +' + (E.athleteOwnedPower(a) * 100).toFixed(1) + '% team power</span></div><div class="row wrap" style="gap:4px;margin-top:6px">' +
+      ms.map((lv) => '<span class="chip ' + (a.lvl >= lv ? 'good' : '') + '">Lv ' + lv + ' · +' + Math.round(D.owned.milestoneBonus * 100) + '%</span>').join('') + '</div><div class="small muted" style="margin-top:4px">Every athlete you own adds power to the whole franchise, bench included. Levels 10, 25, 50, 75 and 100 add more.</div></div>';
+    // Accessory slots
     if (E.unlocked(s, 'gear')) {
-      html += '<div class="sec-title"><span class="h3">Equipment</span><span class="label">+' + Math.round(E.gearPct(s, a) * 100) + '% power</span></div><div class="row wrap" style="gap:12px;justify-content:space-between">';
+      html += '<div class="sec-title"><span class="h3">Accessories</span><span class="label">+' + Math.round(E.gearPct(s, a) * 100) + '% power</span></div><div class="row wrap" style="gap:12px;justify-content:space-between">';
       for (const gt of D.gearTypes.filter((x) => x.slot === 'athlete')) {
         const it = a.gear[gt.k] && s.gearById[a.gear[gt.k]];
+        if (!E.gearTypeUnlocked(s, gt.k)) { html += '<div class="gslot slot-locked"><div class="gicon empty">' + icon('lock') + '</div>' + gt.name.split(' ')[0] + '<br>W' + (E.worldOf(gt.unlock) + 1) + '</div>'; continue; }
         html += '<button class="gslot" data-act="slot" data-slot="' + gt.k + '">' + ui.gearBadge(it) + gt.name.split(' ')[0] + '</button>';
       }
       html += '</div>';
@@ -5809,7 +5887,9 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     } else html += '<div class="lock-note" style="margin-top:8px">' + icon('lock') + ' Crafting unlocks at ' + ui.stageName(D.features.craft.g) + '</div>';
     html += '</div>';
     const coll = Object.keys(s.gearSeen).length;
-    html += '<div class="sec-title"><span class="h3">Inventory (' + s.gear.length + ')</span><span class="label">Gear collection ' + coll + '/70 · +' + coll + '% power</span></div>';
+    html += '<div class="card flat" style="margin-top:10px"><div class="row between"><div><div class="label">Owned bonus</div><div class="num" style="color:var(--good);font-size:18px">+' + (E.gearOwnedBonus(s) * 100).toFixed(1) + '% power</div></div><div class="small muted" style="max-width:58%;text-align:right">Every piece you own adds power, equipped or not (more for rarer and higher-level gear). Sets found: ' + coll + '/70 · +' + coll + '%</div></div>' +
+      '<button class="btn sm blue wide" style="margin-top:8px" data-act="autoequip">' + icon('gear') + ' Auto-equip best on starters</button></div>';
+    html += '<div class="sec-title"><span class="h3">Inventory (' + s.gear.length + ')</span><span class="label">Slots open by world: ' + D.gearTypes.filter((t) => E.gearTypeUnlocked(s, t.k)).length + '/' + D.gearTypes.length + '</span></div>';
     if (!s.gear.length) return html + '<div class="card flat empty">No gear yet — wins sometimes drop equipment, and championships always do.</div>';
     const sorted = s.gear.slice().sort((x, y) => y.rarity - x.rarity || y.set - x.set || y.lvl - x.lvl);
     html += '<div class="ggrid">' + sorted.map((it) => '<button class="gslot" data-act="gear" data-id="' + it.id + '" style="position:relative">' + ui.gearBadge(it) + (E.gearOwner(s, it.id) ? '<span style="color:var(--good)">equipped</span>' : it.isNew ? '<span style="color:var(--bad)">new</span>' : '&nbsp;') + '</button>').join('') + '</div>';
@@ -5883,14 +5963,17 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     const n = s.stats.unique;
     const total = A.catalog.length + 1;
     const cb = E.collectionBonus(s);
-    let html = '<div class="card"><div class="row between"><div><div class="label">Athletes discovered</div><div class="power-num">' + n + ' / ' + total + '</div></div><div style="text-align:right"><div class="label">Collection bonus</div><div class="num" style="color:var(--good)">+' + Math.round(cb.power * 100) + '% power · +' + Math.round(cb.cash * 100) + '% cash</div></div></div>' +
-      '<div class="bar green" style="margin-top:8px"><i style="width:' + (n / total * 100) + '%"></i></div><div class="row wrap" style="margin-top:8px;gap:5px">' +
-      E.collectionMilestones.map((m) => '<span class="chip ' + (n >= m.n ? 'good' : '') + '">' + m.n + ': +' + Math.round(m.power * 100) + '%</span>').join('') + '</div></div>';
+    const own = E.ownedBonus(s), sets = E.worldSetBonus(s);
+    let html = '<div class="card"><div class="row between"><div><div class="label">Collection book</div><div class="power-num">' + n + ' / ' + total + '</div></div><div style="text-align:right"><div class="label">Total collection power</div><div class="num" style="color:var(--good)">+' + Math.round((cb.power + own.power + sets.power) * 100) + '% power · +' + Math.round((cb.cash + own.cash) * 100) + '% cash</div></div></div>' +
+      '<div class="bar green" style="margin-top:8px"><i style="width:' + (n / total * 100) + '%"></i></div>' +
+      '<div class="kv" style="margin-top:8px"><span>Owned effects (' + own.n + ' athletes, ' + own.milestones + ' milestones)</span><span style="color:var(--good)">+' + (own.power * 100).toFixed(1) + '%</span><span>World set bonuses</span><span style="color:var(--good)">+' + Math.round(sets.power * 100) + '%</span><span>Discovery milestones</span><span style="color:var(--good)">+' + Math.round(cb.power * 100) + '%</span></div>' +
+      '<div class="row wrap" style="margin-top:8px;gap:5px">' + E.collectionMilestones.map((m) => '<span class="chip ' + (n >= m.n ? 'good' : '') + '">' + m.n + ': +' + Math.round(m.power * 100) + '%</span>').join('') + '</div></div>';
     const maxW = E.worldOf(s.best);
     for (let w = 0; w < D.worlds.length; w++) {
       const list = A.catalog.filter((t) => t.world === w);
       const got = list.filter((t) => s.collection[t.id]).length;
-      html += '<div class="sec-title"><span class="h3" style="color:' + D.worlds[w].color + '">W' + (w + 1) + ' · ' + D.worlds[w].short + '</span><span class="label">' + got + '/' + list.length + (w > maxW ? ' · scouted from World ' + (w + 1) : '') + '</span></div>';
+      const setChips = D.owned.worldSets.map((ws) => '<span class="chip ' + (got >= ws[0] ? 'good' : '') + '" style="padding:1px 6px">' + ws[0] + ': +' + Math.round(ws[1] * 100) + '%</span>').join(' ');
+      html += '<div class="sec-title"><span class="h3" style="color:' + D.worlds[w].color + '">W' + (w + 1) + ' · ' + D.worlds[w].short + '</span><span class="label">' + got + '/' + list.length + ' ' + setChips + (w > maxW ? ' · from World ' + (w + 1) : '') + '</span></div>';
       if (w > maxW + 1) { html += '<div class="card flat lock-note">' + icon('lock') + ' Reach World ' + (w + 1) + ' to scout these athletes.</div>'; continue; }
       html += '<div class="agrid compact">' + list.map((t) => ui.templateCard(t, !!s.collection[t.id])).join('') + '</div>';
     }
@@ -5927,6 +6010,14 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       BE.bus.emit('levelup', { n }); BE.bus.emit('changed'); renderTeam();
     },
     teamslot: (d) => pickGear(d.slot, null, renderTeam),
+    autoequip: (d, el) => {
+      const s = S();
+      const n = E.autoEquip(s);
+      if (!n) { ui.toast('Your starters already wear the best gear you own', '', 'check'); return; }
+      BE.audio.play('upgrade', { combo: 3 }); if (el) ui.sparks(el, '#48b2ff', 14);
+      ui.toast(n + ' piece' + (n === 1 ? '' : 's') + ' of gear equipped on your starters', 'good', 'gear');
+      BE.bus.emit('changed'); renderTeam();
+    },
     gear: (d) => openGear(d.id),
     craft: (d, el) => {
       const s = S();

@@ -22,6 +22,7 @@ for (let run = 0; run < RUNS; run++) {
   const runStart = t;
   while (t - runStart < HOURS * 3600) {
     G.resets(s, Date.now());
+    for (let k = 0; k < 5 && G.questState(s).done; k++) G.claimQuest(s);
     while (s.tickets > 0) { E.recruit(s, 'pro', 1, 'tickets'); botLineup(); }
     if (s.gems >= 900) { E.recruit(s, 'pro', 10, 'gems'); botLineup(); }
     const tg = G.target(s);
