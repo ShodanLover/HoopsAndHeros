@@ -10,31 +10,42 @@
   const R = { match: null, phase: 'idle', betweenT: 0, quickWait: 0, hold: false, lines: [], lastScore: [0, 0], champBannerShown: false, lastObjective: '' };
 
   // ---------- Layout ----------
-  function renderPlay() {
+  // The arena (stage header, court, abilities, objective) is pinned above the tabs and never leaves the screen.
+  // The Play tab itself holds the hub, toolbar and commentary.
+  function renderArena() {
     const s = S();
-    const el = $('#scr-play');
+    const el = $('#arena');
+    if (!el) return;
     if (!el.dataset.built) {
       el.innerHTML =
         '<div class="stagebar"><div class="grow"><div class="wname" data-p="wname"></div><div class="wsub" data-p="wsub"></div><div class="pips" data-p="pips"></div></div>' +
         '<button class="icon-btn" data-act="map" aria-label="World map">' + icon('map') + '</button></div>' +
-        '<div class="hub" data-p="hub"></div>' +
-        '<button class="objective" data-act="objective" data-p="objective"></button>' +
         '<div class="court-wrap" data-p="courtwrap"><canvas id="court"></canvas><div class="scoreboard" data-p="sb"></div><div class="result-pop hidden" data-p="result"></div><div data-p="overlay"></div></div>' +
         '<div class="controls" data-p="controls"></div>' +
-        '<div class="toolbar" data-p="toolbar"></div>' +
-        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>';
+        '<button class="objective" data-act="objective" data-p="objective"></button>';
       el.dataset.built = '1';
       CT.init($('#court'));
       CT.setTheme(E.worldOf(s.run.cleared), G.cosmetic(s));
     }
     renderStageBar();
-    renderHub();
     renderObjective();
     renderControls();
-    renderToolbar();
     renderOverlay();
     renderScoreboard();
     requestAnimationFrame(() => CT.resize());
+  }
+  function renderPlay() {
+    renderArena();
+    const el = $('#scr-play');
+    if (!el.dataset.built) {
+      el.innerHTML =
+        '<div class="hub" data-p="hub"></div>' +
+        '<div class="toolbar" data-p="toolbar"></div>' +
+        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>';
+      el.dataset.built = '1';
+    }
+    renderHub();
+    renderToolbar();
   }
 
   function renderStageBar() {
@@ -399,9 +410,7 @@
     if (ev.endQuarter && !m.over && !ev.overtime) CT.showBanner('END OF Q' + ev.endQuarter, m.score[0] + ' – ' + m.score[1], '#ffffff', 1.2);
   }
 
-  function draw() {
-    if (ui.current() === 'play') CT.draw();
-  }
+  function draw() { CT.draw(); }
 
   function enterChampionship() {
     const s = S();
@@ -442,6 +451,6 @@
     return b;
   }
 
-  BE.play = { R, renderPlay, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
+  BE.play = { R, renderPlay, renderArena, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
   ui.badges = badges;
 })(typeof window !== 'undefined' ? window : globalThis);

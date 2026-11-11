@@ -262,7 +262,7 @@
   // ---------- Boot ----------
   function shell() {
     const app = $('#app');
-    app.innerHTML = '<header id="hud"></header><main id="screens"><section class="screen active" id="scr-play"></section><section class="screen" id="scr-team"></section><section class="screen" id="scr-recruit"></section><section class="screen" id="scr-empire"></section><section class="screen" id="scr-shop"></section></main><nav id="nav"></nav>';
+    app.innerHTML = '<header id="hud"></header><section id="arena"></section><main id="screens"><section class="screen active" id="scr-play"></section><section class="screen" id="scr-team"></section><section class="screen" id="scr-recruit"></section><section class="screen" id="scr-empire"></section><section class="screen" id="scr-shop"></section></main><nav id="nav"></nav>';
     document.addEventListener('click', dispatch);
   }
 

@@ -88,8 +88,11 @@ svg.i { width: 1em; height: 1em; display: inline-block; vertical-align: -0.14em;
 #screens { flex: 1; position: relative; overflow: hidden; }
 .screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 10px 12px 18px; display: none; -webkit-overflow-scrolling: touch; }
 .screen.active { display: block; animation: fadeIn 0.18s ease; }
-#scr-play { padding: 8px 10px 10px; display: none; flex-direction: column; gap: 7px; }
+#scr-play { padding: 8px 12px 18px; display: none; flex-direction: column; gap: 8px; }
 #scr-play.active { display: flex; }
+/* Pinned arena: stage header, court, abilities and objective stay on screen on every tab */
+#arena { flex: none; display: flex; flex-direction: column; gap: 6px; padding: 6px 10px 6px; background: rgba(0, 0, 0, 0.18); border-bottom: 1px solid var(--line); z-index: 2; }
+#arena .court-wrap { height: clamp(190px, 34vh, 320px); min-height: 0; max-height: none; flex: none; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } }
 
 /* ---------- Nav ---------- */
@@ -447,7 +450,10 @@ textarea.textin { min-height: 90px; font-family: ui-monospace, monospace; font-s
 @keyframes dots { from { width: 0; } to { width: 1.2em; } }
 
 @media (max-height: 700px) {
-  .court-wrap { min-height: 200px; }
+  #arena { gap: 4px; padding-top: 4px; }
+  #arena .court-wrap { height: clamp(165px, 29vh, 240px); }
+  .stagebar .wsub { display: none; }
+  .abil { min-height: 42px; }
   .hub-btn { width: 52px; padding: 4px 0 3px; }
   .hub-btn svg { width: 19px; height: 19px; }
 }
@@ -4740,31 +4746,42 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   const R = { match: null, phase: 'idle', betweenT: 0, quickWait: 0, hold: false, lines: [], lastScore: [0, 0], champBannerShown: false, lastObjective: '' };
 
   // ---------- Layout ----------
-  function renderPlay() {
+  // The arena (stage header, court, abilities, objective) is pinned above the tabs and never leaves the screen.
+  // The Play tab itself holds the hub, toolbar and commentary.
+  function renderArena() {
     const s = S();
-    const el = $('#scr-play');
+    const el = $('#arena');
+    if (!el) return;
     if (!el.dataset.built) {
       el.innerHTML =
         '<div class="stagebar"><div class="grow"><div class="wname" data-p="wname"></div><div class="wsub" data-p="wsub"></div><div class="pips" data-p="pips"></div></div>' +
         '<button class="icon-btn" data-act="map" aria-label="World map">' + icon('map') + '</button></div>' +
-        '<div class="hub" data-p="hub"></div>' +
-        '<button class="objective" data-act="objective" data-p="objective"></button>' +
         '<div class="court-wrap" data-p="courtwrap"><canvas id="court"></canvas><div class="scoreboard" data-p="sb"></div><div class="result-pop hidden" data-p="result"></div><div data-p="overlay"></div></div>' +
         '<div class="controls" data-p="controls"></div>' +
-        '<div class="toolbar" data-p="toolbar"></div>' +
-        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>';
+        '<button class="objective" data-act="objective" data-p="objective"></button>';
       el.dataset.built = '1';
       CT.init($('#court'));
       CT.setTheme(E.worldOf(s.run.cleared), G.cosmetic(s));
     }
     renderStageBar();
-    renderHub();
     renderObjective();
     renderControls();
-    renderToolbar();
     renderOverlay();
     renderScoreboard();
     requestAnimationFrame(() => CT.resize());
+  }
+  function renderPlay() {
+    renderArena();
+    const el = $('#scr-play');
+    if (!el.dataset.built) {
+      el.innerHTML =
+        '<div class="hub" data-p="hub"></div>' +
+        '<div class="toolbar" data-p="toolbar"></div>' +
+        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>';
+      el.dataset.built = '1';
+    }
+    renderHub();
+    renderToolbar();
   }
 
   function renderStageBar() {
@@ -5129,9 +5146,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     if (ev.endQuarter && !m.over && !ev.overtime) CT.showBanner('END OF Q' + ev.endQuarter, m.score[0] + ' – ' + m.score[1], '#ffffff', 1.2);
   }
 
-  function draw() {
-    if (ui.current() === 'play') CT.draw();
-  }
+  function draw() { CT.draw(); }
 
   function enterChampionship() {
     const s = S();
@@ -5172,7 +5187,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     return b;
   }
 
-  BE.play = { R, renderPlay, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
+  BE.play = { R, renderPlay, renderArena, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
   ui.badges = badges;
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -7247,7 +7262,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   // ---------- Boot ----------
   function shell() {
     const app = $('#app');
-    app.innerHTML = '<header id="hud"></header><main id="screens"><section class="screen active" id="scr-play"></section><section class="screen" id="scr-team"></section><section class="screen" id="scr-recruit"></section><section class="screen" id="scr-empire"></section><section class="screen" id="scr-shop"></section></main><nav id="nav"></nav>';
+    app.innerHTML = '<header id="hud"></header><section id="arena"></section><main id="screens"><section class="screen active" id="scr-play"></section><section class="screen" id="scr-team"></section><section class="screen" id="scr-recruit"></section><section class="screen" id="scr-empire"></section><section class="screen" id="scr-shop"></section></main><nav id="nav"></nav>';
     document.addEventListener('click', dispatch);
   }
 

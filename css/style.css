@@ -84,8 +84,11 @@ svg.i { width: 1em; height: 1em; display: inline-block; vertical-align: -0.14em;
 #screens { flex: 1; position: relative; overflow: hidden; }
 .screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 10px 12px 18px; display: none; -webkit-overflow-scrolling: touch; }
 .screen.active { display: block; animation: fadeIn 0.18s ease; }
-#scr-play { padding: 8px 10px 10px; display: none; flex-direction: column; gap: 7px; }
+#scr-play { padding: 8px 12px 18px; display: none; flex-direction: column; gap: 8px; }
 #scr-play.active { display: flex; }
+/* Pinned arena: stage header, court, abilities and objective stay on screen on every tab */
+#arena { flex: none; display: flex; flex-direction: column; gap: 6px; padding: 6px 10px 6px; background: rgba(0, 0, 0, 0.18); border-bottom: 1px solid var(--line); z-index: 2; }
+#arena .court-wrap { height: clamp(190px, 34vh, 320px); min-height: 0; max-height: none; flex: none; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } }
 
 /* ---------- Nav ---------- */
@@ -443,7 +446,10 @@ textarea.textin { min-height: 90px; font-family: ui-monospace, monospace; font-s
 @keyframes dots { from { width: 0; } to { width: 1.2em; } }
 
 @media (max-height: 700px) {
-  .court-wrap { min-height: 200px; }
+  #arena { gap: 4px; padding-top: 4px; }
+  #arena .court-wrap { height: clamp(165px, 29vh, 240px); }
+  .stagebar .wsub { display: none; }
+  .abil { min-height: 42px; }
   .hub-btn { width: 52px; padding: 4px 0 3px; }
   .hub-btn svg { width: 19px; height: 19px; }
 }
