@@ -601,6 +601,16 @@ svg.pxi { width: 16px; height: 16px; vertical-align: -3px; }
 .abil svg.pxi, .objective .oi svg.pxi, .toast .ti svg.pxi, .close-x svg.pxi, .hud-btn svg.pxi, .icon-btn svg.pxi { width: 16px; height: 16px; }
 @media (max-height: 700px) { .hub-btn svg.pxi { width: 16px; height: 16px; } }
 
+/* STARTER tag: an in-flow strip at the bottom of the card, so it never covers the rating, level or stars */
+.acard.inlineup .in::after { position: static; transform: none; display: block; margin-top: auto; padding: 2px 0 1px; text-align: center; font-size: 10px; letter-spacing: 1px; line-height: 1.2; }
+/* narrow cards (5-wide starters row): shrink the rating and level badges so they do not collide */
+.acard { container-type: inline-size; }
+@container (max-width: 84px) {
+  .acard .ovr { font-size: 10px; left: 3px; top: 3px; }
+  .acard .ovr small { font-size: 9px; }
+  .acard .lv { font-size: 9px; padding: 0 2px; right: 3px; top: 3px; }
+}
+
 </style>
 <div id="app"></div>
 <div id="modal-root"></div>
