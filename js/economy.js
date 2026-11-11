@@ -490,11 +490,33 @@
   }
 
   // ---------- Recruitment ----------
+  // Banners level up with pulls (xp = pulls). Odds move linearly from `odds` at level 1 to `oddsMax` at level 10.
+  const BANNER_LEVELS = [0, 10, 25, 50, 90, 140, 200, 280, 380, 500]; // cumulative pulls needed for levels 1..10
   const banners = {
     street: { name: 'Street Scout', odds: [70, 25, 5, 0, 0, 0], currency: 'cash' },
-    pro: { name: 'Pro Scout', odds: [50, 28.5, 15, 5, 1.3, 0.2], currency: 'tickets', gemCost: 100, pity: { e: 30, l: 80, m: 200 }, tenGuarantee: 2 },
-    event: { name: 'Event Scout', odds: [40, 30, 20, 7, 2.5, 0.5], currency: 'eventTickets', gemCost: 150, pity: { e: 25, l: 60, m: 150 }, tenGuarantee: 2 },
+    pro: { name: 'Pro Scout', odds: [50, 28.5, 15, 5, 1.3, 0.2], oddsMax: [30, 30, 24, 11, 4, 1], currency: 'tickets', gemCost: 100, pity: { e: 30, l: 80, m: 200 }, tenGuarantee: 2 },
+    event: { name: 'Event Scout', odds: [40, 30, 20, 7, 2.5, 0.5], oddsMax: [25, 28, 27, 14, 5, 1], currency: 'eventTickets', gemCost: 150, pity: { e: 25, l: 60, m: 150 }, tenGuarantee: 2 },
   };
+  function bannerLevel(s, key) {
+    const b = banners[key];
+    if (!b || !b.oddsMax) return { lvl: 1, xp: 0, next: null, frac: 1, max: true };
+    const xp = (s.recruit[key] && s.recruit[key].xp) || 0;
+    let lvl = 1;
+    for (let i = 1; i < BANNER_LEVELS.length; i++) if (xp >= BANNER_LEVELS[i]) lvl = i + 1;
+    const max = lvl >= BANNER_LEVELS.length;
+    const lo = BANNER_LEVELS[lvl - 1], hi = max ? lo : BANNER_LEVELS[lvl];
+    return { lvl, xp, next: max ? null : hi, frac: max ? 1 : (xp - lo) / (hi - lo), max };
+  }
+  // Odds (percent, summing to 100) for a banner at a given level
+  function bannerOddsAt(key, lvl) {
+    const b = banners[key];
+    if (!b.oddsMax) return b.odds.slice();
+    const t = (Math.max(1, Math.min(10, lvl)) - 1) / 9;
+    const raw = b.odds.map((o, i) => o + (b.oddsMax[i] - o) * t);
+    const sum = raw.reduce((x, y) => x + y, 0);
+    return raw.map((o) => Math.round(o / sum * 1000) / 10);
+  }
+  function bannerOdds(s, key) { return bannerOddsAt(key, bannerLevel(s, key).lvl); }
   function streetCost(s) {
     const f = s.facilities.scouting || 0;
     return Math.max(25, B.rewardBase * Math.pow(B.rewardGrowth, Math.max(0, s.run.cleared)) * 4 * Math.max(0.5, 1 - 0.03 * f));
@@ -510,22 +532,23 @@
   function rollRarity(odds, rng) { return U.weightedIndex(odds, rng()); }
   function pullOne(s, bannerKey, rng, forceMin) {
     const b = banners[bannerKey];
+    const odds = bannerOdds(s, bannerKey);
     let r;
     if (b.pity) {
       const p = s.recruit[bannerKey];
       if (p.m + 1 >= b.pity.m) r = 5;
-      else if (p.l + 1 >= b.pity.l) r = rng() < b.odds[5] / (b.odds[4] + b.odds[5]) ? 5 : 4;
-      else if (p.e + 1 >= b.pity.e) { const w = b.odds.slice(3); r = 3 + U.weightedIndex(w, rng()); }
-      else r = rollRarity(b.odds, rng);
+      else if (p.l + 1 >= b.pity.l) r = rng() < odds[5] / (odds[4] + odds[5]) ? 5 : 4;
+      else if (p.e + 1 >= b.pity.e) { const w = odds.slice(3); r = 3 + U.weightedIndex(w, rng()); }
+      else r = rollRarity(odds, rng);
       if (forceMin !== undefined && r < forceMin) {
-        const w = b.odds.slice(forceMin);
+        const w = odds.slice(forceMin);
         r = forceMin + U.weightedIndex(w, rng());
       }
       p.e = r >= 3 ? 0 : p.e + 1;
       p.l = r >= 4 ? 0 : p.l + 1;
       p.m = r >= 5 ? 0 : p.m + 1;
     } else {
-      r = rollRarity(b.odds, rng);
+      r = rollRarity(odds, rng);
       if (forceMin !== undefined && r < forceMin) r = forceMin;
     }
     return r;
@@ -536,6 +559,11 @@
       const ev = eventFeatured();
       if (rng() < 0.5) return ev.featured;
     }
+    // Wish list: when the Pro banner rolls a Legendary, 50% chance it is one of up to 3 wished athletes
+    if (bannerKey === 'pro' && rarity === 4 && s.recruit.wish && s.recruit.wish.length && rng() < 0.5) {
+      const wished = s.recruit.wish.map((id) => A.tpl(id)).filter((t) => t && t.world <= maxW);
+      if (wished.length) return U.pick(wished, rng());
+    }
     const pool = A.catalog.filter((t) => t.rarity === rarity && t.world <= maxW);
     return pool.length ? U.pick(pool, rng()) : U.pick(A.catalog.filter((t) => t.rarity === rarity), rng());
   }
@@ -545,7 +573,15 @@
       if (existing.stars < 5) { existing.stars++; invalidate(); return { dupe: true, starUp: true, a: existing }; }
       const sh = Math.round(D.rarities[t.rarity].shards * mods(s).shardMult);
       s.shards += sh;
-      return { dupe: true, shards: sh, a: existing };
+      // No dead pulls: every 5 duplicates of a 5-star athlete convert into a recruit of the next rarity
+      existing.dupes = (existing.dupes || 0) + 1;
+      let convert = null;
+      if (existing.dupes % 5 === 0 && t.rarity < 5) {
+        const pool = A.catalog.filter((x) => x.rarity === t.rarity + 1 && x.world <= worldOf(s.best));
+        const nt = pool.length ? U.pick(pool, Math.random()) : null;
+        if (nt) convert = Object.assign({ t: nt, rarity: nt.rarity }, addAthlete(s, nt));
+      }
+      return { dupe: true, shards: sh, a: existing, convert };
     }
     const a = { uid: 'u' + s.nextUid++, cid: t.id, lvl: 1, stars: 1, train: {}, gear: {}, isNew: true };
     s.roster.push(a);
@@ -565,7 +601,9 @@
     rng = rng || Math.random;
     const b = banners[bannerKey];
     if (!b) return { ok: false, reason: 'Unknown banner' };
-    if (bannerKey === 'street') {
+    if (payWith === 'free') {
+      // daily free recruit (optional ad): no charge, same odds
+    } else if (bannerKey === 'street') {
       const cost = streetCost(s) * count;
       if (s.cash < cost) return { ok: false, reason: 'Not enough cash' };
       s.cash -= cost;
@@ -590,7 +628,17 @@
     }
     s.recruit.total += count;
     s.stats.pulls += count;
+    if (b.oddsMax) { const before = bannerLevel(s, bannerKey).lvl; s.recruit[bannerKey].xp = (s.recruit[bannerKey].xp || 0) + count; const after = bannerLevel(s, bannerKey).lvl; if (after > before) results.levelUp = after; }
     return { ok: true, results };
+  }
+  function toggleWish(s, cid) {
+    const t = A.tpl(cid);
+    if (!t || t.rarity !== 4) return { ok: false, reason: 'Only Legendary athletes can be wish-listed' };
+    const i = s.recruit.wish.indexOf(cid);
+    if (i >= 0) { s.recruit.wish.splice(i, 1); return { ok: true, on: false }; }
+    if (s.recruit.wish.length >= 3) return { ok: false, reason: 'Wish list is full (3). Remove one first.' };
+    s.recruit.wish.push(cid);
+    return { ok: true, on: true };
   }
   function shardExchange(s, what) {
     const table = { ticket: 120, tp: 40, scrap: 30 };
@@ -680,7 +728,7 @@
     levelUp, trainCost, train, stageReward, fansPerWin, farmG, passivePerSec, divisionPerSec, tpPerSec, addCash, facilityCost,
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
-    eventFeatured, pullOne, recruit, addAthlete, shardExchange, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
+    eventFeatured, pullOne, recruit, addAthlete, shardExchange, BANNER_LEVELS, bannerLevel, bannerOddsAt, bannerOdds, toggleWish, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
     doPrestige, gearPct, teamGearPct, athleteMilestones, athleteOwnedPower, ownedBonus, worldSetBonus, gearOwnedBonus, gearTypeUnlocked, autoEquip, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

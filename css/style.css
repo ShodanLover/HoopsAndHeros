@@ -501,3 +501,13 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 .quest .qr { display: inline-flex; gap: 4px; }
 .quest .qr .rew { font-size: 11px; }
 .quest .btn { min-width: 60px; min-height: 36px; padding: 4px 8px; font-size: 13px; }
+
+/* ---------- Recruit: banner levels, odds table ---------- */
+.blevel { display: flex; align-items: center; gap: 6px; max-width: 64%; font-size: 11px; color: #e8ebff; }
+.blevel .chip { padding: 1px 7px; font-size: 11px; }
+.odds-table { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; font-family: var(--cond); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.ot-row { display: grid; grid-template-columns: 28px repeat(6, 1fr); gap: 2px; padding: 2px 4px; border-radius: 6px; }
+.ot-row span { text-align: right; }
+.ot-row span:first-child { text-align: left; color: var(--muted); }
+.ot-row.ot-head { font-weight: 800; }
+.ot-row.cur { background: rgba(255, 210, 63, 0.14); color: var(--gold); }

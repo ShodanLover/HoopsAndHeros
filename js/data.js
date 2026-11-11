@@ -450,6 +450,8 @@
     daily: { name: 'Extra daily reward', daily: 1 },
     tourney: { name: 'Bonus tournament rewards', daily: 3 },
     ticket: { name: 'Free Pro Scout ticket', daily: 2 },
+    freepro: { name: 'Free Pro Scout recruit', daily: 1 },
+    freeevent: { name: 'Free Event Scout recruit', daily: 1 },
     contest: { name: 'Extra contest attempt', daily: 3 },
   };
 

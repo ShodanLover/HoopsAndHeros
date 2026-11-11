@@ -506,6 +506,16 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 .quest .qr .rew { font-size: 11px; }
 .quest .btn { min-width: 60px; min-height: 36px; padding: 4px 8px; font-size: 13px; }
 
+/* ---------- Recruit: banner levels, odds table ---------- */
+.blevel { display: flex; align-items: center; gap: 6px; max-width: 64%; font-size: 11px; color: #e8ebff; }
+.blevel .chip { padding: 1px 7px; font-size: 11px; }
+.odds-table { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; font-family: var(--cond); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.ot-row { display: grid; grid-template-columns: 28px repeat(6, 1fr); gap: 2px; padding: 2px 4px; border-radius: 6px; }
+.ot-row span { text-align: right; }
+.ot-row span:first-child { text-align: left; color: var(--muted); }
+.ot-row.ot-head { font-weight: 800; }
+.ot-row.cur { background: rgba(255, 210, 63, 0.14); color: var(--gold); }
+
 </style>
 <div id="app"></div>
 <div id="modal-root"></div>
@@ -1123,6 +1133,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     daily: { name: 'Extra daily reward', daily: 1 },
     tourney: { name: 'Bonus tournament rewards', daily: 3 },
     ticket: { name: 'Free Pro Scout ticket', daily: 2 },
+    freepro: { name: 'Free Pro Scout recruit', daily: 1 },
+    freeevent: { name: 'Free Event Scout recruit', daily: 1 },
     contest: { name: 'Extra contest attempt', daily: 3 },
   };
 
@@ -1616,7 +1628,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       growth: {},
       quest: { i: 0, claimed: 0 },
       prestige: { points: 0, earned: 0, count: 0, upgrades: {} },
-      recruit: { pro: { e: 0, l: 0, m: 0 }, event: { e: 0, l: 0, m: 0 }, total: 0 },
+      recruit: { pro: { e: 0, l: 0, m: 0, xp: 0 }, event: { e: 0, l: 0, m: 0, xp: 0 }, total: 0, wish: [] },
       collection: { S0: true },
       stats: defaultStats(),
       missions: { day: '', daily: [], week: '', weekly: [] },
@@ -1678,7 +1690,9 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       for (const k in a.train) a.train[k] = U.clamp(Math.floor(U.num(a.train[k], 0)), 0, 40);
       a.gear = isObj(a.gear) ? a.gear : {};
       a.isNew = !!a.isNew;
+      a.dupes = U.clamp(Math.floor(U.num(a.dupes, 0)), 0, 100000);
     }
+    s.recruit.wish = (Array.isArray(s.recruit.wish) ? s.recruit.wish : []).filter((id, i, arr) => A.tpl(id) && A.tpl(id).rarity === 4 && arr.indexOf(id) === i).slice(0, 3);
     if (s.roster.length === 0) s.roster = defaultState().roster;
     // gear
     const gseen = new Set();
@@ -2325,11 +2339,33 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   }
 
   // ---------- Recruitment ----------
+  // Banners level up with pulls (xp = pulls). Odds move linearly from `odds` at level 1 to `oddsMax` at level 10.
+  const BANNER_LEVELS = [0, 10, 25, 50, 90, 140, 200, 280, 380, 500]; // cumulative pulls needed for levels 1..10
   const banners = {
     street: { name: 'Street Scout', odds: [70, 25, 5, 0, 0, 0], currency: 'cash' },
-    pro: { name: 'Pro Scout', odds: [50, 28.5, 15, 5, 1.3, 0.2], currency: 'tickets', gemCost: 100, pity: { e: 30, l: 80, m: 200 }, tenGuarantee: 2 },
-    event: { name: 'Event Scout', odds: [40, 30, 20, 7, 2.5, 0.5], currency: 'eventTickets', gemCost: 150, pity: { e: 25, l: 60, m: 150 }, tenGuarantee: 2 },
+    pro: { name: 'Pro Scout', odds: [50, 28.5, 15, 5, 1.3, 0.2], oddsMax: [30, 30, 24, 11, 4, 1], currency: 'tickets', gemCost: 100, pity: { e: 30, l: 80, m: 200 }, tenGuarantee: 2 },
+    event: { name: 'Event Scout', odds: [40, 30, 20, 7, 2.5, 0.5], oddsMax: [25, 28, 27, 14, 5, 1], currency: 'eventTickets', gemCost: 150, pity: { e: 25, l: 60, m: 150 }, tenGuarantee: 2 },
   };
+  function bannerLevel(s, key) {
+    const b = banners[key];
+    if (!b || !b.oddsMax) return { lvl: 1, xp: 0, next: null, frac: 1, max: true };
+    const xp = (s.recruit[key] && s.recruit[key].xp) || 0;
+    let lvl = 1;
+    for (let i = 1; i < BANNER_LEVELS.length; i++) if (xp >= BANNER_LEVELS[i]) lvl = i + 1;
+    const max = lvl >= BANNER_LEVELS.length;
+    const lo = BANNER_LEVELS[lvl - 1], hi = max ? lo : BANNER_LEVELS[lvl];
+    return { lvl, xp, next: max ? null : hi, frac: max ? 1 : (xp - lo) / (hi - lo), max };
+  }
+  // Odds (percent, summing to 100) for a banner at a given level
+  function bannerOddsAt(key, lvl) {
+    const b = banners[key];
+    if (!b.oddsMax) return b.odds.slice();
+    const t = (Math.max(1, Math.min(10, lvl)) - 1) / 9;
+    const raw = b.odds.map((o, i) => o + (b.oddsMax[i] - o) * t);
+    const sum = raw.reduce((x, y) => x + y, 0);
+    return raw.map((o) => Math.round(o / sum * 1000) / 10);
+  }
+  function bannerOdds(s, key) { return bannerOddsAt(key, bannerLevel(s, key).lvl); }
   function streetCost(s) {
     const f = s.facilities.scouting || 0;
     return Math.max(25, B.rewardBase * Math.pow(B.rewardGrowth, Math.max(0, s.run.cleared)) * 4 * Math.max(0.5, 1 - 0.03 * f));
@@ -2345,22 +2381,23 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   function rollRarity(odds, rng) { return U.weightedIndex(odds, rng()); }
   function pullOne(s, bannerKey, rng, forceMin) {
     const b = banners[bannerKey];
+    const odds = bannerOdds(s, bannerKey);
     let r;
     if (b.pity) {
       const p = s.recruit[bannerKey];
       if (p.m + 1 >= b.pity.m) r = 5;
-      else if (p.l + 1 >= b.pity.l) r = rng() < b.odds[5] / (b.odds[4] + b.odds[5]) ? 5 : 4;
-      else if (p.e + 1 >= b.pity.e) { const w = b.odds.slice(3); r = 3 + U.weightedIndex(w, rng()); }
-      else r = rollRarity(b.odds, rng);
+      else if (p.l + 1 >= b.pity.l) r = rng() < odds[5] / (odds[4] + odds[5]) ? 5 : 4;
+      else if (p.e + 1 >= b.pity.e) { const w = odds.slice(3); r = 3 + U.weightedIndex(w, rng()); }
+      else r = rollRarity(odds, rng);
       if (forceMin !== undefined && r < forceMin) {
-        const w = b.odds.slice(forceMin);
+        const w = odds.slice(forceMin);
         r = forceMin + U.weightedIndex(w, rng());
       }
       p.e = r >= 3 ? 0 : p.e + 1;
       p.l = r >= 4 ? 0 : p.l + 1;
       p.m = r >= 5 ? 0 : p.m + 1;
     } else {
-      r = rollRarity(b.odds, rng);
+      r = rollRarity(odds, rng);
       if (forceMin !== undefined && r < forceMin) r = forceMin;
     }
     return r;
@@ -2371,6 +2408,11 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       const ev = eventFeatured();
       if (rng() < 0.5) return ev.featured;
     }
+    // Wish list: when the Pro banner rolls a Legendary, 50% chance it is one of up to 3 wished athletes
+    if (bannerKey === 'pro' && rarity === 4 && s.recruit.wish && s.recruit.wish.length && rng() < 0.5) {
+      const wished = s.recruit.wish.map((id) => A.tpl(id)).filter((t) => t && t.world <= maxW);
+      if (wished.length) return U.pick(wished, rng());
+    }
     const pool = A.catalog.filter((t) => t.rarity === rarity && t.world <= maxW);
     return pool.length ? U.pick(pool, rng()) : U.pick(A.catalog.filter((t) => t.rarity === rarity), rng());
   }
@@ -2380,7 +2422,15 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       if (existing.stars < 5) { existing.stars++; invalidate(); return { dupe: true, starUp: true, a: existing }; }
       const sh = Math.round(D.rarities[t.rarity].shards * mods(s).shardMult);
       s.shards += sh;
-      return { dupe: true, shards: sh, a: existing };
+      // No dead pulls: every 5 duplicates of a 5-star athlete convert into a recruit of the next rarity
+      existing.dupes = (existing.dupes || 0) + 1;
+      let convert = null;
+      if (existing.dupes % 5 === 0 && t.rarity < 5) {
+        const pool = A.catalog.filter((x) => x.rarity === t.rarity + 1 && x.world <= worldOf(s.best));
+        const nt = pool.length ? U.pick(pool, Math.random()) : null;
+        if (nt) convert = Object.assign({ t: nt, rarity: nt.rarity }, addAthlete(s, nt));
+      }
+      return { dupe: true, shards: sh, a: existing, convert };
     }
     const a = { uid: 'u' + s.nextUid++, cid: t.id, lvl: 1, stars: 1, train: {}, gear: {}, isNew: true };
     s.roster.push(a);
@@ -2400,7 +2450,9 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     rng = rng || Math.random;
     const b = banners[bannerKey];
     if (!b) return { ok: false, reason: 'Unknown banner' };
-    if (bannerKey === 'street') {
+    if (payWith === 'free') {
+      // daily free recruit (optional ad): no charge, same odds
+    } else if (bannerKey === 'street') {
       const cost = streetCost(s) * count;
       if (s.cash < cost) return { ok: false, reason: 'Not enough cash' };
       s.cash -= cost;
@@ -2425,7 +2477,17 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     }
     s.recruit.total += count;
     s.stats.pulls += count;
+    if (b.oddsMax) { const before = bannerLevel(s, bannerKey).lvl; s.recruit[bannerKey].xp = (s.recruit[bannerKey].xp || 0) + count; const after = bannerLevel(s, bannerKey).lvl; if (after > before) results.levelUp = after; }
     return { ok: true, results };
+  }
+  function toggleWish(s, cid) {
+    const t = A.tpl(cid);
+    if (!t || t.rarity !== 4) return { ok: false, reason: 'Only Legendary athletes can be wish-listed' };
+    const i = s.recruit.wish.indexOf(cid);
+    if (i >= 0) { s.recruit.wish.splice(i, 1); return { ok: true, on: false }; }
+    if (s.recruit.wish.length >= 3) return { ok: false, reason: 'Wish list is full (3). Remove one first.' };
+    s.recruit.wish.push(cid);
+    return { ok: true, on: true };
   }
   function shardExchange(s, what) {
     const table = { ticket: 120, tp: 40, scrap: 30 };
@@ -2515,7 +2577,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     levelUp, trainCost, train, stageReward, fansPerWin, farmG, passivePerSec, divisionPerSec, tpPerSec, addCash, facilityCost,
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
-    eventFeatured, pullOne, recruit, addAthlete, shardExchange, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
+    eventFeatured, pullOne, recruit, addAthlete, shardExchange, BANNER_LEVELS, bannerLevel, bannerOddsAt, bannerOdds, toggleWish, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
     doPrestige, gearPct, teamGearPct, athleteMilestones, athleteOwnedPower, ownedBonus, worldSetBonus, gearOwnedBonus, gearTypeUnlocked, autoEquip, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
@@ -6033,8 +6095,17 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   const S = () => BE.game_state;
   let busy = false;
 
-  function oddsMini(b) {
-    return b.odds.map((o, i) => o > 0 ? '<span style="color:' + D.rarities[i].color + '">' + D.rarities[i].name[0] + ' ' + o + '%</span>' : '').join('');
+  function oddsMini(odds) {
+    return odds.map((o, i) => o > 0 ? '<span style="color:' + D.rarities[i].color + '">' + D.rarities[i].name[0] + ' ' + o + '%</span>' : '').join('');
+  }
+  function levelLine(s, key) {
+    const bl = E.bannerLevel(s, key);
+    return '<div class="blevel"><span class="chip gold">Banner Lv ' + bl.lvl + '</span><div class="bar" style="flex:1;height:5px"><i style="width:' + Math.round(bl.frac * 100) + '%"></i></div><span class="small">' + (bl.max ? 'MAX odds' : (bl.next - bl.xp) + ' pulls to Lv ' + (bl.lvl + 1)) + '</span></div>';
+  }
+  function freeRow(s, key) {
+    const k = key === 'pro' ? 'freepro' : 'freeevent';
+    const left = adRemaining(s, k);
+    return '<button class="chip ' + (left ? 'good' : '') + '" data-act="freepull" data-b="' + key + '"' + (left ? '' : ' disabled') + ' style="padding:4px 9px">' + icon('tv') + ' Free recruit · ' + (left ? 'optional ad' : 'tomorrow') + '</button>';
   }
   function bannerArt(t) {
     return '<div class="bart">' + A.portraitSVG(t, { colors: ['#ff7a2f', '#1b1f3a'] }) + '</div>';
@@ -6052,23 +6123,25 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     let html = '<div class="row between" style="margin-bottom:10px"><div><div class="h2">Recruit Talent</div><div class="small muted">Pool: athletes from Worlds 1–' + (E.worldOf(s.best) + 1) + ' · reach new worlds to scout more</div></div><button class="btn sm ghost" data-act="odds">' + icon('info') + ' Odds</button></div>';
     // Pro scout
     const p = s.recruit.pro;
+    const wishNames = s.recruit.wish.map((id) => A.tpl(id)).filter(Boolean).map((t) => t.last).join(', ');
     html += '<div class="banner-card pro" data-tut="probanner">' + bannerArt(pick) + '<div class="label" style="color:var(--gem)">Featured scouting</div><div class="bt">Pro Scout</div>' +
-      '<div class="bd">All rarities, including Mythic. Every 10-pull includes Rare or better.</div><div class="odds-mini">' + oddsMini(B.pro) + '</div>' +
+      '<div class="bd">All rarities, including Mythic. Every 10-pull includes Rare or better. Odds improve as the banner levels up.</div>' + levelLine(s, 'pro') + '<div class="odds-mini">' + oddsMini(E.bannerOdds(s, 'pro')) + '</div>' +
       '<div class="pity">Epic+ guaranteed in <b>' + (B.pro.pity.e - p.e) + '</b> · Legendary+ in <b>' + (B.pro.pity.l - p.l) + '</b> · Mythic in <b>' + (B.pro.pity.m - p.m) + '</b></div>' +
+      '<div class="row wrap" style="gap:6px;margin-top:4px"><button class="chip" data-act="wish" style="padding:4px 9px">' + icon('star') + ' Wish list ' + s.recruit.wish.length + '/3' + (wishNames ? ': ' + U.esc(wishNames) : '') + '</button>' + freeRow(s, 'pro') + '</div>' +
       '<div class="pull-row"><button class="btn purple stack" data-act="pull" data-b="pro" data-n="1" data-tut="pull1">Recruit ×1<span class="sub">' + (s.tickets >= 1 ? '★ 1 ticket' : '◆ ' + B.pro.gemCost) + '</span></button>' +
       '<button class="btn gold stack" data-act="pull" data-b="pro" data-n="10">Recruit ×10<span class="sub">' + (s.tickets >= 10 ? '★ 10 tickets' : '◆ ' + B.pro.gemCost * 9 + ' (10% off)') + '</span></button></div></div>';
     // Event
     if (E.unlocked(s, 'events')) {
       const pe = s.recruit.event;
       html += '<div class="banner-card event" style="margin-top:10px">' + bannerArt(ev.featured) + '<div class="label" style="color:var(--r4)">Limited · ends in ' + U.fmtTime(msLeft / 1000) + '</div><div class="bt">' + ev.theme + '</div>' +
-        '<div class="bd">Featured Legendary: <b>' + U.esc(A.displayName(ev.featured)) + '</b> (50% of Legendary results). Boosted Epic+ rates.</div><div class="odds-mini">' + oddsMini(B.event) + '</div>' +
-        '<div class="pity">Event tickets: <b>' + s.eventTickets + '</b> · Epic+ in ' + (B.event.pity.e - pe.e) + ' · Legendary+ in ' + (B.event.pity.l - pe.l) + '</div>' +
+        '<div class="bd">Featured Legendary: <b>' + U.esc(A.displayName(ev.featured)) + '</b> (50% of Legendary results). Boosted Epic+ rates.</div>' + levelLine(s, 'event') + '<div class="odds-mini">' + oddsMini(E.bannerOdds(s, 'event')) + '</div>' +
+        '<div class="pity">Event tickets: <b>' + s.eventTickets + '</b> · Epic+ in ' + (B.event.pity.e - pe.e) + ' · Legendary+ in ' + (B.event.pity.l - pe.l) + '</div><div class="row" style="margin-top:4px">' + freeRow(s, 'event') + '</div>' +
         '<div class="pull-row"><button class="btn gold stack" data-act="pull" data-b="event" data-n="1">Recruit ×1<span class="sub">' + (s.eventTickets >= 1 ? '✦ 1 event ticket' : '◆ ' + B.event.gemCost) + '</span></button>' +
         '<button class="btn stack" data-act="pull" data-b="event" data-n="10">×10<span class="sub">' + (s.eventTickets >= 10 ? '✦ 10' : '◆ ' + B.event.gemCost * 9) + '</span></button></div></div>';
     }
     // Street
     html += '<div class="banner-card street" style="margin-top:10px"><div class="label" style="color:var(--accent)">Cash scouting</div><div class="bt">Street Scout</div>' +
-      '<div class="bd">Find local talent with cash. Common to Rare only. Great for filling your bench and collection.</div><div class="odds-mini">' + oddsMini(B.street) + '</div>' +
+      '<div class="bd">Find local talent with cash. Common to Rare only. Great for filling your bench and collection.</div><div class="odds-mini">' + oddsMini(B.street.odds) + '</div>' +
       '<div class="pull-row"><button class="btn stack" data-act="pull" data-b="street" data-n="1">Scout ×1<span class="sub">$' + U.fmt(sc) + '</span></button><button class="btn stack" data-act="pull" data-b="street" data-n="10">×10<span class="sub">$' + U.fmt(sc * 10) + '</span></button></div></div>';
     // Free ticket via ad
     const adLeft = adRemaining(s, 'ticket');
@@ -6077,7 +6150,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     html += '<div class="sec-title"><span class="h3">Star Shard Exchange</span><span class="label">✧ ' + U.fmtInt(s.shards) + ' shards</span></div>' +
       '<div class="small muted" style="margin-bottom:8px">Duplicates raise an athlete\'s stars (up to 5★). Beyond that they become Star Shards.</div><div class="col">' +
       exRow('ticket', 'Pro Scout ticket', 120, 'ticket') + exRow('tp', 'Training crate (1h of training points)', 40, 'train') + exRow('scrap', '60 gear scrap', 30, 'craft') + '</div>';
-    html += '<div class="card flat small muted" style="margin-top:12px">Total recruits: ' + s.recruit.total + '. Odds are fixed and shown before every pull; guarantees count across sessions and are listed above.</div>';
+    html += '<div class="card flat small muted" style="margin-top:12px">Total recruits: ' + s.recruit.total + '. Odds for the current banner level are shown before every pull (full table under Odds); guarantees count across sessions. Duplicates raise stars, and at 5★ every 5 duplicates convert into a recruit of the next rarity.</div>';
     el.innerHTML = html;
   }
   function exRow(k, label, cost, ic) {
@@ -6090,25 +6163,34 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     const B = E.banners;
     const ev = E.eventFeatured();
     let html = '<div class="small muted" style="margin-bottom:10px">These are the exact per-pull probabilities. Guarantees replace a pull\'s roll when their counter is reached; counters are saved and shown on each banner.</div>';
+    const s = S();
     for (const k of ['pro', 'event', 'street']) {
       const b = B[k];
-      html += '<div class="card" style="margin-bottom:10px"><div class="h3">' + b.name + '</div><div class="kv" style="margin-top:6px">' +
-        b.odds.map((o, i) => '<span style="color:' + D.rarities[i].color + '">' + D.rarities[i].name + '</span><span>' + o.toFixed(1) + '%</span>').join('') + '</div>';
-      if (b.pity) html += '<div class="small" style="margin-top:8px">• 10-pull: at least one Rare or better.<br>• Epic or better guaranteed by pull ' + b.pity.e + ' without one.<br>• Legendary or better by pull ' + b.pity.l + '.<br>• Mythic by pull ' + b.pity.m + '.</div>';
+      const bl = E.bannerLevel(s, k);
+      const cur = E.bannerOdds(s, k);
+      html += '<div class="card" style="margin-bottom:10px"><div class="row between"><div class="h3">' + b.name + '</div>' + (b.oddsMax ? '<span class="chip gold">Lv ' + bl.lvl + ' · ' + bl.xp + ' pulls</span>' : '') + '</div><div class="kv" style="margin-top:6px">' +
+        cur.map((o, i) => '<span style="color:' + D.rarities[i].color + '">' + D.rarities[i].name + '</span><span>' + o.toFixed(1) + '%</span>').join('') + '</div>';
+      if (b.oddsMax) {
+        html += '<div class="small muted" style="margin-top:8px">Banner level rises with pulls (' + E.BANNER_LEVELS.slice(1).join(', ') + ' pulls for levels 2–10). Odds by level:</div><div class="odds-table">' +
+          '<div class="ot-row ot-head"><span>Lv</span>' + D.rarities.map((r) => '<span style="color:' + r.color + '">' + r.name[0] + '</span>').join('') + '</div>' +
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((L) => '<div class="ot-row' + (L === bl.lvl ? ' cur' : '') + '"><span>' + L + '</span>' + E.bannerOddsAt(k, L).map((o) => '<span>' + o + '</span>').join('') + '</div>').join('') + '</div>';
+      }
+      if (b.pity) html += '<div class="small" style="margin-top:8px">• 10-pull: at least one Rare or better.<br>• Epic or better guaranteed by pull ' + b.pity.e + ' without one.<br>• Legendary or better by pull ' + b.pity.l + '.<br>• Mythic by pull ' + b.pity.m + '.<br>• One free recruit per day (optional ad) at the same odds.</div>';
       if (k === 'event') html += '<div class="small" style="margin-top:6px">• When a Legendary is rolled, 50% chance it is the featured athlete (' + U.esc(A.displayName(ev.featured)) + ').</div>';
+      if (k === 'pro') html += '<div class="small" style="margin-top:6px">• Wish list: when a Legendary is rolled, 50% chance it is one of your up to 3 wish-listed athletes (if they are in the unlocked pool).</div>';
       html += '<div class="small muted" style="margin-top:6px">Cost: ' + (k === 'street' ? 'cash (scales with progress)' : (k === 'pro' ? '1 Pro ticket or ' : '1 Event ticket or ') + b.gemCost + ' gems; ×10 costs 9× in gems') + '</div></div>';
     }
-    html += '<div class="card flat small">Duplicates: +1★ (max 5★, +30% power and +2 all attributes per star). At 5★ duplicates convert to Star Shards (Common 5 … Mythic 400). Athletes are drawn evenly from the unlocked pool of the rolled rarity.</div>';
+    html += '<div class="card flat small">Duplicates: +1★ (max 5★, +30% power and +2 all attributes per star). At 5★ duplicates convert to Star Shards (Common 5 … Mythic 400), and every 5 such duplicates also convert into a recruit of the next rarity. Athletes are drawn evenly from the unlocked pool of the rolled rarity.</div>';
     ui.modal({ title: 'Recruitment odds', html });
   }
 
   // ---------- Pull flow ----------
-  async function pull(bannerKey, n) {
+  async function pull(bannerKey, n, free) {
     if (busy) return;
     const s = S();
     const B = E.banners[bannerKey];
-    let payWith = 'tickets';
-    if (bannerKey !== 'street') {
+    let payWith = free ? 'free' : 'tickets';
+    if (bannerKey !== 'street' && !free) {
       const have = s[B.currency];
       if (have < n) {
         payWith = 'gems';
@@ -6139,6 +6221,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     try { if (n === 1) await revealOne(res.results[0], bannerKey); else await revealMany(res.results); }
     finally { busy = false; }
     renderRecruit();
+    if (res.results.levelUp) { ui.toast(E.banners[bannerKey].name + ' banner reached Lv ' + res.results.levelUp + ': better odds on every pull!', 'gold', 'star'); BE.audio.play('milestone'); }
     if (promoted.length) ui.toast(promoted.slice(0, 3).join(', ') + (promoted.length > 3 ? ' and more' : '') + ' moved into the starting lineup', 'good', 'swap');
     BE.bus.emit('recruit:done', res);
   }
@@ -6175,7 +6258,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
         ui.sparks(card, D.rarities[rar].color, 10 + rar * 8);
         const info = $('[data-info]', m.el);
         info.innerHTML = '<div class="rar r' + rar + '"><div class="rar-name">' + D.rarities[rar].name.toUpperCase() + '</div></div><div class="h3">' + U.esc(A.displayName(t)) + '</div><div class="small muted">' + D.positions[t.pos].name + ' · ' + D.archetypes.find((x) => x.k === t.arch).name + '</div>' +
-          '<div style="margin-top:4px">' + (r.dupe ? (r.starUp ? '<span class="chip gold">Duplicate → ★' + r.a.stars + ' (+30% power)</span>' : '<span class="chip">Max stars → +' + r.shards + ' ✧ shards</span>') : '<span class="chip good">NEW ATHLETE!</span>') + '</div>';
+          '<div style="margin-top:4px">' + (r.dupe ? (r.starUp ? '<span class="chip gold">Duplicate → ★' + r.a.stars + ' (+30% power)</span>' : '<span class="chip">Max stars → +' + r.shards + ' ✧ shards</span>' + (r.convert ? ' <span class="chip good">5 dupes → ' + D.rarities[r.convert.rarity].name + ' ' + U.esc(r.convert.t.last) + '!</span>' : '')) : '<span class="chip good">NEW ATHLETE!</span>') + '</div>';
         $('[data-done]', m.el).classList.remove('hidden');
         if (S().tutorial.done) $('[data-again]', m.el).classList.remove('hidden');
       };
@@ -6235,8 +6318,41 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     });
   }
 
+  function wishModal() {
+    const m = ui.modal({ title: 'Legendary wish list', render: (mm) => draw(mm) });
+    function draw(mm) {
+      const s = S();
+      const pool = A.catalog.filter((t) => t.rarity === 4 && t.world <= E.worldOf(s.best));
+      let html = '<div class="small muted" style="margin-bottom:8px">Pick up to 3 Legendaries. When the Pro Scout banner rolls a Legendary, there is a 50% chance it is one of them. Odds of rolling a Legendary do not change.</div>' +
+        '<div class="row wrap" style="gap:4px;margin-bottom:8px">' + (s.recruit.wish.length ? s.recruit.wish.map((id) => '<span class="chip gold">' + U.esc(A.displayName(A.tpl(id), true)) + '</span>').join('') : '<span class="chip">Empty</span>') + '</div>';
+      html += '<div class="agrid compact">' + pool.map((t) => '<div style="position:relative">' + ui.templateCard(t, true, { act: 'wishpick' }) + (s.recruit.wish.includes(t.id) ? '<span class="chip gold" style="position:absolute;top:4px;left:4px">★ Wished</span>' : '') + '</div>').join('') + '</div>';
+      if (!pool.length) html += '<div class="empty">Legendaries from your unlocked worlds appear here.</div>';
+      mm.set(html);
+    }
+    m.el.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-act="wishpick"]');
+      if (!b) return;
+      e.stopPropagation();
+      const r = E.toggleWish(S(), b.dataset.cid);
+      if (!r.ok) { ui.toast(r.reason, 'bad', 'x'); return; }
+      BE.audio.play(r.on ? 'claim' : 'click');
+      draw(m); renderRecruit();
+    }, true);
+  }
+
   const act = {
     pull: (d) => pull(d.b, +d.n),
+    wish: () => wishModal(),
+    wishpick: () => {},
+    freepull: async (d) => {
+      const s = S();
+      const k = d.b === 'pro' ? 'freepro' : 'freeevent';
+      if (!adRemaining(s, k)) return;
+      const r = await BE.services.rewardedAd(k);
+      if (!r.ok) { ui.toast('No recruit — the ad was not completed', '', 'tv'); return; }
+      s.ads.counts[k] = (s.ads.counts[k] || 0) + 1;
+      pull(d.b, 1, true);
+    },
     odds: () => oddsModal(),
     exchange: (d, el) => {
       const r = E.shardExchange(S(), d.k);

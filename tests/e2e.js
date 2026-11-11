@@ -64,6 +64,9 @@ const shot = (p, n) => p.screenshot({ path: 'tests/shots/' + n + '.png' });
   await page.click('[data-act="pull"][data-b="street"][data-n="10"]'); await page.waitForTimeout(500); await page.click('[data-all]'); await page.waitForTimeout(1800); await page.click('[data-done]');
   await page.click('[data-act="pull"][data-b="event"][data-n="1"]'); await page.waitForTimeout(500); await page.click('[data-card]'); await page.waitForTimeout(900); await page.click('[data-done]');
   await page.click('[data-act="odds"]'); await page.waitForTimeout(300); await shot(page, 'r4-odds'); await closeAll();
+  await page.click('[data-act="wish"]'); await page.waitForTimeout(300); const wp = await page.$('.modal [data-act="wishpick"]'); if (wp) await wp.click(); await page.waitForTimeout(200); await shot(page, 'r5-wish'); await closeAll();
+  await page.click('[data-act="freepull"][data-b="pro"]'); await page.waitForTimeout(5600); await page.click('[data-ad="done"]'); await page.waitForTimeout(700); await page.click('[data-card]').catch(() => {}); await page.waitForTimeout(900); await page.click('[data-done]').catch(() => {});
+  console.log('banner', await ev(() => JSON.stringify(BE.econ.bannerLevel(BE.game_state, 'pro'))), 'wish', await ev(() => BE.game_state.recruit.wish.length));
   await page.click('[data-act="exchange"][data-k="ticket"]');
   await page.click('[data-act="adticket"]'); await page.waitForTimeout(5600); await page.click('[data-ad="done"]'); await page.waitForTimeout(300);
   // Team

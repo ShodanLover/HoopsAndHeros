@@ -35,7 +35,7 @@
       growth: {},
       quest: { i: 0, claimed: 0 },
       prestige: { points: 0, earned: 0, count: 0, upgrades: {} },
-      recruit: { pro: { e: 0, l: 0, m: 0 }, event: { e: 0, l: 0, m: 0 }, total: 0 },
+      recruit: { pro: { e: 0, l: 0, m: 0, xp: 0 }, event: { e: 0, l: 0, m: 0, xp: 0 }, total: 0, wish: [] },
       collection: { S0: true },
       stats: defaultStats(),
       missions: { day: '', daily: [], week: '', weekly: [] },
@@ -97,7 +97,9 @@
       for (const k in a.train) a.train[k] = U.clamp(Math.floor(U.num(a.train[k], 0)), 0, 40);
       a.gear = isObj(a.gear) ? a.gear : {};
       a.isNew = !!a.isNew;
+      a.dupes = U.clamp(Math.floor(U.num(a.dupes, 0)), 0, 100000);
     }
+    s.recruit.wish = (Array.isArray(s.recruit.wish) ? s.recruit.wish : []).filter((id, i, arr) => A.tpl(id) && A.tpl(id).rarity === 4 && arr.indexOf(id) === i).slice(0, 3);
     if (s.roster.length === 0) s.roster = defaultState().roster;
     // gear
     const gseen = new Set();
