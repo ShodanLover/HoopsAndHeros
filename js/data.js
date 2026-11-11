@@ -189,6 +189,8 @@
     recruit: { g: 1, name: 'Recruiting', icon: 'recruit' },
     facilities: { g: 2, name: 'Facilities', icon: 'empire' },
     missions: { g: 2, name: 'Missions', icon: 'missions' },
+    boosts: { g: 3, name: 'Boosts & Halftime Spin', icon: 'fire' },
+    camps: { g: 7, name: 'Training Camps', icon: 'dumbbell' },
     daily: { g: 2, name: 'Daily Rewards', icon: 'daily' },
     coaches: { g: 4, name: 'Coaches', icon: 'coach' },
     shop: { g: 3, name: 'Shop', icon: 'shop' },
@@ -444,8 +446,28 @@
     { k: 'autocoach', name: 'Auto-Coach License', cost: 600, grant: { autocoach: true }, once: true },
   ];
 
+  // 20-minute team buffs: free once a day each, then optional ads (capped). Never stronger for paying.
+  const boosts = [
+    { k: 'cash', name: 'Sponsor Boost', desc: '+50% cash from every source', icon: 'cash', color: '#38d996', mult: 1.5, minutes: 20 },
+    { k: 'power', name: 'Hype Train', desc: '+25% team power', icon: 'fire', color: '#ff7a2f', mult: 1.25, minutes: 20 },
+  ];
+  // Halftime Spin slices: weight, label, reward (grant() format)
+  const spinWheel = [
+    { w: 22, label: '◆ 10', reward: { gems: 10 } },
+    { w: 18, label: '$ 10 min', reward: { cashMinutes: 10 } },
+    { w: 14, label: '◆ 20', reward: { gems: 20 } },
+    { w: 12, label: 'Scrap 40', reward: { scrap: 40 } },
+    { w: 12, label: '★ Ticket', reward: { tickets: 1 } },
+    { w: 10, label: 'Shards 25', reward: { shards: 25 } },
+    { w: 8, label: 'Gear chest', reward: { gearChest: 1 } },
+    { w: 4, label: '◆ 60', reward: { gems: 60 } },
+  ];
+
   const ads = {
     offline: { name: 'Double offline earnings', daily: 6 },
+    boost: { name: 'Extra boost activation', daily: 2 },
+    spin: { name: 'Extra halftime spin', daily: 2 },
+    camp: { name: 'Extra camp key', daily: 2 },
     tp: { name: 'Training materials', daily: 3 },
     daily: { name: 'Extra daily reward', daily: 1 },
     tourney: { name: 'Bonus tournament rewards', daily: 3 },
@@ -472,6 +494,6 @@
     balance, attrs, positions, rarities, archetypes, personalities, celebrations, firstNames, lastNames, nicknames, opponentNicks,
     skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, growth, questLine, facilities, coaches, gearTypes, gearRarityPct,
     gearRarityAttr, owned, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
-    achievements, achievementGems, products, gemShop, ads, alliances, aiFranchiseNames, franchiseAdjectives, franchiseNouns,
+    achievements, achievementGems, products, gemShop, boosts, spinWheel, ads, alliances, aiFranchiseNames, franchiseAdjectives, franchiseNouns,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

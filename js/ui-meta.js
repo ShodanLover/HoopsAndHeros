@@ -170,15 +170,20 @@
     return w;
   }
   function eventsModal(startTab) {
-    let tab = startTab || 'contests';
-    const m = ui.modal({ title: 'Events', render: (mm) => draw(mm) });
+    const s0 = S();
+    let tab = startTab || (E.unlocked(s0, 'camps') ? 'camps' : 'contests');
+    const m = ui.modal({ title: 'Camps & Events', render: (mm) => draw(mm) });
     function draw(mm) {
       const s = S();
-      const tabs = [['contests', 'Skill Contests']];
+      const tabs = [];
+      if (E.unlocked(s, 'camps')) tabs.push(['camps', 'Camps']);
+      if (E.unlocked(s, 'events')) tabs.push(['contests', 'Contests']);
       if (E.unlocked(s, 'tourney')) tabs.push(['tourney', 'Tournament']);
       tabs.push(['limited', 'Limited']);
+      if (!tabs.some((t) => t[0] === tab)) tab = tabs[0][0];
       let html = '<div class="tabs">' + tabs.map((t) => '<button class="tab' + (t[0] === tab ? ' active' : '') + '" data-et="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>';
-      if (tab === 'contests') {
+      if (tab === 'camps') html += BE.camps.campsHTML(s);
+      else if (tab === 'contests') {
         const wk = U.isWeekend();
         html += wk ? '<div class="card" style="border-color:rgba(255,210,63,.4);margin-bottom:10px"><b style="color:var(--gold)">Weekend Showdown is live!</b><div class="small muted">Contest rewards give double Event tickets until Monday.</div></div>' : '';
         const C = [
@@ -217,6 +222,7 @@
       }
       mm.set(html);
     }
+    BE.camps.bindCamps(m, draw);
     m.el.addEventListener('click', async (e) => {
       const s = S();
       const t = e.target.closest('[data-et]');
@@ -558,6 +564,8 @@
   // ---------- Feature intros ----------
   const INTROS = {
     growth: ['Team Growth', 'Franchise-wide stats live under the court on the Home tab: Offense, Defense, Conditioning and more. They are cheap, always available, and multiply every athlete you own.', 'play'],
+    boosts: ['Boosts & Halftime Spin', 'Two 20-minute boosts (free once a day each) and a daily spin for gems, tickets and gear, right on the Home tab.', 'play'],
+    camps: ['Training Camps', 'Cash, Scrap and Shard Camps plus Boss Rush: 2 keys each per day, pick your tier, clear it to unlock the next. Find them under Camps on the Home tab.', 'play'],
     facilities: ['Facilities unlocked!', 'Upgrade your Home Court and Weight Room in the Empire tab. Facilities give permanent multipliers.', 'empire'],
     missions: ['Missions & Daily Rewards', 'Daily and weekly missions plus login rewards are on the Play screen hub. They pay gems, tickets and Pass XP.', 'play'],
     shop: ['The Shop is open', 'Claim a free daily gift, earn optional ad rewards, and customize your team\'s look.', 'shop'],
@@ -595,7 +603,8 @@
           if (k === 'gear' || k === 'craft') BE.team.setTab('gear');
           if (it[2] !== 'play') BE.ui.renderScreen(it[2]);
           if (k === 'missions') missionsModal();
-          if (k === 'events') eventsModal();
+          if (k === 'events') eventsModal('contests');
+          if (k === 'camps') eventsModal('camps');
           if (k === 'tourney') eventsModal('tourney');
           if (k === 'social') socialModal();
           if (k === 'pass') passModal();

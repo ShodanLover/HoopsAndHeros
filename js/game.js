@@ -391,6 +391,92 @@
     return msgs;
   }
 
+  // ---------- Training Camps (keyed, tiered dungeons) ----------
+  const CAMPS = [
+    { k: 'cash', name: 'Cash Camp', desc: 'One game against a tuned-up squad for a cash bonus.', icon: 'cash', color: '#38d996', rounds: 1, reward: (tier) => ({ cash: 8 * tier }) },
+    { k: 'scrap', name: 'Scrap Camp', desc: 'One game. Scrap for upgrading and crafting gear.', icon: 'craft', color: '#8a94a8', rounds: 1, reward: (tier) => ({ scrap: 30 * tier, cash: 2 * tier }) },
+    { k: 'shard', name: 'Shard Camp', desc: 'One game. Star Shards for the exchange.', icon: 'star', color: '#ff8fd0', rounds: 1, reward: (tier) => ({ shards: 15 * tier, cash: 2 * tier }) },
+    { k: 'boss', name: 'Boss Rush', desc: 'Three opponents, each tougher. Gems per round won.', icon: 'trophy', color: '#ffd23f', rounds: 3, reward: (tier, won) => ({ gems: 6 * tier * won, cash: 3 * tier * won }) },
+  ];
+  const CAMP_KEYS = 2, CAMP_MAX_TIER = 25;
+  function campsState(s) {
+    const day = U.dayKey();
+    const c = s.camps;
+    if (c.day !== day) { c.day = day; for (const x of CAMPS) c.keys[x.k] = CAMP_KEYS; }
+    for (const x of CAMPS) { if (c.keys[x.k] === undefined) c.keys[x.k] = CAMP_KEYS; if (!c.tier[x.k]) c.tier[x.k] = 1; if (!c.max[x.k]) c.max[x.k] = 1; }
+    return c;
+  }
+  function campScale(tier) { return 0.75 + 0.3 * tier; }
+  function campReward(s, k, tier, won) { const c = CAMPS.find((x) => x.k === k); return c.reward(tier, won === undefined ? c.rounds : won); }
+  function setCampTier(s, k, delta) { const st = campsState(s); st.tier[k] = U.clamp(st.tier[k] + delta, 1, st.max[k]); return st.tier[k]; }
+  function runCamp(s, k) {
+    const c = CAMPS.find((x) => x.k === k);
+    const st = campsState(s);
+    if (!c) return { ok: false, reason: 'Unknown camp' };
+    if (st.keys[k] <= 0) return { ok: false, reason: 'No keys left today' };
+    st.keys[k]--;
+    const tier = st.tier[k];
+    const g = E.farmG(s);
+    const fmt = E.formatOf(Math.min(g, 99)), size = D.formats[fmt].size;
+    const home = playerTeam(s, size);
+    const m = E.mods(s);
+    const bonus = Object.assign({}, m.sim, { staminaDrain: m.staminaDrain });
+    const results = [];
+    let won = 0;
+    for (let r = 0; r < c.rounds; r++) {
+      const away = oppTeam(s, g);
+      const scale = campScale(tier) * (1 + 0.15 * r);
+      away.power *= scale; away.players.forEach((p) => { p.power *= scale; });
+      away.name = c.rounds > 1 ? ['Camp Starters', 'Camp Veterans', 'Camp Boss'][r] : c.name + ' squad';
+      const mt = S.createMatch(home, away, { format: fmt, rng: Math.random, bonus });
+      S.playAll(mt);
+      const w = mt.winner === 0;
+      results.push({ opp: away.name, score: mt.score.slice(), won: w });
+      if (!w) break;
+      won++;
+    }
+    const cleared = won === c.rounds;
+    let granted = [];
+    if (won > 0) granted = E.grant(s, c.reward(tier, won));
+    let newTier = 0;
+    if (cleared && tier === st.max[k] && st.max[k] < CAMP_MAX_TIER) { st.max[k]++; st.tier[k] = st.max[k]; newTier = st.max[k]; }
+    s.stats.camps = (s.stats.camps || 0) + 1;
+    return { ok: true, tier, rounds: c.rounds, won, cleared, results, granted, newTier };
+  }
+
+  // ---------- Boosts (20-minute buffs) ----------
+  function activateBuff(s, k) {
+    const b = D.boosts.find((x) => x.k === k);
+    const now = Date.now();
+    const base = Math.max(now, s.buffs[k] || 0);
+    s.buffs[k] = base + b.minutes * 60000;
+    E.invalidate();
+    return { left: s.buffs[k] - now };
+  }
+
+  // ---------- Halftime Spin ----------
+  function spinState(s) {
+    const day = U.dayKey();
+    if (s.spin.day !== day) { s.spin.day = day; s.spin.used = 0; }
+    return { freeLeft: s.spin.used < 1 ? 1 : 0, adLeft: Math.max(0, D.ads.spin.daily - (s.ads.counts.spin || 0)), used: s.spin.used };
+  }
+  function spin(s) {
+    spinState(s);
+    const idx = U.weightedIndex(D.spinWheel.map((w) => w.w), Math.random());
+    s.spin.used++;
+    s.stats.spins = (s.stats.spins || 0) + 1;
+    return { idx, granted: E.grant(s, D.spinWheel[idx].reward) };
+  }
+
+  // ---------- Fan gifts ----------
+  function claimGift(s) {
+    const r = { cash: 1.5 };
+    if (Math.random() < 0.35) r.gems = 2 + Math.floor(Math.random() * 3);
+    if (Math.random() < 0.15) r.tp = 10;
+    s.stats.gifts = (s.stats.gifts || 0) + 1;
+    return E.grant(s, r);
+  }
+
   // ---------- Franchise Story (quest chain) ----------
   function questProgress(s, q) {
     switch (q.stat) {
@@ -561,5 +647,6 @@
     cosmetic, ensureLineup, autoLineup, autoPromote, giftWalkOns, target, playerTeam, oppTeam, newMatch, onMatchEnd, startChampionship, tick, offline,
     estimateWinProb, resets, missionProgress, loginStatus, claimLogin, passReward, passTier, PASS_TIERS, PASS_XP, achievementState,
     claimAchievement, social, runTournament, gearVis, questProgress, questState, claimQuest,
+    CAMPS, campsState, campScale, campReward, setCampTier, runCamp, activateBuff, spinState, spin, claimGift,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

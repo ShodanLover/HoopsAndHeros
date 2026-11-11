@@ -39,8 +39,9 @@
 
   // ---------- Modifiers (cached) ----------
   let modsCache = null, modsKey = '';
+  function buffActive(s, k) { return !!(s.buffs && (s.buffs[k] || 0) > Date.now()); }
   function modsSignature(s) {
-    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0,
+    return JSON.stringify([buffActive(s, 'cash'), buffActive(s, 'power'), s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0,
       Math.round(ownedBonus(s).power * 1e5), Math.round(gearOwnedBonus(s) * 1e5), worldSetBonus(s).counts.join(',')]);
   }
   function mods(s) {
@@ -59,8 +60,8 @@
       aura,
       powerMult: aura * (1 + 0.2 * p('power')) * (1 + 0.07 * f('gym')) * (1 + 0.04 * f('training')) * (1 + 0.06 * f('hq')) *
         (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power) *
-        (1 + own.power) * (1 + sets.power) * (1 + gOwn),
-      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash) * (1 + own.cash),
+        (1 + own.power) * (1 + sets.power) * (1 + gOwn) * (buffActive(s, 'power') ? D.boosts.find((b) => b.k === 'power').mult : 1),
+      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash) * (1 + own.cash) * (buffActive(s, 'cash') ? D.boosts.find((b) => b.k === 'cash').mult : 1),
       owned: own, sets, gearOwned: gOwn,
       winCashMult: 1 + 0.15 * f('court'),
       passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult * (1 + gfx.passive),
@@ -729,6 +730,6 @@
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
     eventFeatured, pullOne, recruit, addAthlete, shardExchange, BANNER_LEVELS, bannerLevel, bannerOddsAt, bannerOdds, toggleWish, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
-    doPrestige, gearPct, teamGearPct, athleteMilestones, athleteOwnedPower, ownedBonus, worldSetBonus, gearOwnedBonus, gearTypeUnlocked, autoEquip, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
+    doPrestige, gearPct, teamGearPct, buffActive, athleteMilestones, athleteOwnedPower, ownedBonus, worldSetBonus, gearOwnedBonus, gearTypeUnlocked, autoEquip, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

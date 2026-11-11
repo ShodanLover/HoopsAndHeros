@@ -107,8 +107,13 @@ const shot = (p, n) => p.screenshot({ path: 'tests/shots/' + n + '.png' });
   // Play hub modals
   await page.click('[data-nav="play"]'); await page.waitForTimeout(400);
   await shot(page, 'p3-playfull');
-  for (const k of ['missions', 'daily', 'pass', 'events', 'social', 'trophies']) {
+  // Boosts, spin and a fan gift on the Home tab
+  await page.click('[data-act="boost"][data-k="power"]').catch(() => {}); await page.waitForTimeout(300);
+  await page.click('[data-act="spin"]').catch(() => {}); await page.waitForTimeout(600); await shot(page, 'b1-spin'); await page.waitForTimeout(2400); await page.click('[data-wdone]').catch(() => {}); await page.waitForTimeout(200);
+  await ev(() => BE.camps.showGift()); await page.waitForTimeout(200); await shot(page, 'b2-gift'); await page.click('.fangift').catch(() => {}); await page.waitForTimeout(200);
+  for (const k of ['camps', 'missions', 'daily', 'pass', 'events', 'social', 'trophies']) {
     await page.click('[data-act="hub"][data-k="' + k + '"]'); await page.waitForTimeout(400); await shot(page, 'h-' + k);
+    if (k === 'camps') { await page.click('[data-run="cash"]'); await page.waitForTimeout(1600); await shot(page, 'h-camp-run'); await page.click('[data-cdone]').catch(() => {}); await page.click('[data-tier="boss:1"]').catch(() => {}); await page.click('[data-run="boss"]'); await page.waitForTimeout(2600); await page.click('[data-cdone]').catch(() => {}); await closeAll(); continue; }
     if (k === 'daily') { await page.click('[data-dl="claim"]').catch(() => {}); await page.waitForTimeout(300); await closeAll(); continue; }
     if (k === 'pass') { const b = await page.$('[data-pc]'); if (b) await b.click(); }
     if (k === 'social') { for (const t of ['friends', 'alliance', 'showcase']) { await page.click('[data-st="' + t + '"]'); await page.waitForTimeout(200); if (t === 'alliance') await page.click('[data-join]'); } await shot(page, 'h-social-showcase'); }

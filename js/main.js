@@ -76,7 +76,7 @@
     objective: () => { const tg = G.target(S()); if (tg.champReady && S().tutorial.done) BE.play.enterChampionship(); else if (S().run.farming) ui.go('team'); else BE.meta.mapModal(); },
     hub: (d) => {
       const m = BE.meta;
-      ({ missions: () => m.missionsModal(), daily: () => m.dailyModal(), pass: () => m.passModal(), events: () => m.eventsModal(), social: () => m.socialModal(), trophies: () => m.missionsModal('trophies') }[d.k] || (() => {}))();
+      ({ missions: () => m.missionsModal(), daily: () => m.dailyModal(), pass: () => m.passModal(), events: () => m.eventsModal('contests'), camps: () => m.eventsModal('camps'), social: () => m.socialModal(), trophies: () => m.missionsModal('trophies') }[d.k] || (() => {}))();
     },
     ability: (d) => BE.play.useAbility(d.k),
     speed: () => {
@@ -99,7 +99,7 @@
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const k = el.dataset.act;
-    const fn = actions[k] || (BE.growth && BE.growth.act[k]) || (BE.team.act[k]) || (BE.recruitUI.act[k]) || (BE.empire.act[k]);
+    const fn = actions[k] || (BE.growth && BE.growth.act[k]) || (BE.camps && BE.camps.act[k]) || (BE.team.act[k]) || (BE.recruitUI.act[k]) || (BE.empire.act[k]);
     if (!fn) return;
     if (!BE.audio.state.ctx) BE.audio.ensure();
     if (k !== 'nav' && k !== 'ability') BE.audio.play('click');

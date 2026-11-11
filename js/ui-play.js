@@ -43,6 +43,7 @@
         '<div class="toolbar" data-p="toolbar"></div>' +
         '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>' +
         '<div data-p="growth"></div>' +
+        '<div data-p="boosts"></div>' +
         '<div data-p="squad"></div>';
       el.dataset.built = '1';
     }
@@ -73,6 +74,7 @@
   }
 
   const HUB = [
+    { k: 'camps', label: 'Camps', icon: 'dumbbell', feature: 'camps' },
     { k: 'missions', label: 'Missions', icon: 'missions', feature: 'missions' },
     { k: 'daily', label: 'Daily', icon: 'daily', feature: 'daily' },
     { k: 'pass', label: 'Pass', icon: 'pass', feature: 'pass' },
@@ -429,6 +431,7 @@
     if (!s) return;
     CT.speed = speedOf(s);
     CT.update(dt);
+    if (BE.camps) BE.camps.tickGift(dt);
     if (R.phase === 'idle') { startNext(); return; }
     if (R.phase === 'between') {
       if (R.hold || (BE.tutorial && BE.tutorial.blocking())) return;
@@ -493,6 +496,7 @@
     for (let t = 1; t <= tier; t++) { if (!s.pass.free.includes(t)) passReady++; if (s.pass.premium && !s.pass.prem.includes(t)) passReady++; }
     b.pass = passReady;
     b.events = E.unlocked(s, 'events') && (s.events.attempts.ft + s.events.attempts.three + s.events.attempts.dunk > 0) ? 1 : 0;
+    b.camps = E.unlocked(s, 'camps') && Object.values(G.campsState(s).keys).some((k) => k > 0) ? 1 : 0;
     b.trophies = D.achievements.filter((a) => G.achievementState(s, a).ready).length;
     b.social = E.unlocked(s, 'social') && !s.social.alliance ? 1 : 0;
     b.quest = G.questState(s).done ? 1 : 0;

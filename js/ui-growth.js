@@ -52,8 +52,9 @@
 
   function render() {
     const s = S();
-    const ge = $('[data-p="growth"]'), se = $('[data-p="squad"]');
+    const ge = $('[data-p="growth"]'), se = $('[data-p="squad"]'), be = $('[data-p="boosts"]');
     if (ge) ge.innerHTML = growthHTML(s);
+    if (be && BE.camps) be.innerHTML = BE.camps.boostsHTML(s);
     if (se) se.innerHTML = squadHTML(s);
   }
   // Cheap periodic refresh while idle on the Home tab (costs and affordability change every second)
