@@ -61,21 +61,24 @@ Every file is an IIFE that attaches to one global namespace, `window.BE`. Script
 | File | Responsibility |
 |---|---|
 | `js/util.js` | Seeded RNG (mulberry32), number formatting (K/M/B/…/Dc), date keys (day/week/month), easing, event bus `BE.bus` |
-| `js/data.js` | **All content and balance**: balance constants, attributes, positions, rarities, archetypes and abilities, personalities, names, the 10 worlds (formats, teams, arena themes, unlocks), feature-unlock gates, facilities, coaches, gear types, active abilities, tactics, prestige perks, cosmetics, login rewards, mission pools, achievements, products/IAP, gem shop, ad placements, alliances |
+| `js/data.js` | **All content and balance**: balance constants, attributes, positions, rarities, archetypes and abilities, personalities, names, the 10 worlds (formats, teams, arena themes, unlocks), feature-unlock gates, Team Growth stats, the Franchise Story quest chain (generated), facilities, coaches, gear types with slot unlocks, owned-effect tables, active abilities, tactics, prestige perks, cosmetics, login rewards, mission pools, achievements, products/IAP, gem shop, boosts, spin wheel, ad placements, alliances |
 | `js/athletes.js` | A deterministic catalog of 300 collectible athletes (30 per world: 9 Common, 7 Uncommon, 6 Rare, 4 Epic, 3 Legendary, 1 Mythic) plus the starter. Effective attributes (base, stars, training, gear), opponent generation, and procedural SVG portraits |
 | `js/state.js` | Default save, type-safe merge/validation, migration, runtime indexes, localStorage with a backup slot, optional claude.ai cloud save (`claude.use('db')` at `data/users/<id>/save`), export/import save codes |
-| `js/economy.js` | Formulas and mutating actions: opponent power curve, rewards, the cached modifiers aggregate (`mods`), athlete/team power, leveling, training, facilities, coaches, gear (make/equip/upgrade/merge/salvage/craft), recruitment with pity, shard exchange, `grant()`, prestige |
+| `js/economy.js` | Formulas and mutating actions: opponent power curve, rewards, the cached modifiers aggregate (`mods`), Team Growth, owned effects (athletes, milestones, world sets, gear), athlete/team power, leveling, training, facilities, coaches, gear (make/equip/upgrade/merge/salvage/craft/auto-equip, slots by stage), recruitment with banner levels, pity, wish list and duplicate conversion, shard exchange, `grant()`, prestige |
 | `js/sim.js` | Possession-by-possession basketball simulation (steals, passes, threes, jumpers, drives, dunks, post-ups, blocks, fouls and free throws, offensive rebounds and putbacks, stamina, tactics counters, abilities, clutch time, overtime). Runs headless for offline progress and tournaments |
-| `js/game.js` | Orchestration: lineups, current target (push/farm/championship), building teams for the sim, match result processing, idle `tick`, offline progress (Monte Carlo win rates), daily/weekly/monthly resets, missions, login ladder, season pass, achievements, simulated social layer, weekly tournament |
+| `js/game.js` | Orchestration: lineups, current target (push/farm/championship), building teams for the sim, match result processing, idle `tick`, offline progress (Monte Carlo win rates), daily/weekly/monthly resets, missions, Franchise Story quests, Training Camps, Boosts, Halftime Spin, Fan Gifts, login ladder, season pass, achievements, simulated social layer, weekly tournament |
 | `js/court.js` | Canvas renderer: perspective half-court, themed arenas and crowds per world, player figures with gear visible, hoop and net physics, ball arcs, and the task-queue "director" that turns sim events into animated plays, celebrations, particles and floaters |
 | `js/audio.js` | Procedural SFX (bounce, sneaker squeak, swish, rim, dunk, crowd, buzzer, upgrades, recruit reveals by rarity) and a lo-fi music loop |
 | `js/services.js` | **Monetization integration point** (see below) and haptics |
 | `js/ui-core.js` | Icons, modal sheets, toasts, flying-currency and spark FX, reward popups, HUD, bottom nav, the tutorial coach overlay, the dev-mode ad placeholder |
-| `js/ui-play.js` | Play screen: stage bar, hub, objective chip, live match runner, scoreboard, commentary, abilities, results, championship entry, nav badges |
+| `js/sprite-data.js`, `js/sprites.js` | Optional pixel-sprite players (agent-sprite-forge codeart2d parts, recolored per athlete). Loaded but **off** (`BE.sprites.enabled`) until an owner-approved set exists |
+| `js/ui-play.js` | The pinned **arena** (stage bar, court, scoreboard, abilities, Franchise Story quest bar with GO/CLAIM) and the Home tab shell (hub, toolbar, commentary), live match runner, results, championship entry, nav badges |
+| `js/ui-growth.js` | Home tab: **Team Growth** panel (franchise stats, ×1/×10/×100/MAX) and the squad strip |
+| `js/ui-camps.js` | Daily faucets: Training Camps (keyed, tiered), Boosts (20-minute buffs), Halftime Spin, Fan Gifts |
 | `js/ui-team.js` | Team: lineup, roster, athlete detail (level up, train attributes, equip), gear inventory/crafting, collection |
 | `js/ui-recruit.js` | Banners (Pro, limited Event, Street), disclosed odds, pity counters, single and 10× reveal animations, shard exchange |
 | `js/ui-empire.js` | Empire (facilities, coaches, Development League, Legacy/prestige) and the Shop |
-| `js/ui-meta.js` | Missions/trophies, daily login, season pass, events (contests, tournament, weekly and weekend challenges), leagues and social, world map, tactics, settings, franchise, offline summary, championship ceremony, world intro, feature-unlock intros |
+| `js/ui-meta.js` | Missions/trophies, daily login, season pass, Camps & Events sheet (camps, contests, tournament, weekly and weekend challenges), leagues and social, world map, tactics, settings, franchise, offline summary, championship ceremony, world intro, feature-unlock intros |
 | `js/contests.js` | Interactive minigames: Free Throw Challenge, 3-Point Contest, Slam Dunk Contest (timing meter) |
 | `js/main.js` | Boot, splash, game loop, autosave, visibility/offline handling, the global `data-act` click dispatcher, the tutorial state machine |
 | `css/style.css` | Visual system (tokens at the top) |
@@ -90,12 +93,16 @@ Every file is an IIFE that attaches to one global namespace, `window.BE`. Script
 
 ## Game systems at a glance
 
-- **Core loop:** matches auto-play on the Play screen. Wins pay cash, fans and drops and clear stages. A
-  loss drops you back to "farm" your last win. Auto-push retries after 3 farm wins, and the wall overlay
-  shows the power you need.
-- **Formats:** World 1 goes from 1v1 (first to 7) to 3v3 (first to 11). World 2 goes from 3v3 to 5v5 (four
-  quarters, with every few possessions animated and the rest fast-forwarded). Free walk-ons fill new slots
-  when a format grows.
+- **One screen (the idle-RPG loop, see `design/idle-loop-reference.md`):** the court is pinned at the top on
+  every tab with the scoreboard, abilities and the **Franchise Story** bar (one active quest out of 134, GO
+  jumps to it, CLAIM pays gems/tickets). The tabs scroll underneath. Home holds the hub, **Team Growth**
+  (8 franchise stats, ×1/×10/×100/MAX, always a few wins away, cap 25 + 10 per world, reset on prestige),
+  Boosts, the Halftime Spin and the squad strip.
+- **Core loop:** matches auto-play. Wins pay cash, fans and drops and clear stages. A loss drops you back to
+  "farm" your last win. Auto-push retries after 3 farm wins, and the wall overlay shows the power you need.
+- **Formats:** World 1 fills the five-player squad: 1v1 (Games 1–2, first to 7), 3v3 (Games 3–5, first to 11),
+  5v5 from Game 6 (four quarters, with every few possessions animated and the rest fast-forwarded). All five
+  squad slots are shown from minute one with their unlock game. Free walk-ons fill new slots when a format grows.
 - **Worlds:** 10 worlds × 10 stages. Stage 10 of each world is a 3-round championship the player chooses
   to enter. After World 10, endless Multiverse Rifts begin.
 - **Power:** athlete power = rarity × (OVR/50)^2.2 × level curve (+7% per level, ×2 every 25 levels) ×
@@ -103,12 +110,18 @@ Every file is an IIFE that attaches to one global namespace, `window.BE`. Script
   creates prestige walls.
 - **RPG:** 12 attributes, positions, archetype signature abilities, personalities that change the sim,
   celebrations, star-ups from duplicates, training points to raise attributes up to a potential cap.
-- **Recruiting:** odds are listed in the game. Pro: C 50 / U 28.5 / R 15 / E 5 / L 1.3 / M 0.2. Every
-  10-pull includes Rare or better; Epic+ by 30 pulls, Legendary+ by 80, Mythic by 200. The Event banner
-  is a weekly rotating theme with a featured Legendary. Street Scout costs cash. Collection milestones
-  give permanent bonuses.
+- **Recruiting:** odds are listed in the game per **banner level** (1–10, levelled by pulls; Pro goes from
+  C 50 / U 28.5 / R 15 / E 5 / L 1.3 / M 0.2 at level 1 to C 30 / U 30 / R 24 / E 11 / L 4 / M 1 at level 10, full
+  table in the Odds sheet). Every 10-pull includes Rare or better; Epic+ by 30 pulls, Legendary+ by 80, Mythic
+  by 200. One free recruit per banner per day (optional ad, same odds). A 3-slot **wish list** takes 50% of Pro
+  Legendary rolls. Duplicates raise stars; at 5★ they give shards and every 5 convert into a recruit of the
+  next rarity. The Event banner is a weekly rotating theme with a featured Legendary. Street Scout costs cash.
+- **Owned effects:** every athlete adds power to the franchise even on the bench (by rarity and stars, plus
+  milestone bonuses at Lv 10/25/50/75/100); world set bonuses at 10/20/30 athletes discovered; every gear piece
+  adds power owned or not. The Collection book (Team → Collection) totals them.
 - **Gear:** 7 types (5 per athlete plus ball and training gear for the team), 6 rarities, 10 world sets.
-  Upgrade, merge 3→1, salvage, craft. Gear is visible on court and in portraits.
+  Slots open by stage (sneakers and jersey W1, headband and ball W2, wristband and training W3, sleeve W4).
+  Upgrade, merge 3→1, salvage, craft, one-tap Auto-equip. Gear is visible on court and in portraits.
 - **Idle:** passive income, Development League (the bench earns money), training points, Youth Academy
   tickets, and offline progress capped by the offline-hours modifier. Offline progress can auto-clear
   stages and has an optional rewarded ad that doubles it.
@@ -117,8 +130,12 @@ Every file is an IIFE that attaches to one global namespace, `window.BE`. Script
   gems and perks. Each Legacy Star ever earned gives +2% power and cash, and stars buy perks: income,
   power, offline, scouting, head start, Auto-Trainer (a new mechanic), 4× speed, ability cost, gem drops,
   Second Unit, and an exclusive cosmetic.
+- **Daily faucets:** Training Camps (Cash, Scrap, Shard, Boss Rush; 2 keys each per day, selectable tiers that
+  unlock by clearing, one optional ad key), two 20-minute Boosts (+50% cash, +25% power; free once a day each,
+  optional ads after), a Halftime Spin (one free a day, published slices), and Fan Gifts that drift over the
+  court every few minutes.
 - **Engagement:** 7-day login ladder (missing a day restarts it without penalty), 3 daily missions plus a
-  "complete all" bonus, 3 weekly missions, 19 tiered achievements, a 30-tier monthly season pass with
+  "complete all" bonus, 3 weekly missions, 20 tiered achievements, a 30-tier monthly season pass with
   free and premium tracks, 3 skill contests per day, a weekly 16-team tournament with league tiers, a
   weekly limited challenge, and a weekend showdown.
 - **Social:** global and rival leaderboards, franchise alliances with weekly chests, and a showcase card.
@@ -145,45 +162,32 @@ pack, season pass premium, VIP.
 ## Balance knobs
 
 `BE.data.balance` in `js/data.js` holds the main constants: opponent base and per-world growth, reward
-growth, level cost and power growth, milestones, passive and offline rates. After changing them, run
-`node tests/progression.js 6 3`. Current pacing for an optimal bot: World 2 in about 10–20 minutes,
-World 4 (prestige unlock) in about 40–75 minutes, the first-run wall around World 7–8 after about
-3 hours, and a second run that reaches World 8 about twice as fast.
+growth, level cost and power growth, milestones, passive and offline rates, and the Team Growth cost curve
+(`growthCostGrowth`, `growthCostStage`, caps). Growth prices follow the real reward per win so a level is
+always a few wins away. After changing anything, run `node tests/progression.js 3 2` (the bot buys growth,
+claims quests and recruits). Measured 2026-11-11: World 2 in about 10–16 minutes, World 4 (prestige unlock)
+in about 35–50 minutes, the first-run wall at World 7 after about 1.5–2 hours, and a second run that reaches
+World 9 about twice as fast.
 
 ## Status and next steps
 
 - ✅ Core game complete and tested end to end (`node tests/e2e.js`, no page errors).
-- ✅ **16-bit visual overhaul, first pass** (requested by the owner). `js/pixel.js` is loaded after `athletes.js`
-  and turns every portrait into a 40×40 outlined pixel sprite (`<img class="pix">`). The court (`court.js`) and
-  contest (`contests.js`) canvases draw at about 170 internal px wide (`C.pix = BE.pixel.pixFor(W)`), are upscaled
-  with `image-rendering: pixelated`, and every frame goes through `BE.pixel.quantize()` (4 bits per channel, Bayer
-  4×4 dither). Shake snaps to whole pixels, court lines are 1 internal px, canvas text uses *Press Start 2P* at
-  8 or 16 internal px with a hard drop shadow, and the ad boards are color blocks. The UI uses *Press Start 2P*
-  for display text and *Pixelify Sans* for body text. A "16-BIT SKIN" section at the end of `css/style.css` gives
-  notched SNES windows with double borders, beveled buttons, stepped gradients, a dithered page background and
-  `steps()` animation. `e2e` passes with no errors.
-  Next steps:
-  1. ✅ Court player sprites. They are code-drawn with agent-sprite-forge `codeart2d` (no image model). The art is
-     authored in `tools/sprites/player_spec.py` (24×35 canvas, 2 facings, 5 leg poses, 12 arm poses, 12 hairstyles)
-     and turned into PixelSpecs in `art/sprites/player/`. `python tools/sprites/build_player.py` regenerates the
-     specs, renders them with `render_pixelspec.py --strict-qc` into `art/sprites/player/build/` (review sheet:
-     `build/review/preview-x4.png`), and packs the parts into `js/sprite-data.js`. At runtime `js/sprites.js`
-     composites the parts, recolors skin, hair, jersey, trim, shoes and gear per athlete, adds the jersey number and
-     a 1px outline, and caches each result. `court.js` draws them one internal pixel per sprite pixel and lines the
-     ball up with the sprite's hands, and the contests use them at 2×. The old vector figure remains as a fallback.
-     Ideas: perspective scaling for far players, dedicated dribble and celebrate frames, and a lighter outline
-     for very dark jerseys.
-  2. Portraits: upgrade `js/pixel.js`'s simple rasterizer with the sprite-forge hibit finish (render
-     `BE.athletes.portraitSVGRaw` to PNG, then run `forge_hibit.py`).
-  3. ✅ Pixel icons. All 60 UI icons are 16×16 two-tone pixel icons, code-drawn in `tools/sprites/icon_spec.py` and
-     rendered with codeart2d. `python tools/sprites/build_icons.py` rebuilds `art/sprites/icons/` and packs crisp SVG
-     paths into `js/icon-data.js`. Both tones use `currentColor`, so `BE.ui.icon(k)` keeps taking each button's color;
-     CSS shows them only at 16 or 32 px so pixels stay even. The vector set in `ui-core.js` remains as a fallback.
-     Still vector: the splash ball and the trophy art (`ballArt`, `trophyArt`) and the currency glyphs (`$ ◆ ★`).
-  4. Art-director review of every screen. Small text in Pixelify Sans below 12px (chips, `.sb-pow`, `.p`) is
-     readable but under the art bible's 13px minimum.
-  5. Add a `prefers-reduced-motion` check that the stepped animations still respect, and profile `quantize()`
-     on a low-end phone (it runs every frame on about 40k pixels).
+- ✅ **Idle-RPG loop pass (2026-11-11)**, following `design/idle-loop-reference.md` (owner brief: the Legend of
+  Slime loop: a 5-character squad, constant unlocks, accessories, always a goal). Shipped in order: presentation
+  reset (clean UI, HD court, vector art), one-screen layout with the court pinned, squad of five from minute one,
+  Team Growth panel, Franchise Story quest line, owned effects + Collection book + Auto-equip + slots by stage,
+  banner levels + free daily recruit + wish list + duplicate conversion, Training Camps + Boosts + Halftime Spin +
+  Fan Gifts, a juice and balance pass. All within `design/monetization-policy.md`.
+- ⏸ **Art direction (owner's call: pixel sprites, HD-2D style).** The 16-bit whole-screen look was rejected and
+  reverted; the court is HD with the original vector figures. `js/sprites.js` and the code-drawn parts remain
+  behind `BE.sprites.enabled = false`. Three sprite attempts were rejected for unreadable faces (see
+  `tools/sd/` and the memory note `art-quality-bar`). Next: produce **one** finished character at phone size
+  with a clearly readable face and get it approved before any batch. A free local pipeline exists on the owner's
+  desktop (`D:\AI`: ComfyUI + DreamShaper 8 + OpenPose ControlNet + anime-seg; scripts in `tools/sd/`).
+- Next for the loop (not started): a Plays track (abilities as a collectible with slots and levels), Coaches as a
+  summonable companion track, a Rookie Journal (7-day newbie event with a guaranteed Legendary), stage-milestone
+  Hall of Records, and an economy-designer pass on the camp reward curve and the mid-game once real players
+  exist.
 - **Resources the owner wants used.** These were investigated from a cloud session; set them up on the desktop.
   1. ✅ *Installed on the owner's desktop (v0.5.0, user scope; enabled for this project in `.claude/settings.json`).
      Python packages and ffmpeg are present and `codeart2d` renders locally. `route_media.py` reports no image

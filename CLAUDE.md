@@ -6,11 +6,14 @@ the start of a session. This file holds the working rules.
 
 ## The owner's current goals
 
-1. **Finish the 16-bit visual overhaul.** The step-by-step plan is in README → "Status and next steps", and
-   the target look is in `design/art-bible.md`.
-2. **Use the owner's chosen resources.** These are agent-sprite-forge for sprites, effects and maps, and
-   the pixel-art-atlas dataset as a *style reference only* until its license is checked. Details are in the
-   README.
+1. **Make the game play like a successful idle RPG** (the owner's reference is Legend of Slime): a 5-character
+   squad, constant unlocks, accessories, always a visible goal. The plan and what shipped are in
+   `design/idle-loop-reference.md` and README → "Status and next steps". Public-source references are in
+   `design/reference/`. Copy the shape of the loop, never another game's art, text or data.
+2. **Art: pixel sprites, HD-2D style, but only once a character is approved.** Whole-screen pixelation and the
+   pixel UI skin were rejected and reverted. Faces must be readable at the size players appear on a phone. Show
+   one finished character before producing any batch. agent-sprite-forge and the local Stable Diffusion setup
+   (`tools/sd/`, `D:\AI`) are the free routes; the pixel-art-atlas dataset is a *style reference only*.
 3. Keep the game honest and fun. `design/game-brief.md` and `design/monetization-policy.md` are the
    rules every change is checked against.
 
@@ -32,7 +35,7 @@ Run the first two once per machine. Then use these:
 | `npm run check` | Syntax-check every module (fast) |
 | `npm test` | Full Playwright playthrough on a phone viewport (`tests/e2e.js`). It must end with `NO ERRORS` |
 | `npm run smoke` | First minute only, with screenshots |
-| `npm run balance` | Progression bot (`tests/progression.js 6 3`). Compare against the targets in `design/game-brief.md` |
+| `npm run balance` | Progression bot (`tests/progression.js 3 3`; it buys growth, claims quests and recruits). Compare against the targets in `design/game-brief.md` and the measured numbers in README → "Balance knobs" |
 | `npm run calibrate` | Win probability against power ratio for each format |
 
 Screenshots go to `tests/shots/` (gitignored). **Look at them** after visual changes: a passing test
@@ -47,8 +50,12 @@ doesn't prove the screen looks right.
 - `js/economy.js` holds formulas and state changes, `js/sim.js` the match simulation (headless), and
   `js/game.js` the orchestration. None of them may touch the DOM, so they can run under Node in
   `tests/load.js`.
-- UI clicks go through `data-act` attributes and one dispatcher (`main.js`). Modals handle their own
-  `data-*` clicks.
+- UI clicks go through `data-act` attributes and one dispatcher (`main.js`, which also looks in
+  `BE.growth.act`, `BE.camps.act`, `BE.team.act`, `BE.recruitUI.act`, `BE.empire.act`). Modals handle their
+  own `data-*` clicks.
+- The court lives in the pinned `#arena` (built by `ui-play.js renderArena`) and renders on every tab. Tab
+  content goes in the `#screens` sections. Home is composed by `ui-play.js renderPlay` and filled by
+  `ui-growth.js` (growth, squad) and `ui-camps.js` (boosts, spin).
 - Saves are validated in `js/state.js`. When you add a saved field, add it to `defaultState()`. Bump
   `SAVE_VERSION` and handle it in `migrate()` only when an old save would otherwise break.
 - Never use `String.prototype.replace` with a replacement *string* that might contain `$`. Use a function
