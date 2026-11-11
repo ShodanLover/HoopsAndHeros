@@ -10,6 +10,8 @@
   const isChamp = (g) => g < 100 && g % 10 === 9;
   function formatOf(g) { return g >= 100 ? '5v5' : D.worlds[worldOf(g)].formats[g % 10]; }
   function sizeOf(g) { return D.formats[formatOf(g)].size; }
+  // First global stage at which squad slot i (0-based) is on the court
+  function slotUnlockG(i) { for (let g = 0; g < 100; g++) if (sizeOf(g) > i) return g; return 0; }
   function stageLabel(g) {
     if (g >= 100) return 'Rift ' + (g - 99);
     return isChamp(g) ? D.worlds[worldOf(g)].champ : 'Game ' + (stageOf(g) + 1);
@@ -544,7 +546,7 @@
   }
 
   BE.econ = {
-    worldOf, stageOf, isChamp, formatOf, sizeOf, stageLabel, oppPerPlayer, oppPower, unlocked, mods, invalidate, collectionMilestones,
+    worldOf, stageOf, isChamp, formatOf, sizeOf, slotUnlockG, stageLabel, oppPerPlayer, oppPower, unlocked, mods, invalidate, collectionMilestones,
     collectionBonus, athleteOvr, athletePower, athleteBase, levelMult, lineupAthletes, teamPower, maxLevel, levelCost, maxAffordable,
     levelUp, trainCost, train, stageReward, fansPerWin, farmG, passivePerSec, divisionPerSec, tpPerSec, addCash, facilityCost,
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,

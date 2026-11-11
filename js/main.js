@@ -165,7 +165,7 @@
       } else if (st === 8) {
         ui.coach('One more thing: your team <b>keeps playing while you\'re away</b>. Come back to collect offline earnings — facilities and coaches make them bigger.', { ok: 'Got it', block: true, onOk: () => { s.tutorial.step = 9; tutorial.show(); } });
       } else if (st === 9) {
-        ui.coach('Next goal: win 9 games to qualify for the <b>Block Party Classic</b>. Win it, and High School scouts will come calling. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
+        ui.coach('Next goal: fill your <b>five-player squad</b> and win the <b>Block Party Classic</b>. Game 3 goes 3v3, Game 6 goes 5v5, and local kids join for free when you need bodies. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
       }
     },
     finish() {

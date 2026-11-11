@@ -101,17 +101,17 @@
     {
       name: 'Neighborhood Streetball', short: 'Streetball', arena: 'The Cracked Blacktop', color: '#ff7a2f', set: 'Asphalt', champ: 'Block Party Classic',
       tagline: 'Chain nets, cracked asphalt, and something to prove.',
-      formats: ['1v1', '1v1', '1v1', '1v1', '1v1', '3v3', '3v3', '3v3', '3v3', '3v3'],
-      teams: ['Lil Ray', 'Corner Kev', 'Old Man Gus', 'Fast Freddie', 'Big Tony', 'Hydrant Heroes', 'Alley Cats', 'Chain Net Crew', 'Blacktop Bandits', 'Kings of 5th Street'],
-      unlocks: ['1v1 & 3v3 streetball', 'Recruiting', 'Facilities', 'Head Coach'],
+      formats: ['1v1', '1v1', '3v3', '3v3', '3v3', '5v5', '5v5', '5v5', '5v5', '5v5'],
+      teams: ['Lil Ray', 'Corner Kev', 'Hydrant Heroes', 'Alley Cats', 'Chain Net Crew', 'Blacktop Bandits', 'Fast Freddie\'s Five', 'Big Tony\'s Crew', 'Old Man Gus & Co', 'Kings of 5th Street'],
+      unlocks: ['Your 5-player squad', 'Recruiting', 'Facilities', 'Head Coach'],
       theme: { sky: ['#ff9a5a', '#5b3a8c'], floor: '#4a4e57', floor2: '#3d414a', line: '#f2f2f2', paint: '#c2462b', stands: 'fence', crowd: 0.35 },
     },
     {
       name: 'High School Basketball', short: 'High School', arena: 'Westfield High Gym', color: '#2fb6ff', set: 'Varsity', champ: 'State Championship',
       tagline: 'Friday nights, pep bands, and packed bleachers.',
-      formats: ['3v3', '3v3', '3v3', '3v3', '3v3', '5v5', '5v5', '5v5', '5v5', '5v5'],
+      formats: Array(10).fill('5v5'),
       teams: ['Lincoln Lynx', 'Eastside Eagles', 'Riverdale Rams', 'Oak Hill Owls', 'Central Comets', 'Summit Spartans', 'Bayview Bulldogs', 'Northgate Knights', 'Granite Grizzlies', 'St. Vincent Saints'],
-      unlocks: ['5v5 games', 'Tactics', 'Skill Contests', 'Season Pass'],
+      unlocks: ['Full-court 5v5', 'Tactics', 'Skill Contests', 'Season Pass'],
       theme: { sky: ['#2b3550', '#1a2033'], floor: '#d9a35f', floor2: '#c98f4b', line: '#ffffff', paint: '#1f6fd1', stands: 'bleachers', crowd: 0.5 },
     },
     {

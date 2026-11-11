@@ -41,7 +41,7 @@
       const uid = s.lineup[i];
       const a = uid && s.rosterByUid[uid];
       if (i >= size) {
-        html += '<div class="slot-empty slot-locked">' + icon('lock') + '<br>' + (i < 3 ? '3v3' : '5v5') + '</div>';
+        html += '<div class="slot-empty slot-locked">' + icon('lock') + '<br>Opens<br>' + E.stageLabel(E.slotUnlockG(i)) + '</div>';
         continue;
       }
       if (!a) { html += '<button class="slot-empty" data-act="tab-roster">' + icon('plus') + '<br>Add</button>'; continue; }

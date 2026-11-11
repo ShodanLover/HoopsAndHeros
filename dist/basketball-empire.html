@@ -754,17 +754,17 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     {
       name: 'Neighborhood Streetball', short: 'Streetball', arena: 'The Cracked Blacktop', color: '#ff7a2f', set: 'Asphalt', champ: 'Block Party Classic',
       tagline: 'Chain nets, cracked asphalt, and something to prove.',
-      formats: ['1v1', '1v1', '1v1', '1v1', '1v1', '3v3', '3v3', '3v3', '3v3', '3v3'],
-      teams: ['Lil Ray', 'Corner Kev', 'Old Man Gus', 'Fast Freddie', 'Big Tony', 'Hydrant Heroes', 'Alley Cats', 'Chain Net Crew', 'Blacktop Bandits', 'Kings of 5th Street'],
-      unlocks: ['1v1 & 3v3 streetball', 'Recruiting', 'Facilities', 'Head Coach'],
+      formats: ['1v1', '1v1', '3v3', '3v3', '3v3', '5v5', '5v5', '5v5', '5v5', '5v5'],
+      teams: ['Lil Ray', 'Corner Kev', 'Hydrant Heroes', 'Alley Cats', 'Chain Net Crew', 'Blacktop Bandits', 'Fast Freddie\'s Five', 'Big Tony\'s Crew', 'Old Man Gus & Co', 'Kings of 5th Street'],
+      unlocks: ['Your 5-player squad', 'Recruiting', 'Facilities', 'Head Coach'],
       theme: { sky: ['#ff9a5a', '#5b3a8c'], floor: '#4a4e57', floor2: '#3d414a', line: '#f2f2f2', paint: '#c2462b', stands: 'fence', crowd: 0.35 },
     },
     {
       name: 'High School Basketball', short: 'High School', arena: 'Westfield High Gym', color: '#2fb6ff', set: 'Varsity', champ: 'State Championship',
       tagline: 'Friday nights, pep bands, and packed bleachers.',
-      formats: ['3v3', '3v3', '3v3', '3v3', '3v3', '5v5', '5v5', '5v5', '5v5', '5v5'],
+      formats: Array(10).fill('5v5'),
       teams: ['Lincoln Lynx', 'Eastside Eagles', 'Riverdale Rams', 'Oak Hill Owls', 'Central Comets', 'Summit Spartans', 'Bayview Bulldogs', 'Northgate Knights', 'Granite Grizzlies', 'St. Vincent Saints'],
-      unlocks: ['5v5 games', 'Tactics', 'Skill Contests', 'Season Pass'],
+      unlocks: ['Full-court 5v5', 'Tactics', 'Skill Contests', 'Season Pass'],
       theme: { sky: ['#2b3550', '#1a2033'], floor: '#d9a35f', floor2: '#c98f4b', line: '#ffffff', paint: '#1f6fd1', stands: 'bleachers', crowd: 0.5 },
     },
     {
@@ -1741,6 +1741,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   const isChamp = (g) => g < 100 && g % 10 === 9;
   function formatOf(g) { return g >= 100 ? '5v5' : D.worlds[worldOf(g)].formats[g % 10]; }
   function sizeOf(g) { return D.formats[formatOf(g)].size; }
+  // First global stage at which squad slot i (0-based) is on the court
+  function slotUnlockG(i) { for (let g = 0; g < 100; g++) if (sizeOf(g) > i) return g; return 0; }
   function stageLabel(g) {
     if (g >= 100) return 'Rift ' + (g - 99);
     return isChamp(g) ? D.worlds[worldOf(g)].champ : 'Game ' + (stageOf(g) + 1);
@@ -2275,7 +2277,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   }
 
   BE.econ = {
-    worldOf, stageOf, isChamp, formatOf, sizeOf, stageLabel, oppPerPlayer, oppPower, unlocked, mods, invalidate, collectionMilestones,
+    worldOf, stageOf, isChamp, formatOf, sizeOf, slotUnlockG, stageLabel, oppPerPlayer, oppPower, unlocked, mods, invalidate, collectionMilestones,
     collectionBonus, athleteOvr, athletePower, athleteBase, levelMult, lineupAthletes, teamPower, maxLevel, levelCost, maxAffordable,
     levelUp, trainCost, train, stageReward, fansPerWin, farmG, passivePerSec, divisionPerSec, tpPerSec, addCash, facilityCost,
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
@@ -5245,7 +5247,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       const uid = s.lineup[i];
       const a = uid && s.rosterByUid[uid];
       if (i >= size) {
-        html += '<div class="slot-empty slot-locked">' + icon('lock') + '<br>' + (i < 3 ? '3v3' : '5v5') + '</div>';
+        html += '<div class="slot-empty slot-locked">' + icon('lock') + '<br>Opens<br>' + E.stageLabel(E.slotUnlockG(i)) + '</div>';
         continue;
       }
       if (!a) { html += '<button class="slot-empty" data-act="tab-roster">' + icon('plus') + '<br>Add</button>'; continue; }
@@ -7175,7 +7177,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       } else if (st === 8) {
         ui.coach('One more thing: your team <b>keeps playing while you\'re away</b>. Come back to collect offline earnings — facilities and coaches make them bigger.', { ok: 'Got it', block: true, onOk: () => { s.tutorial.step = 9; tutorial.show(); } });
       } else if (st === 9) {
-        ui.coach('Next goal: win 9 games to qualify for the <b>Block Party Classic</b>. Win it, and High School scouts will come calling. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
+        ui.coach('Next goal: fill your <b>five-player squad</b> and win the <b>Block Party Classic</b>. Game 3 goes 3v3, Game 6 goes 5v5, and local kids join for free when you need bodies. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
       }
     },
     finish() {
