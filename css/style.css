@@ -82,7 +82,7 @@ svg.i { width: 1em; height: 1em; display: inline-block; vertical-align: -0.14em;
 
 /* ---------- Screens ---------- */
 #screens { flex: 1; position: relative; overflow: hidden; }
-.screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 10px 12px 18px; display: none; -webkit-overflow-scrolling: touch; }
+.screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; overflow-anchor: none; padding: 10px 12px 18px; display: none; -webkit-overflow-scrolling: touch; }
 .screen.active { display: block; animation: fadeIn 0.18s ease; }
 #scr-play { padding: 8px 12px 18px; display: none; flex-direction: column; gap: 8px; }
 #scr-play.active { display: flex; }
@@ -471,3 +471,33 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   .acard .ovr small { font-size: 9px; }
   .acard .lv { font-size: 9px; padding: 0 3px; right: 3px; top: 3px; }
 }
+
+/* ---------- Home: Team Growth ---------- */
+.mults { display: inline-flex; gap: 4px; }
+.mults .chip { cursor: pointer; padding: 3px 9px; }
+.mults .chip.on { background: rgba(255, 122, 47, 0.22); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(255, 122, 47, 0.5); }
+.grow-head { display: flex; align-items: baseline; gap: 8px; margin: -2px 2px 8px; }
+.grow-head .power-num { font-size: 22px; }
+.grow-row { display: flex; align-items: center; gap: 10px; padding: 7px 8px 7px 8px; border-radius: 14px; background: linear-gradient(180deg, var(--panel), #131a35); border: 1px solid var(--line); }
+.grow-row .gic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; flex: none; background: rgba(255, 255, 255, 0.05); }
+.grow-row .gic svg { width: 22px; height: 22px; }
+.grow-row .gt { flex: 1; min-width: 0; }
+.grow-row .gt .n { font-family: var(--cond); font-weight: 800; font-size: 14.5px; display: flex; gap: 6px; align-items: baseline; }
+.grow-row .gt .n .lv { color: var(--gold); font-size: 12px; }
+.grow-row .gt .e { font-size: 11.5px; color: var(--good); font-family: var(--cond); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.grow-row .btn { min-width: 84px; min-height: 40px; }
+.grow-row .btn.ghost .sub { color: var(--muted); }
+
+/* ---------- Franchise Story bar ---------- */
+.quest { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 10px; border-radius: 12px; background: linear-gradient(90deg, rgba(255, 210, 63, 0.16), rgba(255, 122, 47, 0.05)); border: 1px solid rgba(255, 210, 63, 0.35); width: 100%; }
+.quest .qi { width: 28px; height: 28px; border-radius: 8px; background: var(--gold); color: #3d2a00; display: grid; place-items: center; flex: none; }
+.quest .qi svg { width: 18px; height: 18px; }
+.quest .qt { flex: 1; min-width: 0; }
+.quest .qlabel { font-family: var(--cond); font-weight: 800; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); line-height: 1.1; }
+.quest .qn { font-family: var(--cond); font-weight: 800; font-size: 13.5px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.quest .qm { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 11px; }
+.quest .qm .bar { flex: 1; height: 5px; min-width: 40px; }
+.quest .qm .num { font-size: 11px; }
+.quest .qr { display: inline-flex; gap: 4px; }
+.quest .qr .rew { font-size: 11px; }
+.quest .btn { min-width: 60px; min-height: 36px; padding: 4px 8px; font-size: 13px; }

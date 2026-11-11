@@ -40,7 +40,7 @@
   // ---------- Modifiers (cached) ----------
   let modsCache = null, modsKey = '';
   function modsSignature(s) {
-    return JSON.stringify([s.facilities, s.coaches, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0]);
+    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0]);
   }
   function mods(s) {
     const sig = modsSignature(s);
@@ -52,21 +52,23 @@
     const coll = collectionBonus(s);
     const gearColl = 1 + 0.01 * Object.keys(s.gearSeen).length;
     const fansMult = 1 + Math.log10(1 + s.fans) * 0.06;
+    const gfx = growthFx(s);
     const m = {
       aura,
       powerMult: aura * (1 + 0.2 * p('power')) * (1 + 0.07 * f('gym')) * (1 + 0.04 * f('training')) * (1 + 0.06 * f('hq')) *
-        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl,
-      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash),
+        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power),
+      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash),
       winCashMult: 1 + 0.15 * f('court'),
-      passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult,
-      fanMult: 1 + 0.12 * f('stadium'),
+      passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult * (1 + gfx.passive),
+      fanMult: (1 + 0.12 * f('stadium')) * (1 + gfx.fans),
       offlineEff: Math.min(1, B.offlineBaseEff + 0.04 * f('medical') + 0.03 * c('business') + 0.08 * p('offline')) * (s.purchases.vip ? 1.25 : 1),
       offlineCapH: B.offlineBaseCapH + p('offline') + (s.best >= 40 ? 2 : 0) + (s.purchases.vip ? 2 : 0),
       tpMult: (1 + 0.2 * f('training')) * (1 + 0.12 * c('development')),
       costMult: Math.max(0.6, 1 - 0.02 * c('development')),
       shardMult: (1 + 0.1 * f('scouting')) * (1 + 0.1 * c('recruiting')) * (1 + 0.2 * p('scout')),
-      staminaDrain: Math.max(0.3, 1 - 0.06 * f('medical') - 0.03 * c('strength')),
-      sim: { shoot: 0.03 * c('shooting'), def: 0.03 * c('defense'), reb: 0.03 * c('strength'), tactic: 0.12 + 0.02 * c('analytics') },
+      staminaDrain: Math.max(0.3, 1 - 0.06 * f('medical') - 0.03 * c('strength') - gfx.stamina),
+      sim: { shoot: 0.03 * c('shooting') + gfx.shoot, def: 0.03 * c('defense') + gfx.def, reb: 0.03 * c('strength') + gfx.reb, tactic: 0.12 + 0.02 * c('analytics') },
+      growth: gfx,
       energyCost: Math.max(0.5, 1 - 0.1 * p('clutch')),
       gemDrop: 0.02 * p('goldrush'),
       divisionMult: (1 + p('secondunit')) * (1 + 0.25 * f('academy')),
@@ -77,6 +79,74 @@
     return m;
   }
   function invalidate() { modsKey = ''; }
+
+  // ---------- Team Growth (franchise stats) ----------
+  function growthFx(s) {
+    const t = { power: 0, cash: 0, passive: 0, fans: 0, stamina: 0, shoot: 0, def: 0, reb: 0 };
+    for (const g of D.growth) {
+      const lvl = s.growth[g.k] || 0;
+      if (!lvl) continue;
+      for (const k in g.fx) t[k] += g.fx[k] * lvl;
+    }
+    t.stamina = Math.min(0.4, t.stamina);
+    return t;
+  }
+  function growthCap(s) { return B.growthCapBase + B.growthCapPerWorld * worldOf(s.best); }
+  // Prices follow the current run's real income per win (multipliers included), so the next level is
+  // always a few wins away: level L costs about base/rewardBase * 1.05^L wins
+  function growthUnit(s) { return Math.pow(stageReward(s, farmG(s)) / B.rewardBase, B.growthCostStage); }
+  function growthCost(s, k, n) {
+    const g = D.growth.find((x) => x.k === k);
+    const lvl = s.growth[k] || 0;
+    const unit = growthUnit(s);
+    let total = 0;
+    for (let i = 0; i < n; i++) total += g.base * unit * Math.pow(B.growthCostGrowth, lvl + i);
+    return total;
+  }
+  // How many levels the chosen multiplier buys: n levels (clamped to the cap) or MAX affordable
+  function growthQuote(s, k, mult) {
+    const g = D.growth.find((x) => x.k === k);
+    const lvl = s.growth[k] || 0;
+    const room = Math.max(0, growthCap(s) - lvl);
+    if (!g || room <= 0) return { n: 0, cost: 0 };
+    if (mult === 'max') {
+      const unit = growthUnit(s);
+      let n = 0, total = 0;
+      while (n < room) { const c = g.base * unit * Math.pow(B.growthCostGrowth, lvl + n); if (total + c > s.cash) break; total += c; n++; }
+      return { n, cost: total };
+    }
+    const n = Math.min(mult, room);
+    return { n, cost: growthCost(s, k, n) };
+  }
+  function upgradeGrowth(s, k, n) {
+    const g = D.growth.find((x) => x.k === k);
+    if (!g) return { ok: false, reason: 'Unknown stat' };
+    const lvl = s.growth[k] || 0;
+    n = Math.min(n, growthCap(s) - lvl);
+    if (n <= 0) return { ok: false, reason: 'Capped until the next world' };
+    const cost = growthCost(s, k, n);
+    if (s.cash < cost) return { ok: false, reason: 'Not enough cash' };
+    s.cash -= cost;
+    s.growth[k] = lvl + n;
+    s.stats.growthUps += n;
+    invalidate();
+    return { ok: true, n, lvl: lvl + n, cost };
+  }
+  function growthEffectText(g, lvl) {
+    const f = g.fx;
+    const n = lvl || 1;
+    const pct = (v) => (v * 100 >= 10 ? Math.round(v * 100) : (v * 100).toFixed(1).replace(/\.0$/, '')) + '%';
+    const parts = [];
+    if (f.power) parts.push('+' + pct(f.power * n) + ' team power');
+    if (f.cash) parts.push('+' + pct(f.cash * n) + ' cash');
+    if (f.passive) parts.push('+' + pct(f.passive * n) + ' idle income');
+    if (f.fans) parts.push('+' + pct(f.fans * n) + ' fans');
+    if (f.stamina) parts.push('-' + pct(Math.min(0.4, f.stamina * n)) + ' stamina drain');
+    if (f.shoot) parts.push('+' + pct(f.shoot * n) + ' shooting');
+    if (f.def) parts.push('+' + pct(f.def * n) + ' defense');
+    if (f.reb) parts.push('+' + pct(f.reb * n) + ' boards');
+    return (lvl ? '' : 'Per level: ') + parts.join(' · ');
+  }
 
   const collectionMilestones = [
     { n: 3, power: 0.05, cash: 0.05 }, { n: 10, power: 0.1, cash: 0.1 }, { n: 25, power: 0.2, cash: 0.15 }, { n: 50, power: 0.35, cash: 0.25 },
@@ -535,6 +605,7 @@
     s.cash = 0;
     s.facilities = {};
     s.coaches = {};
+    s.growth = {};
     s.fans = Math.floor(s.fans * 0.1);
     const keepLvl = (s.prestige.upgrades.headstart || 0) > 0 ? 10 : 1;
     for (const a of s.roster) a.lvl = keepLvl;
@@ -552,6 +623,6 @@
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
     eventFeatured, pullOne, recruit, addAthlete, shardExchange, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
-    doPrestige, gearPct, teamGearPct,
+    doPrestige, gearPct, teamGearPct, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -22,7 +22,7 @@
         '<button class="icon-btn" data-act="map" aria-label="World map">' + icon('map') + '</button></div>' +
         '<div class="court-wrap" data-p="courtwrap"><canvas id="court"></canvas><div class="scoreboard" data-p="sb"></div><div class="result-pop hidden" data-p="result"></div><div data-p="overlay"></div></div>' +
         '<div class="controls" data-p="controls"></div>' +
-        '<button class="objective" data-act="objective" data-p="objective"></button>';
+        '<div class="quest" data-p="objective"></div>';
       el.dataset.built = '1';
       CT.init($('#court'));
       CT.setTheme(E.worldOf(s.run.cleared), G.cosmetic(s));
@@ -41,11 +41,14 @@
       el.innerHTML =
         '<div class="hub" data-p="hub"></div>' +
         '<div class="toolbar" data-p="toolbar"></div>' +
-        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>';
+        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>' +
+        '<div data-p="growth"></div>' +
+        '<div data-p="squad"></div>';
       el.dataset.built = '1';
     }
     renderHub();
     renderToolbar();
+    if (BE.growth) BE.growth.render();
   }
 
   function renderStageBar() {
@@ -106,11 +109,60 @@
   }
   function renderObjective() {
     const s = S();
-    const o = objectiveText(s);
-    const key = o.t + o.s;
+    const el = $('[data-p="objective"]');
+    if (!el) return;
+    const st = G.questState(s);
+    let key, html;
+    if (!st.q) {
+      const o = objectiveText(s);
+      key = 'done' + o.t + o.s;
+      html = '<span class="qi">' + icon('trophy') + '</span><div class="qt"><div class="qlabel">Franchise Story complete</div><div class="qn">' + U.esc(o.t) + '</div></div>';
+    } else {
+      key = st.q.id + ':' + st.prog + ':' + (st.done ? 1 : 0);
+      const ic = { play: 'ball', champ: 'trophy', growth: 'chart', team: 'jersey', recruit: 'cards', empire: 'empire', events: 'events' }[st.q.go] || 'ball';
+      html = '<span class="qi">' + icon(ic) + '</span><div class="qt"><div class="qlabel">Franchise Story · ' + (st.i + 1) + '/' + st.total + '</div><div class="qn">' + U.esc(st.q.text) + '</div>' +
+        '<div class="qm"><div class="bar ' + (st.done ? 'green' : '') + '"><i style="width:' + Math.min(100, st.prog / st.q.n * 100) + '%"></i></div><span class="num">' + U.fmtInt(st.prog) + '/' + U.fmtInt(st.q.n) + '</span><span class="qr">' + ui.rewardPreview(st.q.reward) + '</span></div></div>' +
+        (st.done ? '<button class="btn sm green pulse" data-act="questclaim">Claim</button>' : '<button class="btn sm gold" data-act="questgo">Go</button>');
+    }
     if (key === R.lastObjective) return;
     R.lastObjective = key;
-    $('[data-p="objective"]').innerHTML = '<span class="oi">' + icon(o.i) + '</span><span class="grow" style="min-width:0"><b>' + U.esc(o.t) + '</b><br><span class="muted">' + U.esc(o.s) + '</span></span>';
+    el.innerHTML = html;
+  }
+  // Where the GO button takes the player
+  function questGo() {
+    const s = S();
+    const st = G.questState(s);
+    if (!st.q) return;
+    const go = st.q.go;
+    BE.audio.play('tab');
+    if (go === 'growth') { ui.go('play'); const row = $('.grow-row'); if (row) { row.scrollIntoView({ block: 'center', behavior: 'smooth' }); ui.flash(row); } return; }
+    if (go === 'team' || go === 'recruit' || go === 'empire') { ui.go(go); return; }
+    if (go === 'events') { if (E.unlocked(s, 'events')) BE.meta.eventsModal(); else ui.toast('Skill Contests unlock at ' + ui.stageName(D.features.events.g), '', 'lock'); return; }
+    if (go === 'champ') {
+      const tg = G.target(s);
+      if (tg.champReady && !s.run.champ) { enterChampionship(); return; }
+      if (s.run.champ) { ui.toast('The championship is underway. Win three straight!', '', 'trophy'); return; }
+      ui.toast('Reach Game 10 of this world to enter the championship', '', 'trophy'); ui.flash($('[data-p="courtwrap"]')); return;
+    }
+    // play: the court is already working on it
+    if (s.run.farming) { ui.toast('Your team is farming the last win. Upgrade, then tap Retry on the court.', '', 'up'); ui.go('play'); return; }
+    ui.toast('Your team is on it. Keep the court running!', '', 'ball'); ui.flash($('[data-p="courtwrap"]'));
+  }
+  function questClaim(el) {
+    const s = S();
+    const r = G.claimQuest(s);
+    if (!r) return;
+    BE.audio.play('claim');
+    BE.services.haptic(20);
+    if (el) ui.sparks(el, '#ffd23f', 18);
+    const seen = {};
+    for (const g of r.granted) if (['cash', 'gems', 'tickets', 'eventTickets'].includes(g.k) && !seen[g.k]) { seen[g.k] = 1; ui.flyCurrency(g.k, el, 8); }
+    ui.toast('Quest complete: ' + U.esc(r.q.text) + (r.next ? ' · Next: ' + U.esc(r.next.text) : ''), 'gold', 'check');
+    R.lastObjective = '';
+    renderObjective();
+    ui.updateBadges(s);
+    BE.bus.emit('quest', r);
+    BE.bus.emit('changed');
   }
 
   function renderControls() {
@@ -443,7 +495,8 @@
     b.events = E.unlocked(s, 'events') && (s.events.attempts.ft + s.events.attempts.three + s.events.attempts.dunk > 0) ? 1 : 0;
     b.trophies = D.achievements.filter((a) => G.achievementState(s, a).ready).length;
     b.social = E.unlocked(s, 'social') && !s.social.alliance ? 1 : 0;
-    b.play = (b.missions || 0) + (b.daily ? 1 : 0) + (b.pass || 0) + (b.trophies || 0);
+    b.quest = G.questState(s).done ? 1 : 0;
+    b.play = (b.missions || 0) + (b.daily ? 1 : 0) + (b.pass || 0) + (b.trophies || 0) + b.quest;
     b.team = s.roster.some((a) => a.isNew) || s.gear.some((g) => g.isNew) ? 1 : 0;
     b.recruit = s.tickets > 0 && E.unlocked(s, 'recruit') ? s.tickets : 0;
     b.shop = s.timers.freeGiftDay !== U.dayKey() && E.unlocked(s, 'shop') ? 1 : 0;
@@ -451,6 +504,6 @@
     return b;
   }
 
-  BE.play = { R, renderPlay, renderArena, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
+  BE.play = { R, renderPlay, renderArena, questGo, questClaim, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
   ui.badges = badges;
 })(typeof window !== 'undefined' ? window : globalThis);

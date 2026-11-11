@@ -557,6 +557,7 @@
 
   // ---------- Feature intros ----------
   const INTROS = {
+    growth: ['Team Growth', 'Franchise-wide stats live under the court on the Home tab: Offense, Defense, Conditioning and more. They are cheap, always available, and multiply every athlete you own.', 'play'],
     facilities: ['Facilities unlocked!', 'Upgrade your Home Court and Weight Room in the Empire tab. Facilities give permanent multipliers.', 'empire'],
     missions: ['Missions & Daily Rewards', 'Daily and weekly missions plus login rewards are on the Play screen hub. They pay gems, tickets and Pass XP.', 'play'],
     shop: ['The Shop is open', 'Claim a free daily gift, earn optional ad rewards, and customize your team\'s look.', 'shop'],

@@ -11,7 +11,7 @@
     return {
       wins: 0, losses: 0, gamesPlayed: 0, threes: 0, dunks: 0, blocks: 0, steals: 0, levelups: 0, pulls: 0, facilityUps: 0,
       gearUps: 0, contests: 0, trains: 0, abilities: 0, cashEarned: 0, championships: 0, prestiges: 0, legendaries: 0,
-      mythics: 0, unique: 1, bestWorld: 1, loginDays: 0, perfectFT: 0, stagesCleared: 0, champWins: 0, tourneyWins: 0,
+      mythics: 0, unique: 1, bestWorld: 1, loginDays: 0, perfectFT: 0, stagesCleared: 0, champWins: 0, tourneyWins: 0, growthUps: 0,
     };
   }
 
@@ -32,6 +32,8 @@
       gearSeen: {},
       facilities: {},
       coaches: {},
+      growth: {},
+      quest: { i: 0, claimed: 0 },
       prestige: { points: 0, earned: 0, count: 0, upgrades: {} },
       recruit: { pro: { e: 0, l: 0, m: 0 }, event: { e: 0, l: 0, m: 0 }, total: 0 },
       collection: { S0: true },
@@ -42,7 +44,7 @@
       pass: { month: '', xp: 0, premium: false, free: [], prem: [] },
       ads: { day: '', counts: {}, lastInterstitial: 0 },
       purchases: { starter: false, vip: false, autocoach: false, history: [] },
-      settings: { sfx: 0.8, music: 0.35, haptics: true, reduceMotion: false, speed: 2, autoPush: true, autoAbilities: false, autoTactics: true, commentary: true },
+      settings: { sfx: 0.8, music: 0.35, haptics: true, reduceMotion: false, speed: 2, autoPush: true, autoAbilities: false, autoTactics: true, commentary: true, buyMult: 1 },
       tactics: { off: 'balanced', def: 'man' },
       tutorial: { step: 0, done: false },
       seenFeatures: {},
@@ -82,6 +84,7 @@
 
   function validate(raw) {
     const s = mergeTyped(defaultState(), raw);
+    if (raw && raw.settings && raw.settings.buyMult === 'max') s.settings.buyMult = 'max';
     // currencies non-negative
     for (const k of ['cash', 'gems', 'tickets', 'eventTickets', 'tp', 'scrap', 'shards', 'fans']) s[k] = Math.max(0, U.num(s[k], 0));
     // roster
@@ -130,6 +133,9 @@
     if (!D.cosmetics.some((c) => c.k === s.franchise.cosmetic)) s.franchise.cosmetic = 'default';
     s.franchise.name = String(s.franchise.name || 'Blacktop Ballers').slice(0, 24);
     s.settings.speed = U.clamp(Math.floor(s.settings.speed), 1, 4);
+    if (s.settings.buyMult !== 'max') s.settings.buyMult = [1, 10, 100].includes(s.settings.buyMult) ? s.settings.buyMult : 1;
+    for (const k in s.growth) s.growth[k] = U.clamp(Math.floor(U.num(s.growth[k], 0)), 0, 1000);
+    s.quest.i = U.clamp(Math.floor(U.num(s.quest.i, 0)), 0, D.questLine.length);
     s.log = s.log.slice(-30);
     s.v = SAVE_VERSION;
     return s;

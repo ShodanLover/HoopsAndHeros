@@ -50,7 +50,7 @@
       const pool = A.catalog.filter((t) => t.rarity <= 1 && t.world === 0 && !s.collection[t.id]);
       const t = pool.length ? pool[Math.floor(Math.random() * pool.length)] : A.catalog[0];
       const r = E.addAthlete(s, t);
-      r.a.lvl = Math.max(1, Math.max.apply(null, s.roster.map((x) => x.lvl)) - 2);
+      r.a.lvl = Math.max(1, Math.max.apply(null, s.roster.map((x) => x.lvl)));
       gifts.push(r.a);
     }
     ensureLineup(s, size);
@@ -391,6 +391,31 @@
     return msgs;
   }
 
+  // ---------- Franchise Story (quest chain) ----------
+  function questProgress(s, q) {
+    switch (q.stat) {
+      case 'best': return s.best;
+      case 'roster': return s.roster.length;
+      case 'unique': return s.stats.unique;
+      default: return s.stats[q.stat] || 0;
+    }
+  }
+  function questState(s) {
+    const list = D.questLine, i = s.quest.i;
+    if (i >= list.length) return { q: null, done: false, i, prog: 0, total: list.length };
+    const q = list[i];
+    const prog = questProgress(s, q);
+    return { q, prog: Math.min(prog, q.n), done: prog >= q.n, i, total: list.length };
+  }
+  function claimQuest(s) {
+    const st = questState(s);
+    if (!st.q || !st.done) return null;
+    s.quest.i++;
+    s.quest.claimed++;
+    s.pass.xp += 40;
+    return { granted: E.grant(s, st.q.reward), q: st.q, next: questState(s).q };
+  }
+
   // ---------- Login rewards ----------
   function loginStatus(s) {
     const today = U.dayKey();
@@ -535,6 +560,6 @@
   BE.game = {
     cosmetic, ensureLineup, autoLineup, autoPromote, giftWalkOns, target, playerTeam, oppTeam, newMatch, onMatchEnd, startChampionship, tick, offline,
     estimateWinProb, resets, missionProgress, loginStatus, claimLogin, passReward, passTier, PASS_TIERS, PASS_XP, achievementState,
-    claimAchievement, social, runTournament, gearVis,
+    claimAchievement, social, runTournament, gearVis, questProgress, questState, claimQuest,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

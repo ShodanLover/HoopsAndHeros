@@ -26,6 +26,10 @@
     fansPerWinBase: 3,
     fansGrowth: 1.16,
     maxLevelBase: 400,
+    growthCostGrowth: 1.07, // per level, for Team Growth stats
+    growthCostStage: 1.0,  // growth prices scale with rewardGrowth^(this * current stage), so a level always costs a few wins
+    growthCapBase: 25,      // Team Growth level cap in World 1 ...
+    growthCapPerWorld: 10,  // ... plus this per world reached
   };
 
   const attrs = [
@@ -201,6 +205,65 @@
     autocoach: { g: 30, name: 'Auto-Coaching', icon: 'auto' },
   };
 
+  // Team Growth: franchise-wide stats bought with cash from minute one. fx values are per level.
+  // Effects: power (team power), cash (all cash), passive (idle income), fans, stamina (less drain), shoot/def/reb (sim bonuses).
+  const growth = [
+    { k: 'offense', name: 'Offense', icon: 'ball', color: '#ff7a2f', base: 4, fx: { power: 0.015, shoot: 0.002 } },
+    { k: 'defense', name: 'Defense', icon: 'shield', color: '#3aa8ff', base: 5, fx: { power: 0.015, def: 0.002 } },
+    { k: 'conditioning', name: 'Conditioning', icon: 'dumbbell', color: '#38d996', base: 7, fx: { power: 0.0075, stamina: 0.005 } },
+    { k: 'hustle', name: 'Hustle', icon: 'steal', color: '#ffd23f', base: 8, fx: { power: 0.0075, reb: 0.003 } },
+    { k: 'clutch', name: 'Clutch Gene', icon: 'fire', color: '#ff4d6d', base: 10, fx: { power: 0.0075, shoot: 0.003 } },
+    { k: 'playmaking', name: 'Playmaking', icon: 'swap', color: '#c86bff', base: 10, fx: { power: 0.0075, shoot: 0.001, def: 0.001 } },
+    { k: 'revenue', name: 'Gate Revenue', icon: 'cash', color: '#38d996', base: 8, fx: { cash: 0.02 } },
+    { k: 'hype', name: 'Fan Hype', icon: 'social', color: '#ff9f1c', base: 12, fx: { passive: 0.03, fans: 0.02 } },
+  ];
+
+  // Franchise Story: one chain of small goals, always one active, pinned above the tabs with a GO button.
+  // Goals are lifetime totals (stats), best stage reached ('best'), roster size or collection count, so progress
+  // only moves forward. 'go' is where the GO button sends the player.
+  const questLine = (() => {
+    const q = [];
+    const add = (text, stat, n, reward, go) => q.push({ id: 'q' + (q.length + 1), text, stat, n, reward, go });
+    add('Win your first game', 'wins', 1, { gems: 10 }, 'play');
+    add('Level up Bricks', 'levelups', 1, { gems: 10 }, 'team');
+    add('Upgrade Team Growth 3 times', 'growthUps', 3, { gems: 10, cash: 1 }, 'growth');
+    add('Recruit your first athlete', 'pulls', 1, { gems: 15 }, 'recruit');
+    add('Win 3 games', 'wins', 3, { gems: 10 }, 'play');
+    add('Reach Game 3: your squad goes 3v3', 'best', 2, { gems: 15, tickets: 1 }, 'play');
+    add('Upgrade Team Growth 10 times', 'growthUps', 10, { gems: 15 }, 'growth');
+    add('Level up athletes 10 times', 'levelups', 10, { gems: 15 }, 'team');
+    add('Own 3 athletes', 'roster', 3, { gems: 15 }, 'recruit');
+    add('Build your first facility', 'facilityUps', 1, { gems: 15 }, 'empire');
+    add('Reach Game 6: your squad goes 5v5', 'best', 5, { gems: 20, tickets: 1 }, 'play');
+    add('Own 5 athletes', 'roster', 5, { gems: 20 }, 'recruit');
+    add('Use abilities 3 times', 'abilities', 3, { gems: 10 }, 'play');
+    add('Win 15 games', 'wins', 15, { gems: 20 }, 'play');
+    add('Upgrade Team Growth 25 times', 'growthUps', 25, { gems: 20 }, 'growth');
+    add('Level up athletes 40 times', 'levelups', 40, { gems: 20 }, 'team');
+    add('Reach the Block Party Classic (Game 10)', 'best', 9, { gems: 25 }, 'play');
+    add('Win the Block Party Classic', 'championships', 1, { gems: 40, tickets: 2 }, 'champ');
+    const cum = { wins: 15, levelups: 40, growthUps: 25, pulls: 1, facilityUps: 1, gearUps: 0, abilities: 3, contests: 0, unique: 5 };
+    for (let w = 1; w < 10; w++) {
+      const W = worlds[w], g0 = w * 10, gem = 20 + w * 10;
+      cum.wins += 25 + w * 15; cum.levelups += 60 + w * 40; cum.growthUps += 30 + w * 10; cum.pulls += 5 + w * 3; cum.facilityUps += 8 + w * 4;
+      cum.unique += 6 + w * 2; cum.gearUps += 3 + w * 2; cum.abilities += 10 + w * 5; cum.contests += 3;
+      add('Win ' + cum.wins + ' games', 'wins', cum.wins, { gems: gem }, 'play');
+      add('Reach ' + W.short + ' Game 3', 'best', g0 + 2, { gems: gem, cashMinutes: 10 }, 'play');
+      add('Upgrade Team Growth ' + cum.growthUps + ' times', 'growthUps', cum.growthUps, { gems: gem }, 'growth');
+      add('Level up athletes ' + cum.levelups + ' times', 'levelups', cum.levelups, { gems: gem }, 'team');
+      add('Recruit ' + cum.pulls + ' athletes', 'pulls', cum.pulls, { gems: gem, tickets: 1 }, 'recruit');
+      add('Discover ' + cum.unique + ' different athletes', 'unique', cum.unique, { gems: gem }, 'recruit');
+      add('Reach ' + W.short + ' Game 6', 'best', g0 + 5, { gems: gem, tickets: 1 }, 'play');
+      add('Upgrade facilities or coaches ' + cum.facilityUps + ' times', 'facilityUps', cum.facilityUps, { gems: gem }, 'empire');
+      add('Use abilities ' + cum.abilities + ' times', 'abilities', cum.abilities, { gems: gem }, 'play');
+      if (w >= 2) add('Upgrade, merge or craft gear ' + cum.gearUps + ' times', 'gearUps', cum.gearUps, { gems: gem }, 'team');
+      if (w >= 1) add('Play ' + cum.contests + ' skill contests', 'contests', cum.contests, { gems: gem, eventTickets: 1 }, 'events');
+      add('Reach the ' + W.champ, 'best', g0 + 9, { gems: gem + 10 }, 'play');
+      add('Win the ' + W.champ, 'championships', w + 1, { gems: gem * 2, tickets: 2, eventTickets: 1 }, 'champ');
+    }
+    return q;
+  })();
+
   const facilities = [
     { k: 'court', name: 'Home Court', desc: '+15% cash from wins', per: 0.15, base: 40, growth: 1.57, unlock: 2, max: 100, icon: 'court' },
     { k: 'gym', name: 'Weight Room', desc: '+7% team power', per: 0.07, base: 70, growth: 1.60, unlock: 2, max: 100, icon: 'gym' },
@@ -301,6 +364,7 @@
       { k: 'threes', text: 'Make {n} three-pointers', n: [10, 20, 30], stat: 'threes' },
       { k: 'dunks', text: 'Throw down {n} dunks', n: [6, 12, 20], stat: 'dunks' },
       { k: 'levels', text: 'Level up athletes {n} times', n: [10, 20, 40], stat: 'levelups' },
+      { k: 'growth', text: 'Upgrade Team Growth {n} times', n: [10, 25, 50], stat: 'growthUps' },
       { k: 'ability', text: 'Use abilities {n} times', n: [5, 10, 15], stat: 'abilities' },
       { k: 'facility', text: 'Upgrade facilities {n} times', n: [3, 6, 10], stat: 'facilityUps' },
       { k: 'recruit', text: 'Recruit {n} athletes', n: [1, 3, 5], stat: 'pulls' },
@@ -334,6 +398,7 @@
     { k: 'champs', name: 'Champion', stat: 'championships', tiers: [1, 3, 5, 10, 25, 50], icon: 'trophy' },
     { k: 'prestige', name: 'Dynasty', stat: 'prestiges', tiers: [1, 3, 5, 10, 25], icon: 'legacy' },
     { k: 'levelups', name: 'Grinder', stat: 'levelups', tiers: [10, 100, 1000, 5000, 20000], icon: 'up' },
+    { k: 'growth', name: 'Franchise Builder', stat: 'growthUps', tiers: [10, 100, 500, 2000, 10000], icon: 'chart' },
     { k: 'cash', name: 'Money Maker', stat: 'cashEarned', tiers: [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e24], icon: 'cash' },
     { k: 'facility', name: 'Architect', stat: 'facilityUps', tiers: [5, 50, 250, 1000], icon: 'empire' },
     { k: 'gear', name: 'Gearhead', stat: 'gearUps', tiers: [5, 50, 250, 1000], icon: 'gear' },
@@ -390,7 +455,7 @@
 
   BE.data = {
     balance, attrs, positions, rarities, archetypes, personalities, celebrations, firstNames, lastNames, nicknames, opponentNicks,
-    skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, facilities, coaches, gearTypes, gearRarityPct,
+    skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, growth, questLine, facilities, coaches, gearTypes, gearRarityPct,
     gearRarityAttr, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
     achievements, achievementGems, products, gemShop, ads, alliances, aiFranchiseNames, franchiseAdjectives, franchiseNouns,
   };

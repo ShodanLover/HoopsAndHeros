@@ -94,7 +94,7 @@ svg.i { width: 1em; height: 1em; display: inline-block; vertical-align: -0.14em;
 
 /* ---------- Screens ---------- */
 #screens { flex: 1; position: relative; overflow: hidden; }
-.screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 10px 12px 18px; display: none; -webkit-overflow-scrolling: touch; }
+.screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; overflow-anchor: none; padding: 10px 12px 18px; display: none; -webkit-overflow-scrolling: touch; }
 .screen.active { display: block; animation: fadeIn 0.18s ease; }
 #scr-play { padding: 8px 12px 18px; display: none; flex-direction: column; gap: 8px; }
 #scr-play.active { display: flex; }
@@ -484,6 +484,36 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   .acard .lv { font-size: 9px; padding: 0 3px; right: 3px; top: 3px; }
 }
 
+/* ---------- Home: Team Growth ---------- */
+.mults { display: inline-flex; gap: 4px; }
+.mults .chip { cursor: pointer; padding: 3px 9px; }
+.mults .chip.on { background: rgba(255, 122, 47, 0.22); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(255, 122, 47, 0.5); }
+.grow-head { display: flex; align-items: baseline; gap: 8px; margin: -2px 2px 8px; }
+.grow-head .power-num { font-size: 22px; }
+.grow-row { display: flex; align-items: center; gap: 10px; padding: 7px 8px 7px 8px; border-radius: 14px; background: linear-gradient(180deg, var(--panel), #131a35); border: 1px solid var(--line); }
+.grow-row .gic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; flex: none; background: rgba(255, 255, 255, 0.05); }
+.grow-row .gic svg { width: 22px; height: 22px; }
+.grow-row .gt { flex: 1; min-width: 0; }
+.grow-row .gt .n { font-family: var(--cond); font-weight: 800; font-size: 14.5px; display: flex; gap: 6px; align-items: baseline; }
+.grow-row .gt .n .lv { color: var(--gold); font-size: 12px; }
+.grow-row .gt .e { font-size: 11.5px; color: var(--good); font-family: var(--cond); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.grow-row .btn { min-width: 84px; min-height: 40px; }
+.grow-row .btn.ghost .sub { color: var(--muted); }
+
+/* ---------- Franchise Story bar ---------- */
+.quest { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 10px; border-radius: 12px; background: linear-gradient(90deg, rgba(255, 210, 63, 0.16), rgba(255, 122, 47, 0.05)); border: 1px solid rgba(255, 210, 63, 0.35); width: 100%; }
+.quest .qi { width: 28px; height: 28px; border-radius: 8px; background: var(--gold); color: #3d2a00; display: grid; place-items: center; flex: none; }
+.quest .qi svg { width: 18px; height: 18px; }
+.quest .qt { flex: 1; min-width: 0; }
+.quest .qlabel { font-family: var(--cond); font-weight: 800; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); line-height: 1.1; }
+.quest .qn { font-family: var(--cond); font-weight: 800; font-size: 13.5px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.quest .qm { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 11px; }
+.quest .qm .bar { flex: 1; height: 5px; min-width: 40px; }
+.quest .qm .num { font-size: 11px; }
+.quest .qr { display: inline-flex; gap: 4px; }
+.quest .qr .rew { font-size: 11px; }
+.quest .btn { min-width: 60px; min-height: 36px; padding: 4px 8px; font-size: 13px; }
+
 </style>
 </head>
 <body>
@@ -679,6 +709,10 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     fansPerWinBase: 3,
     fansGrowth: 1.16,
     maxLevelBase: 400,
+    growthCostGrowth: 1.07, // per level, for Team Growth stats
+    growthCostStage: 1.0,  // growth prices scale with rewardGrowth^(this * current stage), so a level always costs a few wins
+    growthCapBase: 25,      // Team Growth level cap in World 1 ...
+    growthCapPerWorld: 10,  // ... plus this per world reached
   };
 
   const attrs = [
@@ -854,6 +888,65 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     autocoach: { g: 30, name: 'Auto-Coaching', icon: 'auto' },
   };
 
+  // Team Growth: franchise-wide stats bought with cash from minute one. fx values are per level.
+  // Effects: power (team power), cash (all cash), passive (idle income), fans, stamina (less drain), shoot/def/reb (sim bonuses).
+  const growth = [
+    { k: 'offense', name: 'Offense', icon: 'ball', color: '#ff7a2f', base: 4, fx: { power: 0.015, shoot: 0.002 } },
+    { k: 'defense', name: 'Defense', icon: 'shield', color: '#3aa8ff', base: 5, fx: { power: 0.015, def: 0.002 } },
+    { k: 'conditioning', name: 'Conditioning', icon: 'dumbbell', color: '#38d996', base: 7, fx: { power: 0.0075, stamina: 0.005 } },
+    { k: 'hustle', name: 'Hustle', icon: 'steal', color: '#ffd23f', base: 8, fx: { power: 0.0075, reb: 0.003 } },
+    { k: 'clutch', name: 'Clutch Gene', icon: 'fire', color: '#ff4d6d', base: 10, fx: { power: 0.0075, shoot: 0.003 } },
+    { k: 'playmaking', name: 'Playmaking', icon: 'swap', color: '#c86bff', base: 10, fx: { power: 0.0075, shoot: 0.001, def: 0.001 } },
+    { k: 'revenue', name: 'Gate Revenue', icon: 'cash', color: '#38d996', base: 8, fx: { cash: 0.02 } },
+    { k: 'hype', name: 'Fan Hype', icon: 'social', color: '#ff9f1c', base: 12, fx: { passive: 0.03, fans: 0.02 } },
+  ];
+
+  // Franchise Story: one chain of small goals, always one active, pinned above the tabs with a GO button.
+  // Goals are lifetime totals (stats), best stage reached ('best'), roster size or collection count, so progress
+  // only moves forward. 'go' is where the GO button sends the player.
+  const questLine = (() => {
+    const q = [];
+    const add = (text, stat, n, reward, go) => q.push({ id: 'q' + (q.length + 1), text, stat, n, reward, go });
+    add('Win your first game', 'wins', 1, { gems: 10 }, 'play');
+    add('Level up Bricks', 'levelups', 1, { gems: 10 }, 'team');
+    add('Upgrade Team Growth 3 times', 'growthUps', 3, { gems: 10, cash: 1 }, 'growth');
+    add('Recruit your first athlete', 'pulls', 1, { gems: 15 }, 'recruit');
+    add('Win 3 games', 'wins', 3, { gems: 10 }, 'play');
+    add('Reach Game 3: your squad goes 3v3', 'best', 2, { gems: 15, tickets: 1 }, 'play');
+    add('Upgrade Team Growth 10 times', 'growthUps', 10, { gems: 15 }, 'growth');
+    add('Level up athletes 10 times', 'levelups', 10, { gems: 15 }, 'team');
+    add('Own 3 athletes', 'roster', 3, { gems: 15 }, 'recruit');
+    add('Build your first facility', 'facilityUps', 1, { gems: 15 }, 'empire');
+    add('Reach Game 6: your squad goes 5v5', 'best', 5, { gems: 20, tickets: 1 }, 'play');
+    add('Own 5 athletes', 'roster', 5, { gems: 20 }, 'recruit');
+    add('Use abilities 3 times', 'abilities', 3, { gems: 10 }, 'play');
+    add('Win 15 games', 'wins', 15, { gems: 20 }, 'play');
+    add('Upgrade Team Growth 25 times', 'growthUps', 25, { gems: 20 }, 'growth');
+    add('Level up athletes 40 times', 'levelups', 40, { gems: 20 }, 'team');
+    add('Reach the Block Party Classic (Game 10)', 'best', 9, { gems: 25 }, 'play');
+    add('Win the Block Party Classic', 'championships', 1, { gems: 40, tickets: 2 }, 'champ');
+    const cum = { wins: 15, levelups: 40, growthUps: 25, pulls: 1, facilityUps: 1, gearUps: 0, abilities: 3, contests: 0, unique: 5 };
+    for (let w = 1; w < 10; w++) {
+      const W = worlds[w], g0 = w * 10, gem = 20 + w * 10;
+      cum.wins += 25 + w * 15; cum.levelups += 60 + w * 40; cum.growthUps += 30 + w * 10; cum.pulls += 5 + w * 3; cum.facilityUps += 8 + w * 4;
+      cum.unique += 6 + w * 2; cum.gearUps += 3 + w * 2; cum.abilities += 10 + w * 5; cum.contests += 3;
+      add('Win ' + cum.wins + ' games', 'wins', cum.wins, { gems: gem }, 'play');
+      add('Reach ' + W.short + ' Game 3', 'best', g0 + 2, { gems: gem, cashMinutes: 10 }, 'play');
+      add('Upgrade Team Growth ' + cum.growthUps + ' times', 'growthUps', cum.growthUps, { gems: gem }, 'growth');
+      add('Level up athletes ' + cum.levelups + ' times', 'levelups', cum.levelups, { gems: gem }, 'team');
+      add('Recruit ' + cum.pulls + ' athletes', 'pulls', cum.pulls, { gems: gem, tickets: 1 }, 'recruit');
+      add('Discover ' + cum.unique + ' different athletes', 'unique', cum.unique, { gems: gem }, 'recruit');
+      add('Reach ' + W.short + ' Game 6', 'best', g0 + 5, { gems: gem, tickets: 1 }, 'play');
+      add('Upgrade facilities or coaches ' + cum.facilityUps + ' times', 'facilityUps', cum.facilityUps, { gems: gem }, 'empire');
+      add('Use abilities ' + cum.abilities + ' times', 'abilities', cum.abilities, { gems: gem }, 'play');
+      if (w >= 2) add('Upgrade, merge or craft gear ' + cum.gearUps + ' times', 'gearUps', cum.gearUps, { gems: gem }, 'team');
+      if (w >= 1) add('Play ' + cum.contests + ' skill contests', 'contests', cum.contests, { gems: gem, eventTickets: 1 }, 'events');
+      add('Reach the ' + W.champ, 'best', g0 + 9, { gems: gem + 10 }, 'play');
+      add('Win the ' + W.champ, 'championships', w + 1, { gems: gem * 2, tickets: 2, eventTickets: 1 }, 'champ');
+    }
+    return q;
+  })();
+
   const facilities = [
     { k: 'court', name: 'Home Court', desc: '+15% cash from wins', per: 0.15, base: 40, growth: 1.57, unlock: 2, max: 100, icon: 'court' },
     { k: 'gym', name: 'Weight Room', desc: '+7% team power', per: 0.07, base: 70, growth: 1.60, unlock: 2, max: 100, icon: 'gym' },
@@ -954,6 +1047,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       { k: 'threes', text: 'Make {n} three-pointers', n: [10, 20, 30], stat: 'threes' },
       { k: 'dunks', text: 'Throw down {n} dunks', n: [6, 12, 20], stat: 'dunks' },
       { k: 'levels', text: 'Level up athletes {n} times', n: [10, 20, 40], stat: 'levelups' },
+      { k: 'growth', text: 'Upgrade Team Growth {n} times', n: [10, 25, 50], stat: 'growthUps' },
       { k: 'ability', text: 'Use abilities {n} times', n: [5, 10, 15], stat: 'abilities' },
       { k: 'facility', text: 'Upgrade facilities {n} times', n: [3, 6, 10], stat: 'facilityUps' },
       { k: 'recruit', text: 'Recruit {n} athletes', n: [1, 3, 5], stat: 'pulls' },
@@ -987,6 +1081,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     { k: 'champs', name: 'Champion', stat: 'championships', tiers: [1, 3, 5, 10, 25, 50], icon: 'trophy' },
     { k: 'prestige', name: 'Dynasty', stat: 'prestiges', tiers: [1, 3, 5, 10, 25], icon: 'legacy' },
     { k: 'levelups', name: 'Grinder', stat: 'levelups', tiers: [10, 100, 1000, 5000, 20000], icon: 'up' },
+    { k: 'growth', name: 'Franchise Builder', stat: 'growthUps', tiers: [10, 100, 500, 2000, 10000], icon: 'chart' },
     { k: 'cash', name: 'Money Maker', stat: 'cashEarned', tiers: [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e24], icon: 'cash' },
     { k: 'facility', name: 'Architect', stat: 'facilityUps', tiers: [5, 50, 250, 1000], icon: 'empire' },
     { k: 'gear', name: 'Gearhead', stat: 'gearUps', tiers: [5, 50, 250, 1000], icon: 'gear' },
@@ -1043,7 +1138,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 
   BE.data = {
     balance, attrs, positions, rarities, archetypes, personalities, celebrations, firstNames, lastNames, nicknames, opponentNicks,
-    skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, facilities, coaches, gearTypes, gearRarityPct,
+    skinTones, hairColors, hairStyles, facialHair, formats, worlds, features, growth, questLine, facilities, coaches, gearTypes, gearRarityPct,
     gearRarityAttr, abilities, tactics, offCounters, defCounters, prestigeUpgrades, cosmetics, loginRewards, missionPool,
     achievements, achievementGems, products, gemShop, ads, alliances, aiFranchiseNames, franchiseAdjectives, franchiseNouns,
   };
@@ -1494,7 +1589,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     return {
       wins: 0, losses: 0, gamesPlayed: 0, threes: 0, dunks: 0, blocks: 0, steals: 0, levelups: 0, pulls: 0, facilityUps: 0,
       gearUps: 0, contests: 0, trains: 0, abilities: 0, cashEarned: 0, championships: 0, prestiges: 0, legendaries: 0,
-      mythics: 0, unique: 1, bestWorld: 1, loginDays: 0, perfectFT: 0, stagesCleared: 0, champWins: 0, tourneyWins: 0,
+      mythics: 0, unique: 1, bestWorld: 1, loginDays: 0, perfectFT: 0, stagesCleared: 0, champWins: 0, tourneyWins: 0, growthUps: 0,
     };
   }
 
@@ -1515,6 +1610,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       gearSeen: {},
       facilities: {},
       coaches: {},
+      growth: {},
+      quest: { i: 0, claimed: 0 },
       prestige: { points: 0, earned: 0, count: 0, upgrades: {} },
       recruit: { pro: { e: 0, l: 0, m: 0 }, event: { e: 0, l: 0, m: 0 }, total: 0 },
       collection: { S0: true },
@@ -1525,7 +1622,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       pass: { month: '', xp: 0, premium: false, free: [], prem: [] },
       ads: { day: '', counts: {}, lastInterstitial: 0 },
       purchases: { starter: false, vip: false, autocoach: false, history: [] },
-      settings: { sfx: 0.8, music: 0.35, haptics: true, reduceMotion: false, speed: 2, autoPush: true, autoAbilities: false, autoTactics: true, commentary: true },
+      settings: { sfx: 0.8, music: 0.35, haptics: true, reduceMotion: false, speed: 2, autoPush: true, autoAbilities: false, autoTactics: true, commentary: true, buyMult: 1 },
       tactics: { off: 'balanced', def: 'man' },
       tutorial: { step: 0, done: false },
       seenFeatures: {},
@@ -1565,6 +1662,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 
   function validate(raw) {
     const s = mergeTyped(defaultState(), raw);
+    if (raw && raw.settings && raw.settings.buyMult === 'max') s.settings.buyMult = 'max';
     // currencies non-negative
     for (const k of ['cash', 'gems', 'tickets', 'eventTickets', 'tp', 'scrap', 'shards', 'fans']) s[k] = Math.max(0, U.num(s[k], 0));
     // roster
@@ -1613,6 +1711,9 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     if (!D.cosmetics.some((c) => c.k === s.franchise.cosmetic)) s.franchise.cosmetic = 'default';
     s.franchise.name = String(s.franchise.name || 'Blacktop Ballers').slice(0, 24);
     s.settings.speed = U.clamp(Math.floor(s.settings.speed), 1, 4);
+    if (s.settings.buyMult !== 'max') s.settings.buyMult = [1, 10, 100].includes(s.settings.buyMult) ? s.settings.buyMult : 1;
+    for (const k in s.growth) s.growth[k] = U.clamp(Math.floor(U.num(s.growth[k], 0)), 0, 1000);
+    s.quest.i = U.clamp(Math.floor(U.num(s.quest.i, 0)), 0, D.questLine.length);
     s.log = s.log.slice(-30);
     s.v = SAVE_VERSION;
     return s;
@@ -1771,7 +1872,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   // ---------- Modifiers (cached) ----------
   let modsCache = null, modsKey = '';
   function modsSignature(s) {
-    return JSON.stringify([s.facilities, s.coaches, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0]);
+    return JSON.stringify([s.facilities, s.coaches, s.growth, s.prestige.upgrades, s.prestige.earned, s.stats.unique, Object.keys(s.gearSeen).length, s.purchases.vip, s.fans > 0 ? Math.floor(Math.log10(1 + s.fans) * 10) : 0]);
   }
   function mods(s) {
     const sig = modsSignature(s);
@@ -1783,21 +1884,23 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     const coll = collectionBonus(s);
     const gearColl = 1 + 0.01 * Object.keys(s.gearSeen).length;
     const fansMult = 1 + Math.log10(1 + s.fans) * 0.06;
+    const gfx = growthFx(s);
     const m = {
       aura,
       powerMult: aura * (1 + 0.2 * p('power')) * (1 + 0.07 * f('gym')) * (1 + 0.04 * f('training')) * (1 + 0.06 * f('hq')) *
-        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl,
-      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash),
+        (1 + 0.08 * c('head')) * (1 + 0.03 * (c('shooting') + c('defense') + c('strength'))) * (1 + coll.power) * gearColl * (1 + gfx.power),
+      cashMult: aura * (1 + 0.3 * p('income')) * (1 + 0.06 * f('hq')) * (1 + 0.1 * c('business')) * (1 + coll.cash) * (1 + gfx.cash),
       winCashMult: 1 + 0.15 * f('court'),
-      passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult,
-      fanMult: 1 + 0.12 * f('stadium'),
+      passiveMult: (1 + 0.25 * f('merch')) * (1 + 0.1 * f('stadium')) * fansMult * (1 + gfx.passive),
+      fanMult: (1 + 0.12 * f('stadium')) * (1 + gfx.fans),
       offlineEff: Math.min(1, B.offlineBaseEff + 0.04 * f('medical') + 0.03 * c('business') + 0.08 * p('offline')) * (s.purchases.vip ? 1.25 : 1),
       offlineCapH: B.offlineBaseCapH + p('offline') + (s.best >= 40 ? 2 : 0) + (s.purchases.vip ? 2 : 0),
       tpMult: (1 + 0.2 * f('training')) * (1 + 0.12 * c('development')),
       costMult: Math.max(0.6, 1 - 0.02 * c('development')),
       shardMult: (1 + 0.1 * f('scouting')) * (1 + 0.1 * c('recruiting')) * (1 + 0.2 * p('scout')),
-      staminaDrain: Math.max(0.3, 1 - 0.06 * f('medical') - 0.03 * c('strength')),
-      sim: { shoot: 0.03 * c('shooting'), def: 0.03 * c('defense'), reb: 0.03 * c('strength'), tactic: 0.12 + 0.02 * c('analytics') },
+      staminaDrain: Math.max(0.3, 1 - 0.06 * f('medical') - 0.03 * c('strength') - gfx.stamina),
+      sim: { shoot: 0.03 * c('shooting') + gfx.shoot, def: 0.03 * c('defense') + gfx.def, reb: 0.03 * c('strength') + gfx.reb, tactic: 0.12 + 0.02 * c('analytics') },
+      growth: gfx,
       energyCost: Math.max(0.5, 1 - 0.1 * p('clutch')),
       gemDrop: 0.02 * p('goldrush'),
       divisionMult: (1 + p('secondunit')) * (1 + 0.25 * f('academy')),
@@ -1808,6 +1911,74 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     return m;
   }
   function invalidate() { modsKey = ''; }
+
+  // ---------- Team Growth (franchise stats) ----------
+  function growthFx(s) {
+    const t = { power: 0, cash: 0, passive: 0, fans: 0, stamina: 0, shoot: 0, def: 0, reb: 0 };
+    for (const g of D.growth) {
+      const lvl = s.growth[g.k] || 0;
+      if (!lvl) continue;
+      for (const k in g.fx) t[k] += g.fx[k] * lvl;
+    }
+    t.stamina = Math.min(0.4, t.stamina);
+    return t;
+  }
+  function growthCap(s) { return B.growthCapBase + B.growthCapPerWorld * worldOf(s.best); }
+  // Prices follow the current run's real income per win (multipliers included), so the next level is
+  // always a few wins away: level L costs about base/rewardBase * 1.05^L wins
+  function growthUnit(s) { return Math.pow(stageReward(s, farmG(s)) / B.rewardBase, B.growthCostStage); }
+  function growthCost(s, k, n) {
+    const g = D.growth.find((x) => x.k === k);
+    const lvl = s.growth[k] || 0;
+    const unit = growthUnit(s);
+    let total = 0;
+    for (let i = 0; i < n; i++) total += g.base * unit * Math.pow(B.growthCostGrowth, lvl + i);
+    return total;
+  }
+  // How many levels the chosen multiplier buys: n levels (clamped to the cap) or MAX affordable
+  function growthQuote(s, k, mult) {
+    const g = D.growth.find((x) => x.k === k);
+    const lvl = s.growth[k] || 0;
+    const room = Math.max(0, growthCap(s) - lvl);
+    if (!g || room <= 0) return { n: 0, cost: 0 };
+    if (mult === 'max') {
+      const unit = growthUnit(s);
+      let n = 0, total = 0;
+      while (n < room) { const c = g.base * unit * Math.pow(B.growthCostGrowth, lvl + n); if (total + c > s.cash) break; total += c; n++; }
+      return { n, cost: total };
+    }
+    const n = Math.min(mult, room);
+    return { n, cost: growthCost(s, k, n) };
+  }
+  function upgradeGrowth(s, k, n) {
+    const g = D.growth.find((x) => x.k === k);
+    if (!g) return { ok: false, reason: 'Unknown stat' };
+    const lvl = s.growth[k] || 0;
+    n = Math.min(n, growthCap(s) - lvl);
+    if (n <= 0) return { ok: false, reason: 'Capped until the next world' };
+    const cost = growthCost(s, k, n);
+    if (s.cash < cost) return { ok: false, reason: 'Not enough cash' };
+    s.cash -= cost;
+    s.growth[k] = lvl + n;
+    s.stats.growthUps += n;
+    invalidate();
+    return { ok: true, n, lvl: lvl + n, cost };
+  }
+  function growthEffectText(g, lvl) {
+    const f = g.fx;
+    const n = lvl || 1;
+    const pct = (v) => (v * 100 >= 10 ? Math.round(v * 100) : (v * 100).toFixed(1).replace(/\.0$/, '')) + '%';
+    const parts = [];
+    if (f.power) parts.push('+' + pct(f.power * n) + ' team power');
+    if (f.cash) parts.push('+' + pct(f.cash * n) + ' cash');
+    if (f.passive) parts.push('+' + pct(f.passive * n) + ' idle income');
+    if (f.fans) parts.push('+' + pct(f.fans * n) + ' fans');
+    if (f.stamina) parts.push('-' + pct(Math.min(0.4, f.stamina * n)) + ' stamina drain');
+    if (f.shoot) parts.push('+' + pct(f.shoot * n) + ' shooting');
+    if (f.def) parts.push('+' + pct(f.def * n) + ' defense');
+    if (f.reb) parts.push('+' + pct(f.reb * n) + ' boards');
+    return (lvl ? '' : 'Per level: ') + parts.join(' · ');
+  }
 
   const collectionMilestones = [
     { n: 3, power: 0.05, cash: 0.05 }, { n: 10, power: 0.1, cash: 0.1 }, { n: 25, power: 0.2, cash: 0.15 }, { n: 50, power: 0.35, cash: 0.25 },
@@ -2266,6 +2437,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     s.cash = 0;
     s.facilities = {};
     s.coaches = {};
+    s.growth = {};
     s.fans = Math.floor(s.fans * 0.1);
     const keepLvl = (s.prestige.upgrades.headstart || 0) > 0 ? 10 : 1;
     for (const a of s.roster) a.lvl = keepLvl;
@@ -2283,7 +2455,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     upgradeFacility, upgradeCoach, gearMain, gearMaxLevel, gearUpgradeCost, makeGear, randomGear, gearOwner, equipGear,
     unequipGear, upgradeGear, salvageValue, salvageGear, mergeCandidates, mergeGear, craftCost, craftGear, banners, streetCost,
     eventFeatured, pullOne, recruit, addAthlete, shardExchange, grant, legacyGain, canPrestige, prestigeCost, buyPrestige,
-    doPrestige, gearPct, teamGearPct,
+    doPrestige, gearPct, teamGearPct, growthFx, growthCap, growthCost, growthQuote, upgradeGrowth, growthEffectText,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -2687,7 +2859,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       const pool = A.catalog.filter((t) => t.rarity <= 1 && t.world === 0 && !s.collection[t.id]);
       const t = pool.length ? pool[Math.floor(Math.random() * pool.length)] : A.catalog[0];
       const r = E.addAthlete(s, t);
-      r.a.lvl = Math.max(1, Math.max.apply(null, s.roster.map((x) => x.lvl)) - 2);
+      r.a.lvl = Math.max(1, Math.max.apply(null, s.roster.map((x) => x.lvl)));
       gifts.push(r.a);
     }
     ensureLineup(s, size);
@@ -3028,6 +3200,31 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     return msgs;
   }
 
+  // ---------- Franchise Story (quest chain) ----------
+  function questProgress(s, q) {
+    switch (q.stat) {
+      case 'best': return s.best;
+      case 'roster': return s.roster.length;
+      case 'unique': return s.stats.unique;
+      default: return s.stats[q.stat] || 0;
+    }
+  }
+  function questState(s) {
+    const list = D.questLine, i = s.quest.i;
+    if (i >= list.length) return { q: null, done: false, i, prog: 0, total: list.length };
+    const q = list[i];
+    const prog = questProgress(s, q);
+    return { q, prog: Math.min(prog, q.n), done: prog >= q.n, i, total: list.length };
+  }
+  function claimQuest(s) {
+    const st = questState(s);
+    if (!st.q || !st.done) return null;
+    s.quest.i++;
+    s.quest.claimed++;
+    s.pass.xp += 40;
+    return { granted: E.grant(s, st.q.reward), q: st.q, next: questState(s).q };
+  }
+
   // ---------- Login rewards ----------
   function loginStatus(s) {
     const today = U.dayKey();
@@ -3172,7 +3369,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   BE.game = {
     cosmetic, ensureLineup, autoLineup, autoPromote, giftWalkOns, target, playerTeam, oppTeam, newMatch, onMatchEnd, startChampionship, tick, offline,
     estimateWinProb, resets, missionProgress, loginStatus, claimLogin, passReward, passTier, PASS_TIERS, PASS_XP, achievementState,
-    claimAchievement, social, runTournament, gearVis,
+    claimAchievement, social, runTournament, gearVis, questProgress, questState, claimQuest,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -4770,7 +4967,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
         '<button class="icon-btn" data-act="map" aria-label="World map">' + icon('map') + '</button></div>' +
         '<div class="court-wrap" data-p="courtwrap"><canvas id="court"></canvas><div class="scoreboard" data-p="sb"></div><div class="result-pop hidden" data-p="result"></div><div data-p="overlay"></div></div>' +
         '<div class="controls" data-p="controls"></div>' +
-        '<button class="objective" data-act="objective" data-p="objective"></button>';
+        '<div class="quest" data-p="objective"></div>';
       el.dataset.built = '1';
       CT.init($('#court'));
       CT.setTheme(E.worldOf(s.run.cleared), G.cosmetic(s));
@@ -4789,11 +4986,14 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       el.innerHTML =
         '<div class="hub" data-p="hub"></div>' +
         '<div class="toolbar" data-p="toolbar"></div>' +
-        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>';
+        '<div class="ticker" data-p="ticker"><div class="tl">Welcome to the court.</div><div class="tl"></div></div>' +
+        '<div data-p="growth"></div>' +
+        '<div data-p="squad"></div>';
       el.dataset.built = '1';
     }
     renderHub();
     renderToolbar();
+    if (BE.growth) BE.growth.render();
   }
 
   function renderStageBar() {
@@ -4854,11 +5054,60 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   }
   function renderObjective() {
     const s = S();
-    const o = objectiveText(s);
-    const key = o.t + o.s;
+    const el = $('[data-p="objective"]');
+    if (!el) return;
+    const st = G.questState(s);
+    let key, html;
+    if (!st.q) {
+      const o = objectiveText(s);
+      key = 'done' + o.t + o.s;
+      html = '<span class="qi">' + icon('trophy') + '</span><div class="qt"><div class="qlabel">Franchise Story complete</div><div class="qn">' + U.esc(o.t) + '</div></div>';
+    } else {
+      key = st.q.id + ':' + st.prog + ':' + (st.done ? 1 : 0);
+      const ic = { play: 'ball', champ: 'trophy', growth: 'chart', team: 'jersey', recruit: 'cards', empire: 'empire', events: 'events' }[st.q.go] || 'ball';
+      html = '<span class="qi">' + icon(ic) + '</span><div class="qt"><div class="qlabel">Franchise Story · ' + (st.i + 1) + '/' + st.total + '</div><div class="qn">' + U.esc(st.q.text) + '</div>' +
+        '<div class="qm"><div class="bar ' + (st.done ? 'green' : '') + '"><i style="width:' + Math.min(100, st.prog / st.q.n * 100) + '%"></i></div><span class="num">' + U.fmtInt(st.prog) + '/' + U.fmtInt(st.q.n) + '</span><span class="qr">' + ui.rewardPreview(st.q.reward) + '</span></div></div>' +
+        (st.done ? '<button class="btn sm green pulse" data-act="questclaim">Claim</button>' : '<button class="btn sm gold" data-act="questgo">Go</button>');
+    }
     if (key === R.lastObjective) return;
     R.lastObjective = key;
-    $('[data-p="objective"]').innerHTML = '<span class="oi">' + icon(o.i) + '</span><span class="grow" style="min-width:0"><b>' + U.esc(o.t) + '</b><br><span class="muted">' + U.esc(o.s) + '</span></span>';
+    el.innerHTML = html;
+  }
+  // Where the GO button takes the player
+  function questGo() {
+    const s = S();
+    const st = G.questState(s);
+    if (!st.q) return;
+    const go = st.q.go;
+    BE.audio.play('tab');
+    if (go === 'growth') { ui.go('play'); const row = $('.grow-row'); if (row) { row.scrollIntoView({ block: 'center', behavior: 'smooth' }); ui.flash(row); } return; }
+    if (go === 'team' || go === 'recruit' || go === 'empire') { ui.go(go); return; }
+    if (go === 'events') { if (E.unlocked(s, 'events')) BE.meta.eventsModal(); else ui.toast('Skill Contests unlock at ' + ui.stageName(D.features.events.g), '', 'lock'); return; }
+    if (go === 'champ') {
+      const tg = G.target(s);
+      if (tg.champReady && !s.run.champ) { enterChampionship(); return; }
+      if (s.run.champ) { ui.toast('The championship is underway. Win three straight!', '', 'trophy'); return; }
+      ui.toast('Reach Game 10 of this world to enter the championship', '', 'trophy'); ui.flash($('[data-p="courtwrap"]')); return;
+    }
+    // play: the court is already working on it
+    if (s.run.farming) { ui.toast('Your team is farming the last win. Upgrade, then tap Retry on the court.', '', 'up'); ui.go('play'); return; }
+    ui.toast('Your team is on it. Keep the court running!', '', 'ball'); ui.flash($('[data-p="courtwrap"]'));
+  }
+  function questClaim(el) {
+    const s = S();
+    const r = G.claimQuest(s);
+    if (!r) return;
+    BE.audio.play('claim');
+    BE.services.haptic(20);
+    if (el) ui.sparks(el, '#ffd23f', 18);
+    const seen = {};
+    for (const g of r.granted) if (['cash', 'gems', 'tickets', 'eventTickets'].includes(g.k) && !seen[g.k]) { seen[g.k] = 1; ui.flyCurrency(g.k, el, 8); }
+    ui.toast('Quest complete: ' + U.esc(r.q.text) + (r.next ? ' · Next: ' + U.esc(r.next.text) : ''), 'gold', 'check');
+    R.lastObjective = '';
+    renderObjective();
+    ui.updateBadges(s);
+    BE.bus.emit('quest', r);
+    BE.bus.emit('changed');
   }
 
   function renderControls() {
@@ -5191,7 +5440,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     b.events = E.unlocked(s, 'events') && (s.events.attempts.ft + s.events.attempts.three + s.events.attempts.dunk > 0) ? 1 : 0;
     b.trophies = D.achievements.filter((a) => G.achievementState(s, a).ready).length;
     b.social = E.unlocked(s, 'social') && !s.social.alliance ? 1 : 0;
-    b.play = (b.missions || 0) + (b.daily ? 1 : 0) + (b.pass || 0) + (b.trophies || 0);
+    b.quest = G.questState(s).done ? 1 : 0;
+    b.play = (b.missions || 0) + (b.daily ? 1 : 0) + (b.pass || 0) + (b.trophies || 0) + b.quest;
     b.team = s.roster.some((a) => a.isNew) || s.gear.some((g) => g.isNew) ? 1 : 0;
     b.recruit = s.tickets > 0 && E.unlocked(s, 'recruit') ? s.tickets : 0;
     b.shop = s.timers.freeGiftDay !== U.dayKey() && E.unlocked(s, 'shop') ? 1 : 0;
@@ -5199,8 +5449,107 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     return b;
   }
 
-  BE.play = { R, renderPlay, renderArena, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
+  BE.play = { R, renderPlay, renderArena, questGo, questClaim, update, draw, useAbility, enterChampionship, retryPush, restartMatch, renderOverlay, renderToolbar, renderControls, renderObjective, renderHub, renderStageBar, updateIncome, speeds, startNext };
   ui.badges = badges;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* js/ui-growth.js */
+/* Basketball Empire — Home tab: Team Growth panel (franchise stats, x1/x10/x100/MAX) and the squad strip.
+ * This is the "always something cheap to tap" loop: every row's next level should be affordable within
+ * seconds of income, and every tap visibly raises team power. */
+(function (root) {
+  'use strict';
+  const BE = (root.BE = root.BE || {});
+  const U = BE.util, D = BE.data, E = BE.econ, G = BE.game, A = BE.athletes;
+  const ui = BE.ui;
+  const { $, icon } = ui;
+  const S = () => BE.game_state;
+  const MULTS = [1, 10, 100, 'max'];
+  let combo = 0, comboT = 0;
+
+  function multLabel(m) { return m === 'max' ? 'MAX' : '×' + m; }
+
+  function growthHTML(s) {
+    const cap = E.growthCap(s);
+    const mult = s.settings.buyMult || 1;
+    const tp = E.teamPower(s);
+    let html = '<div class="sec-title"><span class="h3">Team Growth</span><span class="mults">' +
+      MULTS.map((m) => '<button class="chip' + (m === mult ? ' on' : '') + '" data-act="buymult" data-n="' + m + '">' + multLabel(m) + '</button>').join('') + '</span></div>';
+    html += '<div class="grow-head"><span class="label">Team power</span><span class="power-num" data-g="tp">⚡ ' + U.fmt(tp) + '</span><span class="label" style="margin-left:auto">Cap Lv ' + cap + ' · rises each world</span></div>';
+    html += '<div class="col" style="gap:6px">';
+    for (const g of D.growth) {
+      const lvl = s.growth[g.k] || 0;
+      const maxed = lvl >= cap;
+      const q = maxed ? { n: 0, cost: 0 } : E.growthQuote(s, g.k, mult);
+      const can = q.n > 0 && s.cash >= q.cost;
+      html += '<div class="grow-row" data-row="' + g.k + '"><div class="gic" style="color:' + g.color + '">' + icon(g.icon) + '</div>' +
+        '<div class="gt"><div class="n">' + g.name + ' <span class="lv">Lv ' + lvl + '</span></div><div class="e">' + E.growthEffectText(g, lvl) + '</div></div>' +
+        (maxed ? '<button class="btn sm ghost stack" disabled>MAX<span class="sub">World ' + (E.worldOf(s.best) + 2) + '</span></button>' :
+          '<button class="btn sm stack ' + (can ? 'green' : 'ghost') + '" data-act="grow" data-k="' + g.k + '" data-tut="grow-' + g.k + '"' + (q.n > 0 ? '' : ' disabled') + '>+' + (q.n || 1) + '<span class="sub">$' + U.fmt(q.n ? q.cost : E.growthCost(s, g.k, 1)) + '</span></button>') + '</div>';
+    }
+    return html + '</div>';
+  }
+
+  function squadHTML(s) {
+    const g = Math.min(s.run.cleared, 99);
+    const size = E.sizeOf(g);
+    let html = '<div class="sec-title"><span class="h3">Your squad</span><span class="label">' + D.formats[E.formatOf(g)].label + ' · <button class="chip" data-act="goteam" style="padding:1px 7px">Manage</button></span></div><div class="lineup">';
+    for (let i = 0; i < 5; i++) {
+      const uid = s.lineup[i];
+      const a = uid && s.rosterByUid[uid];
+      if (i >= size) { html += '<div class="slot-empty slot-locked">' + icon('lock') + '<br>Opens<br>' + E.stageLabel(E.slotUnlockG(i)) + '</div>'; continue; }
+      if (!a) { html += '<button class="slot-empty" data-act="gorecruit">' + icon('plus') + '<br>Recruit</button>'; continue; }
+      const c = E.levelCost(s, a, 1);
+      const maxed = a.lvl >= E.maxLevel(s);
+      html += '<div>' + ui.athleteCard(s, a) + '<div class="lu-actions"><button class="btn xs ' + (s.cash >= c && !maxed ? 'green' : 'ghost') + '" data-act="homelvl" data-uid="' + a.uid + '"' + (maxed ? ' disabled' : '') + '>' + (maxed ? 'MAX' : '+1 $' + U.fmt(c)) + '</button></div></div>';
+    }
+    return html + '</div>';
+  }
+
+  function render() {
+    const s = S();
+    const ge = $('[data-p="growth"]'), se = $('[data-p="squad"]');
+    if (ge) ge.innerHTML = growthHTML(s);
+    if (se) se.innerHTML = squadHTML(s);
+  }
+  // Cheap periodic refresh while idle on the Home tab (costs and affordability change every second)
+  function refresh() {
+    if (ui.current() !== 'play' || ui.anyModal()) return;
+    if (performance.now() - (BE.main ? BE.main.lastPointer : 0) < 900) return;
+    render();
+  }
+
+  function buy(k, el) {
+    const s = S();
+    const mult = s.settings.buyMult || 1;
+    const q = E.growthQuote(s, k, mult);
+    if (q.n <= 0) { ui.toast(s.growth[k] >= E.growthCap(s) ? 'Capped for now: the cap rises with each new world' : 'Not enough cash', 'bad', 'cash'); BE.audio.play('error'); return; }
+    const before = E.teamPower(s);
+    const r = E.upgradeGrowth(s, k, q.n);
+    if (!r.ok) { ui.toast(r.reason, 'bad', 'cash'); BE.audio.play('error'); return; }
+    const after = E.teamPower(s);
+    const now = performance.now();
+    combo = now - comboT < 900 ? combo + 1 : 0; comboT = now;
+    BE.audio.play('upgrade', { combo });
+    BE.services.haptic(8);
+    if (el) {
+      const pct = (after / before - 1) * 100;
+      ui.floatText(pct > 0.05 ? '+' + (pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)) + '% POWER' : '+' + r.n + ' Lv', el, '#38d996');
+      ui.sparks(el, '#38d996', 6 + Math.min(14, r.n));
+    }
+    render();
+    const row = $('[data-row="' + k + '"]'); ui.flash(row);
+    BE.bus.emit('growth', { k, n: r.n });
+    BE.bus.emit('changed');
+  }
+
+  const act = {
+    grow: (d, el) => buy(d.k, el),
+    buymult: (d) => { const s = S(); s.settings.buyMult = d.n === 'max' ? 'max' : +d.n; BE.audio.play('click'); render(); },
+    homelvl: (d, el) => { const a = S().rosterByUid[d.uid]; if (a && BE.team.doLevel(a, 1, el)) render(); },
+  };
+
+  BE.growth = { render, refresh, act, growthHTML, squadHTML };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 /* js/ui-team.js */
@@ -5923,7 +6272,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     const gain = E.legacyGain(s);
     const can = E.canPrestige(s);
     let html = '<div class="card" style="background:linear-gradient(135deg,#3a2a07,#1b2349);border-color:rgba(255,210,63,.35)"><div class="row"><span style="font-size:34px;color:var(--gold)">' + icon('legacy') + '</span><div class="grow"><div class="label" style="color:var(--gold)">Legacy Stars</div><div class="power-num">★ ' + U.fmtInt(s.prestige.points) + '</div><div class="small muted">Earned all-time: ' + s.prestige.earned + ' · Each star ever earned gives +2% power & cash (now ×' + E.mods(s).aura.toFixed(2) + ')</div></div></div></div>';
-    html += '<div class="card" style="margin-top:10px"><div class="h3">Start a new dynasty</div><div class="small muted" style="margin:6px 0">Retire this run to bank Legacy Stars. You <b>keep</b>: athletes, stars, training, gear, collection, gems, tickets, achievements and legacy perks. You <b>reset</b>: cash, stage progress, athlete levels' + ((s.prestige.upgrades.headstart || 0) ? ' (to Lv 10)' : '') + ', facilities and coaches.</div>' +
+    html += '<div class="card" style="margin-top:10px"><div class="h3">Start a new dynasty</div><div class="small muted" style="margin:6px 0">Retire this run to bank Legacy Stars. You <b>keep</b>: athletes, stars, training, gear, collection, gems, tickets, achievements and legacy perks. You <b>reset</b>: cash, stage progress, athlete levels' + ((s.prestige.upgrades.headstart || 0) ? ' (to Lv 10)' : '') + ', Team Growth, facilities and coaches.</div>' +
       '<div class="row between"><div><div class="label">Stars for retiring now</div><div class="power-num">+' + gain + ' ★</div><div class="small muted">Grows with stages cleared (' + s.run.cleared + ') and cash earned this run</div></div>' +
       '<button class="btn gold stack" data-act="prestige"' + (can ? '' : ' disabled') + '>Retire & Rebuild<span class="sub">' + (can ? 'Run #' + ((s.run.number || 1) + 1) : 'Clear World 3 first') + '</span></button></div></div>';
     html += '<div class="sec-title"><span class="h3">Legacy perks</span><span class="label">Permanent</span></div><div class="col">';
@@ -6692,6 +7041,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 
   // ---------- Feature intros ----------
   const INTROS = {
+    growth: ['Team Growth', 'Franchise-wide stats live under the court on the Home tab: Offense, Defense, Conditioning and more. They are cheap, always available, and multiply every athlete you own.', 'play'],
     facilities: ['Facilities unlocked!', 'Upgrade your Home Court and Weight Room in the Empire tab. Facilities give permanent multipliers.', 'empire'],
     missions: ['Missions & Daily Rewards', 'Daily and weekly missions plus login rewards are on the Play screen hub. They pay gems, tickets and Pass XP.', 'play'],
     shop: ['The Shop is open', 'Claim a free daily gift, earn optional ad rewards, and customize your team\'s look.', 'shop'],
@@ -7103,13 +7453,15 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     autoabil: () => { const s = S(); s.settings.autoAbilities = !s.settings.autoAbilities; BE.play.renderToolbar(); ui.toast('Auto abilities ' + (s.settings.autoAbilities ? 'ON' : 'OFF'), '', 'bolt'); },
     autopush: () => { const s = S(); s.settings.autoPush = !s.settings.autoPush; BE.play.renderToolbar(); ui.toast('Auto-push ' + (s.settings.autoPush ? 'ON: retries the next stage after 3 farm wins' : 'OFF: stays on the last win until you tap Retry'), '', 'up'); },
     enterchamp: () => BE.play.enterChampionship(),
+    questgo: () => BE.play.questGo(),
+    questclaim: (d, el) => BE.play.questClaim(el),
     retry: () => BE.play.retryPush(),
   };
   function dispatch(e) {
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const k = el.dataset.act;
-    const fn = actions[k] || (BE.team.act[k]) || (BE.recruitUI.act[k]) || (BE.empire.act[k]);
+    const fn = actions[k] || (BE.growth && BE.growth.act[k]) || (BE.team.act[k]) || (BE.recruitUI.act[k]) || (BE.empire.act[k]);
     if (!fn) return;
     if (!BE.audio.state.ctx) BE.audio.ensure();
     if (k !== 'nav' && k !== 'ability') BE.audio.play('click');
@@ -7177,7 +7529,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
       } else if (st === 8) {
         ui.coach('One more thing: your team <b>keeps playing while you\'re away</b>. Come back to collect offline earnings — facilities and coaches make them bigger.', { ok: 'Got it', block: true, onOk: () => { s.tutorial.step = 9; tutorial.show(); } });
       } else if (st === 9) {
-        ui.coach('Next goal: fill your <b>five-player squad</b> and win the <b>Block Party Classic</b>. Game 3 goes 3v3, Game 6 goes 5v5, and local kids join for free when you need bodies. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
+        ui.coach('From here, the <b>Franchise Story</b> bar under the court always shows your next goal. Tap <b>GO</b> to jump to it and <b>CLAIM</b> when it\'s done. Fill your five-player squad and win the <b>Block Party Classic</b>. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
       }
     },
     finish() {
@@ -7236,6 +7588,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
         const msgs = G.resets(s);
         for (const msg of msgs) ui.toast(msg, 'gold', 'gift');
         BE.play.renderObjective();
+        if (BE.growth) BE.growth.refresh();
       }
       if (introAcc >= 2) { introAcc = 0; BE.meta.checkFeatureIntros(); }
       if (refreshAcc >= 2 && ui.current() !== 'play' && performance.now() - main.lastPointer > 800 && !ui.anyModal()) { refreshAcc = 0; ui.renderScreen(ui.current()); }

@@ -91,13 +91,15 @@
     autoabil: () => { const s = S(); s.settings.autoAbilities = !s.settings.autoAbilities; BE.play.renderToolbar(); ui.toast('Auto abilities ' + (s.settings.autoAbilities ? 'ON' : 'OFF'), '', 'bolt'); },
     autopush: () => { const s = S(); s.settings.autoPush = !s.settings.autoPush; BE.play.renderToolbar(); ui.toast('Auto-push ' + (s.settings.autoPush ? 'ON: retries the next stage after 3 farm wins' : 'OFF: stays on the last win until you tap Retry'), '', 'up'); },
     enterchamp: () => BE.play.enterChampionship(),
+    questgo: () => BE.play.questGo(),
+    questclaim: (d, el) => BE.play.questClaim(el),
     retry: () => BE.play.retryPush(),
   };
   function dispatch(e) {
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const k = el.dataset.act;
-    const fn = actions[k] || (BE.team.act[k]) || (BE.recruitUI.act[k]) || (BE.empire.act[k]);
+    const fn = actions[k] || (BE.growth && BE.growth.act[k]) || (BE.team.act[k]) || (BE.recruitUI.act[k]) || (BE.empire.act[k]);
     if (!fn) return;
     if (!BE.audio.state.ctx) BE.audio.ensure();
     if (k !== 'nav' && k !== 'ability') BE.audio.play('click');
@@ -165,7 +167,7 @@
       } else if (st === 8) {
         ui.coach('One more thing: your team <b>keeps playing while you\'re away</b>. Come back to collect offline earnings — facilities and coaches make them bigger.', { ok: 'Got it', block: true, onOk: () => { s.tutorial.step = 9; tutorial.show(); } });
       } else if (st === 9) {
-        ui.coach('Next goal: fill your <b>five-player squad</b> and win the <b>Block Party Classic</b>. Game 3 goes 3v3, Game 6 goes 5v5, and local kids join for free when you need bodies. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
+        ui.coach('From here, the <b>Franchise Story</b> bar under the court always shows your next goal. Tap <b>GO</b> to jump to it and <b>CLAIM</b> when it\'s done. Fill your five-player squad and win the <b>Block Party Classic</b>. Let\'s ball!', { ok: 'Let\'s go!', block: true, onOk: () => tutorial.finish() });
       }
     },
     finish() {
@@ -224,6 +226,7 @@
         const msgs = G.resets(s);
         for (const msg of msgs) ui.toast(msg, 'gold', 'gift');
         BE.play.renderObjective();
+        if (BE.growth) BE.growth.refresh();
       }
       if (introAcc >= 2) { introAcc = 0; BE.meta.checkFeatureIntros(); }
       if (refreshAcc >= 2 && ui.current() !== 'play' && performance.now() - main.lastPointer > 800 && !ui.anyModal()) { refreshAcc = 0; ui.renderScreen(ui.current()); }

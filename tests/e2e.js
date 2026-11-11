@@ -43,6 +43,14 @@ const shot = (p, n) => p.screenshot({ path: 'tests/shots/' + n + '.png' });
   // feature intro modals may appear; close all
   const closeAll = () => ev(() => BE.ui.closeAll());
   await closeAll();
+  // Team Growth panel on the Home tab
+  await page.click('[data-act="buymult"][data-n="10"]'); await page.click('[data-act="grow"][data-k="offense"]').catch(() => {});
+  await page.click('[data-act="buymult"][data-n="max"]'); await page.click('[data-act="grow"][data-k="revenue"]').catch(() => {});
+  await page.click('[data-act="buymult"][data-n="1"]'); await page.click('[data-act="homelvl"]').catch(() => {});
+  await page.waitForTimeout(300); await shot(page, 'g1-growth');
+  for (let i = 0; i < 6; i++) { const c = await page.$('[data-act="questclaim"]'); if (!c) break; await c.click(); await page.waitForTimeout(250); }
+  await page.click('[data-act="questgo"]').catch(() => {}); await page.waitForTimeout(300); await closeAll();
+  console.log('quest', await ev(() => JSON.stringify({ i: BE.game_state.quest.i, next: BE.game.questState(BE.game_state).q && BE.game.questState(BE.game_state).q.text })));
   console.log('after 20s cleared', await ev(() => BE.game_state.run.cleared), 'cash', await ev(() => BE.util.fmt(BE.game_state.cash)));
   // ---- Unlock everything mid-game ----
   await ev(() => { const s = BE.game_state; s.cash = 1e9; s.gems = 5000; s.tickets = 30; s.eventTickets = 12; s.tp = 5000; s.scrap = 3000; s.shards = 500; s.best = 29; s.run.cleared = 29; s.run.farming = false; for (const k in BE.data.features) s.seenFeatures[k] = true; BE.econ.invalidate(); BE.ui.renderNav(s); BE.ui.renderHUD(s); BE.play.restartMatch(); });

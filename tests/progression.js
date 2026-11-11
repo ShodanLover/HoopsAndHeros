@@ -9,6 +9,7 @@ function spend() {
   for (let k = 0; k < 200; k++) {
     const opts = [];
     for (const a of E.lineupAthletes(s)) opts.push({ c: E.levelCost(s, a, 1), f: () => E.levelUp(s, a, 1), w: 1 });
+    if (!process.env.NOGROWTH) for (const g of D.growth) if ((s.growth[g.k] || 0) < E.growthCap(s)) opts.push({ c: E.growthCost(s, g.k, 1), f: () => E.upgradeGrowth(s, g.k, 1), w: g.fx.power ? 0.8 : 1.3 });
     for (const f of D.facilities) if (s.best >= f.unlock && ['gym','court','hq','merch','training'].includes(f.k)) opts.push({ c: E.facilityCost(f, s.facilities[f.k]||0), f: () => E.upgradeFacility(s, f.k), w: f.k==='gym'||f.k==='hq'?0.5:1.5 });
     for (const c of D.coaches) if (s.best >= c.unlock && ['head','shooting','defense','business','strength'].includes(c.k)) opts.push({ c: E.facilityCost(c, s.coaches[c.k]||0), f: () => E.upgradeCoach(s, c.k), w: c.k==='head'?0.4:1.2 });
     opts.sort((a, b) => a.c * a.w - b.c * b.w);
@@ -40,4 +41,4 @@ for (let run = 0; run < RUNS; run++) {
   log.push(`run${run+1} END at ${(t/60).toFixed(0)}min cleared ${s.run.cleared} cash ${BE.util.fmt(s.cash)} LP gain ${E.legacyGain(s)} wins ${s.stats.wins} losses ${s.stats.losses}`);
   if (run < RUNS - 1) { const r = E.doPrestige(s); for (const u of ['power','income','power','income','offline','headstart']) E.buyPrestige(s, u); lastW = -1; log.push('PRESTIGE +' + r.gain); }
 }
-console.log(log.join("\n")); if (process.env.DBG) { const m=E.mods(s); console.log("powerMult",m.powerMult.toFixed(1),"cashMult",m.cashMult.toFixed(1), "fac",JSON.stringify(s.facilities),"coach",JSON.stringify(s.coaches)); for (const a of E.lineupAthletes(s)) { const t=A.tpl(a.cid); console.log(t.rarity, "lvl",a.lvl,"stars",a.stars,"ovr",E.athleteOvr(s,a),"base",E.athleteBase(s,a).toFixed(0),"lvlMult",E.levelMult(a.lvl).toExponential(2),"gear",E.gearPct(s,a).toFixed(2), "P", BE.util.fmt(E.athletePower(s,a))); } console.log("opp/player", BE.util.fmt(E.oppPerPlayer(s.run.cleared))); }
+console.log(log.join("\n")); if (process.env.DBG) { const m=E.mods(s); console.log("powerMult",m.powerMult.toFixed(1),"cashMult",m.cashMult.toFixed(1),"growth",JSON.stringify(s.growth),"gfx",JSON.stringify(m.growth), "fac",JSON.stringify(s.facilities),"coach",JSON.stringify(s.coaches)); for (const a of E.lineupAthletes(s)) { const t=A.tpl(a.cid); console.log(t.rarity, "lvl",a.lvl,"stars",a.stars,"ovr",E.athleteOvr(s,a),"base",E.athleteBase(s,a).toFixed(0),"lvlMult",E.levelMult(a.lvl).toExponential(2),"gear",E.gearPct(s,a).toFixed(2), "P", BE.util.fmt(E.athletePower(s,a))); } console.log("opp/player", BE.util.fmt(E.oppPerPlayer(s.run.cleared))); }
