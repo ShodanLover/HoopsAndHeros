@@ -534,6 +534,11 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 .fangift svg { width: 22px; height: 22px; }
 @keyframes giftFloat { from { transform: translateY(0); } to { transform: translateY(-8px); } }
 
+/* ---------- Juice ---------- */
+.power-num.bump { animation: bump 0.35s ease; display: inline-block; }
+.quest .btn.pulse { animation: pulse 1.1s ease-in-out infinite; }
+.cur.bump .ico { animation: bump 0.35s ease; }
+
 </style>
 <div id="app"></div>
 <div id="modal-root"></div>
@@ -706,7 +711,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
 
   const balance = {
     oppBase: 5.2,          // per-player opponent power at global stage 0
-    oppGrowth: [1.3, 1.46, 1.5, 1.54, 1.57, 1.6, 1.62, 1.64, 1.66, 1.68], // per-stage growth by world
+    oppGrowth: [1.3, 1.46, 1.54, 1.58, 1.61, 1.64, 1.66, 1.68, 1.70, 1.72], // per-stage growth by world
     oppGrowthRift: 1.7,       // per global stage
     champMult: [1.0, 1.06, 1.12],
     rewardBase: 6,         // cash per win at stage 0
@@ -5538,6 +5543,8 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     const tg = m.ctx;
     if (tg.mode === 'champ') {
       CT.showBanner(['QUARTERFINAL', 'SEMIFINAL', 'CHAMPIONSHIP FINAL'][tg.round], D.worlds[E.worldOf(tg.g)].champ, '#ffd23f', 2.2);
+      CT.C.shake = Math.max(CT.C.shake, 8 + tg.round * 3);
+      CT.excite(0.9, true);
       BE.audio.play('buzzer');
     } else if (tg.mode === 'push' && E.stageOf(tg.g) === 0 && tg.g > 0) {
       CT.showBanner(D.worlds[E.worldOf(tg.g)].arena.toUpperCase(), 'Welcome to ' + D.worlds[E.worldOf(tg.g)].name, D.worlds[E.worldOf(tg.g)].color, 2.2);
@@ -5610,6 +5617,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     if (res.champLost !== undefined) pushLine('Eliminated in the ' + ['quarterfinal', 'semifinal', 'final'][res.champLost] + '. Upgrade and try again!');
     if (res.advanced && !res.champ) {
       const g = s.run.cleared;
+      if (g === s.best && res.mode === 'push') { CT.showBanner('NEW BEST!', E.stageLabel(g) + ' cleared', '#ffd23f', 1.6); CT.excite(0.8, true); }
       if (E.isChamp(g) && g < 100) setTimeout(() => ui.toast(D.worlds[E.worldOf(g)].champ + ' is ready! Tap the trophy button.', 'gold', 'trophy'), 900);
     }
     BE.bus.emit('match:end', res);
@@ -5799,6 +5807,7 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
     }
     render();
     const row = $('[data-row="' + k + '"]'); ui.flash(row);
+    const tp = $('[data-g="tp"]'); if (tp) { tp.classList.remove('bump'); void tp.offsetWidth; tp.classList.add('bump'); }
     BE.bus.emit('growth', { k, n: r.n });
     BE.bus.emit('changed');
   }

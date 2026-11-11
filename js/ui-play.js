@@ -338,6 +338,8 @@
     const tg = m.ctx;
     if (tg.mode === 'champ') {
       CT.showBanner(['QUARTERFINAL', 'SEMIFINAL', 'CHAMPIONSHIP FINAL'][tg.round], D.worlds[E.worldOf(tg.g)].champ, '#ffd23f', 2.2);
+      CT.C.shake = Math.max(CT.C.shake, 8 + tg.round * 3);
+      CT.excite(0.9, true);
       BE.audio.play('buzzer');
     } else if (tg.mode === 'push' && E.stageOf(tg.g) === 0 && tg.g > 0) {
       CT.showBanner(D.worlds[E.worldOf(tg.g)].arena.toUpperCase(), 'Welcome to ' + D.worlds[E.worldOf(tg.g)].name, D.worlds[E.worldOf(tg.g)].color, 2.2);
@@ -410,6 +412,7 @@
     if (res.champLost !== undefined) pushLine('Eliminated in the ' + ['quarterfinal', 'semifinal', 'final'][res.champLost] + '. Upgrade and try again!');
     if (res.advanced && !res.champ) {
       const g = s.run.cleared;
+      if (g === s.best && res.mode === 'push') { CT.showBanner('NEW BEST!', E.stageLabel(g) + ' cleared', '#ffd23f', 1.6); CT.excite(0.8, true); }
       if (E.isChamp(g) && g < 100) setTimeout(() => ui.toast(D.worlds[E.worldOf(g)].champ + ' is ready! Tap the trophy button.', 'gold', 'trophy'), 900);
     }
     BE.bus.emit('match:end', res);

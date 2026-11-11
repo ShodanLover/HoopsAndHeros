@@ -5,7 +5,7 @@
 
   const balance = {
     oppBase: 5.2,          // per-player opponent power at global stage 0
-    oppGrowth: [1.3, 1.46, 1.5, 1.54, 1.57, 1.6, 1.62, 1.64, 1.66, 1.68], // per-stage growth by world
+    oppGrowth: [1.3, 1.46, 1.54, 1.58, 1.61, 1.64, 1.66, 1.68, 1.70, 1.72], // per-stage growth by world
     oppGrowthRift: 1.7,       // per global stage
     champMult: [1.0, 1.06, 1.12],
     rewardBase: 6,         // cash per win at stage 0

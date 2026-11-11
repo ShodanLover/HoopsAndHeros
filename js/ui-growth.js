@@ -84,6 +84,7 @@
     }
     render();
     const row = $('[data-row="' + k + '"]'); ui.flash(row);
+    const tp = $('[data-g="tp"]'); if (tp) { tp.classList.remove('bump'); void tp.offsetWidth; tp.classList.add('bump'); }
     BE.bus.emit('growth', { k, n: r.n });
     BE.bus.emit('changed');
   }
