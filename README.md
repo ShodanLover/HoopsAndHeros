@@ -43,7 +43,7 @@ every 5 seconds and when the page is hidden. On claude.ai it also uses an option
 
 | Command | What it does |
 |---|---|
-| `node tests/calibrate.js` | Win probability against power ratio for 1v1, 3v3 and 5v5 (checks the sim's balance) |
+| `node tests/calibrate.js` | Win probability and stage length of the challenger stream against power ratio, for squads of 1, 3 and 5 |
 | `node tests/progression.js [hours] [prestiges]` | A greedy bot plays the real game loop and reports time to reach each world, the progression wall, and how much faster runs get after prestige |
 | `node tests/smoke.js` | Loads the bundle in headless Chromium at phone size and screenshots the first minute |
 | `node tests/e2e.js` | Full playthrough: tutorial, every screen and most buttons, recruiting, gear, facilities, shop, every hub modal, contests, a championship, offline earnings, prestige, and save/reload. Fails on any page error. Screenshots go to `tests/shots/` (gitignored) |
@@ -65,9 +65,10 @@ Every file is an IIFE that attaches to one global namespace, `window.BE`. Script
 | `js/athletes.js` | A deterministic catalog of 300 collectible athletes (30 per world: 9 Common, 7 Uncommon, 6 Rare, 4 Epic, 3 Legendary, 1 Mythic) plus the starter. Effective attributes (base, stars, training, gear), opponent generation, and procedural SVG portraits |
 | `js/state.js` | Default save, type-safe merge/validation, migration, runtime indexes, localStorage with a backup slot, optional claude.ai cloud save (`claude.use('db')` at `data/users/<id>/save`), export/import save codes |
 | `js/economy.js` | Formulas and mutating actions: opponent power curve, rewards, the cached modifiers aggregate (`mods`), Team Growth, owned effects (athletes, milestones, world sets, gear), athlete/team power, leveling, training, facilities, coaches, gear (make/equip/upgrade/merge/salvage/craft/auto-equip, slots by stage), recruitment with banner levels, pity, wish list and duplicate conversion, shard exchange, `grant()`, prestige |
-| `js/sim.js` | Possession-by-possession basketball simulation (steals, passes, threes, jumpers, drives, dunks, post-ups, blocks, fouls and free throws, offensive rebounds and putbacks, stamina, tactics counters, abilities, clutch time, overtime). Runs headless for offline progress and tournaments |
+| `js/stream.js` | **The stage model: formation combat.** The squad sits in a formation of seats (columns back to front: 1, 1-2, 2-1-2; bigs auto-seated in front). Ten defenders enter from the right in groups of 2–3 (pressers attack the front column, snipers hit any seat), then the boss. Every squad member attacks on their own rhythm; only the front column drives and dunks, guards and wings shoot from their seats. Each player has their own Stamina: a gassed player sits out 5 s and returns at 35%; if the whole front column is gassed the stage is lost. The boss telegraphs a big play every third play that Lockdown shuts down. Headless; drives the court, offline progress, camps and tournaments |
+| `js/sim.js` | Legacy possession-by-possession simulation, no longer used by the main loop (kept for reference) (steals, passes, threes, jumpers, drives, dunks, post-ups, blocks, fouls and free throws, offensive rebounds and putbacks, stamina, tactics counters, abilities, clutch time, overtime). Runs headless for offline progress and tournaments |
 | `js/game.js` | Orchestration: lineups, current target (push/farm/championship), building teams for the sim, match result processing, idle `tick`, offline progress (Monte Carlo win rates), daily/weekly/monthly resets, missions, Franchise Story quests, Training Camps, Boosts, Halftime Spin, Fan Gifts, login ladder, season pass, achievements, simulated social layer, weekly tournament |
-| `js/court.js` | Canvas renderer: perspective half-court, themed arenas and crowds per world, player figures with gear visible, hoop and net physics, ball arcs, and the task-queue "director" that turns sim events into animated plays, celebrations, particles and floaters |
+| `js/court.js` | Canvas renderer: side-view court with themed arenas and crowds per world. Chibi characters (big heads, readable eyes/brows/mouth, dark outline, hair styles, facial hair and visible gear) drawn in code. Animates stream events: each party member runs their move on the defender, the defender wears the hit (knockback, stumble, ankle-breaker fall), the ball drops through the net, then hit-stop, damage numbers, streak counter, boss crown, aura and wind-up |
 | `js/audio.js` | Procedural SFX (bounce, sneaker squeak, swish, rim, dunk, crowd, buzzer, upgrades, recruit reveals by rarity) and a lo-fi music loop |
 | `js/services.js` | **Monetization integration point** (see below) and haptics |
 | `js/ui-core.js` | Icons, modal sheets, toasts, flying-currency and spark FX, reward popups, HUD, bottom nav, the tutorial coach overlay, the dev-mode ad placeholder |
@@ -98,11 +99,15 @@ Every file is an IIFE that attaches to one global namespace, `window.BE`. Script
   jumps to it, CLAIM pays gems/tickets). The tabs scroll underneath. Home holds the hub, **Team Growth**
   (8 franchise stats, ×1/×10/×100/MAX, always a few wins away, cap 25 + 10 per world, reset on prestige),
   Boosts, the Halftime Spin and the squad strip.
-- **Core loop:** matches auto-play. Wins pay cash, fans and drops and clear stages. A loss drops you back to
-  "farm" your last win. Auto-push retries after 3 farm wins, and the wall overlay shows the power you need.
-- **Formats:** World 1 fills the five-player squad: 1v1 (Games 1–2, first to 7), 3v3 (Games 3–5, first to 11),
-  5v5 from Game 6 (four quarters, with every few possessions animated and the rest fast-forwarded). All five
-  squad slots are shown from minute one with their unlock game. Free walk-ons fill new slots when a format grows.
+- **Core loop (formation combat, 2026-11-11, modelled on Idle Champions; see
+  `design/reference/icfr-combat-and-formation.md`):** the squad holds a formation on the left, defenders pour in
+  from the right in groups, ten per stage, then the boss. Each broken defender pays 4% of the stage reward on the
+  spot; beating the boss pays the rest. If the front column is gassed at the same time, the squad falls back to
+  replay the last stage. Auto-push retries after 3 replay wins, and the wall overlay shows the power you need. Win
+  odds follow squad power ÷ opponent power: about 50% at 1.15, 70% at 1.25 and 90% at 1.4
+  (`node tests/calibrate.js`); stages last about 25–35 seconds.
+- **Party size:** World 1 fills the five-player party: 1 player (Games 1–2), 3 (Games 3–5), all 5 from Game 6.
+  All five squad slots are shown from minute one with their unlock game. Free walk-ons fill new slots.
 - **Worlds:** 10 worlds × 10 stages. Stage 10 of each world is a 3-round championship the player chooses
   to enter. After World 10, endless Multiverse Rifts begin.
 - **Power:** athlete power = rarity × (OVR/50)^2.2 × level curve (+7% per level, ×2 every 25 levels) ×
@@ -165,9 +170,12 @@ pack, season pass premium, VIP.
 growth, level cost and power growth, milestones, passive and offline rates, and the Team Growth cost curve
 (`growthCostGrowth`, `growthCostStage`, caps). Growth prices follow the real reward per win so a level is
 always a few wins away. After changing anything, run `node tests/progression.js 3 2` (the bot buys growth,
-claims quests and recruits). Measured 2026-11-11: World 2 in about 10–16 minutes, World 4 (prestige unlock)
-in about 35–50 minutes, the first-run wall at World 7 after about 1.5–2 hours, and a second run that reaches
-World 9 about twice as fast.
+claims quests and recruits). The stream's own knobs are `BE.stream.CFG` in `js/stream.js` (Guard `hpK`,
+Stamina `staK`, challenger damage `oppK`, per-stage swing `form`, walk-in, boss multiples), and
+`oppPerPlayer` applies a rookie discount (×0.6 rising to ×1 by World 3) so the first session never walls.
+Measured 2026-11-11 with formation combat: World 2 in about 5–30 minutes (median about 20), World 4 in about
+20–60 minutes (median about 40), the first-run wall at World 8 after about 3 hours, and a second run that reaches
+World 9 about four times faster. Variance comes mostly from recruit luck.
 
 ## Status and next steps
 
@@ -178,6 +186,13 @@ World 9 about twice as fast.
   Team Growth panel, Franchise Story quest line, owned effects + Collection book + Auto-equip + slots by stage,
   banner levels + free daily recruit + wish list + duplicate conversion, Training Camps + Boosts + Halftime Spin +
   Fan Gifts, a juice and balance pass. All within `design/monetization-policy.md`.
+- ✅ **Formation combat, step 1 of 7 (2026-11-11):** seats in columns, defender groups (pressers and snipers),
+  per-player Stamina with front-column collapse. Next steps are listed at the end of
+  `design/reference/icfr-combat-and-formation.md` (court chemistry and formation editor next).
+- ✅ **Challenger stream + chibi party (2026-11-11).** Matches replaced by a constant stream of challengers
+  (`js/stream.js`); the court is a side view where the party of five runs signature plays on the defender
+  (`js/court.js`). Chibi characters are code-drawn HD vector, so faces read at phone size. Owner to confirm the
+  look; the pixel-sprite route stays parked behind `BE.sprites.enabled`.
 - ⏸ **Art direction (owner's call: pixel sprites, HD-2D style).** The 16-bit whole-screen look was rejected and
   reverted; the court is HD with the original vector figures. `js/sprites.js` and the code-drawn parts remain
   behind `BE.sprites.enabled = false`. Three sprite attempts were rejected for unreadable faces (see

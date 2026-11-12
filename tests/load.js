@@ -5,7 +5,7 @@ module.exports = function load(extra) {
     btoa: (s) => Buffer.from(s, 'binary').toString('base64'), atob: (s) => Buffer.from(s, 'base64').toString('binary') };
   ctx.globalThis = ctx; ctx.window = undefined;
   vm.createContext(ctx);
-  for (const f of ['util', 'data', 'athletes', 'state', 'economy', 'sim', 'game'].concat(extra || [])) {
+  for (const f of ['util', 'data', 'athletes', 'state', 'economy', 'sim', 'stream', 'game'].concat(extra || [])) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
   }
   return ctx.BE;

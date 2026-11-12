@@ -315,10 +315,10 @@
   const gearRarityAttr = [1, 2, 3, 4, 6, 8];
 
   const abilities = [
-    { k: 'hype', name: 'Hype Up', desc: '+30% team power for 6 possessions', cost: 40, unlock: 0, color: '#ff7a2f' },
-    { k: 'iso', name: 'Iso Play', desc: 'Your best scorer takes the next shot with +40% accuracy', cost: 30, unlock: 3, color: '#ffd23f' },
-    { k: 'lockdown', name: 'Lockdown', desc: '+35% defense for the next 3 possessions', cost: 35, unlock: 10, color: '#3aa8ff' },
-    { k: 'timeout', name: 'Timeout', desc: 'Restore stamina and gain +15 energy momentum', cost: 25, unlock: 14, color: '#38d996' },
+    { k: 'hype', name: 'Hype Up', desc: '+30% squad damage for 6 seconds', cost: 40, unlock: 0, color: '#ff7a2f' },
+    { k: 'iso', name: 'Iso Play', desc: 'Your best scorer fires a 5× crit dunk', cost: 30, unlock: 3, color: '#ffd23f' },
+    { k: 'lockdown', name: 'Lockdown', desc: 'Challengers deal 40% less damage for 5 seconds', cost: 35, unlock: 10, color: '#3aa8ff' },
+    { k: 'timeout', name: 'Timeout', desc: 'Restore 40% squad stamina and gain +15 energy', cost: 25, unlock: 14, color: '#38d996' },
   ];
 
   const tactics = {

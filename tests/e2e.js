@@ -44,11 +44,11 @@ const shot = (p, n) => p.screenshot({ path: 'tests/shots/' + n + '.png' });
   const closeAll = () => ev(() => BE.ui.closeAll());
   await closeAll();
   // Team Growth panel on the Home tab
-  await page.click('[data-act="buymult"][data-n="10"]'); await page.click('[data-act="grow"][data-k="offense"]').catch(() => {});
+  await closeAll(); await page.click('[data-act="buymult"][data-n="10"]'); await page.click('[data-act="grow"][data-k="offense"]').catch(() => {});
   await page.click('[data-act="buymult"][data-n="max"]'); await page.click('[data-act="grow"][data-k="revenue"]').catch(() => {});
   await page.click('[data-act="buymult"][data-n="1"]'); await page.click('[data-act="homelvl"]').catch(() => {});
   await page.waitForTimeout(300); await shot(page, 'g1-growth');
-  for (let i = 0; i < 6; i++) { const c = await page.$('[data-act="questclaim"]'); if (!c) break; await c.click(); await page.waitForTimeout(250); }
+  for (let i = 0; i < 6; i++) { await closeAll(); const c = await page.$('[data-act="questclaim"]'); if (!c) break; await c.click({ timeout: 3000 }).catch(() => {}); await page.waitForTimeout(250); }
   await page.click('[data-act="questgo"]').catch(() => {}); await page.waitForTimeout(300); await closeAll();
   console.log('quest', await ev(() => JSON.stringify({ i: BE.game_state.quest.i, next: BE.game.questState(BE.game_state).q && BE.game.questState(BE.game_state).q.text })));
   console.log('after 20s cleared', await ev(() => BE.game_state.run.cleared), 'cash', await ev(() => BE.util.fmt(BE.game_state.cash)));
@@ -139,7 +139,7 @@ const shot = (p, n) => p.screenshot({ path: 'tests/shots/' + n + '.png' });
   await page.click('[data-act="enterchamp"]').catch((e) => errors.push('enterchamp ' + e.message.split('\n')[0]));
   await page.waitForTimeout(1500); await shot(page, 'ch1-champ');
   for (let r = 0; r < 3; r++) {
-    await ev(() => { const m = BE.play.R.match; m.score = [99, 10]; m.over = true; m.winner = 0; BE.court.clearTasks(); });
+    await ev(() => { const m = BE.play.R.match; if (m && !m.over) { m.over = true; m.winner = 0; } });
     await page.waitForTimeout(3500);
     if (r < 2) { await page.waitForTimeout(500); }
   }

@@ -36,7 +36,7 @@ Run the first two once per machine. Then use these:
 | `npm test` | Full Playwright playthrough on a phone viewport (`tests/e2e.js`). It must end with `NO ERRORS` |
 | `npm run smoke` | First minute only, with screenshots |
 | `npm run balance` | Progression bot (`tests/progression.js 3 3`; it buys growth, claims quests and recruits). Compare against the targets in `design/game-brief.md` and the measured numbers in README → "Balance knobs" |
-| `npm run calibrate` | Win probability against power ratio for each format |
+| `npm run calibrate` | Stream win probability and stage length against power ratio for squads of 1, 3 and 5 |
 
 Screenshots go to `tests/shots/` (gitignored). **Look at them** after visual changes: a passing test
 doesn't prove the screen looks right.
@@ -47,7 +47,7 @@ doesn't prove the screen looks right.
   reads the same order. A new file needs a `<script>` tag in the right place.
 - **Content and balance live in `js/data.js`**, and systems live everywhere else. Adding a world, athlete
   archetype, facility, coach, achievement, product or mission should normally touch only `data.js`.
-- `js/economy.js` holds formulas and state changes, `js/sim.js` the match simulation (headless), and
+- `js/economy.js` holds formulas and state changes, `js/stream.js` the challenger-stream stage model (headless), and
   `js/game.js` the orchestration. None of them may touch the DOM, so they can run under Node in
   `tests/load.js`.
 - UI clicks go through `data-act` attributes and one dispatcher (`main.js`, which also looks in

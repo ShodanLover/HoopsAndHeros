@@ -1,13 +1,13 @@
-/* Basketball Empire — Play screen: live match runner, scoreboard, commentary, abilities, results, championships */
+/* Basketball Empire — Play screen: challenger-stream runner, scoreboard, commentary, abilities, results, championships */
 (function (root) {
   'use strict';
   const BE = (root.BE = root.BE || {});
-  const U = BE.util, D = BE.data, E = BE.econ, G = BE.game, S_ = BE.sim, CT = BE.court, A = BE.athletes;
+  const U = BE.util, D = BE.data, E = BE.econ, G = BE.game, S_ = BE.stream, CT = BE.court, A = BE.athletes;
   const ui = BE.ui;
   const { $, icon } = ui;
   const S = () => BE.game_state;
 
-  const R = { match: null, phase: 'idle', betweenT: 0, quickWait: 0, hold: false, lines: [], lastScore: [0, 0], champBannerShown: false, lastObjective: '' };
+  const R = { match: null, phase: 'idle', betweenT: 0, hold: false, lines: [], champBannerShown: false, lastObjective: '', ctlT: 0 };
 
   // ---------- Layout ----------
   // The arena (stage header, court, abilities, objective) is pinned above the tabs and never leaves the screen.
@@ -94,7 +94,7 @@
   function objectiveText(s) {
     const tg = G.target(s);
     if (!s.tutorial.done && s.tutorial.step < 9) {
-      if (s.run.cleared === 0) return { t: 'Win your first streetball game', s: 'Your player plays automatically. Watch and cheer!', i: 'ball' };
+      if (s.run.cleared === 0) return { t: 'Clear your first streetball stage', s: 'Your player shoots automatically. Every basket is a hit!', i: 'ball' };
     }
     if (tg.mode === 'champ') return { t: D.worlds[E.worldOf(tg.g)].champ + ': ' + ['Quarterfinal', 'Semifinal', 'Final'][tg.round], s: 'Three straight wins takes the trophy', i: 'trophy' };
     if (tg.champReady) return { t: 'Enter the ' + D.worlds[E.worldOf(s.run.cleared)].champ, s: 'Win 3 games to reach World ' + (E.worldOf(s.run.cleared) + 2), i: 'trophy' };
@@ -147,7 +147,7 @@
       ui.toast('Reach Game 10 of this world to enter the championship', '', 'trophy'); ui.flash($('[data-p="courtwrap"]')); return;
     }
     // play: the court is already working on it
-    if (s.run.farming) { ui.toast('Your team is farming the last win. Upgrade, then tap Retry on the court.', '', 'up'); ui.go('play'); return; }
+    if (s.run.farming) { ui.toast('Your squad is replaying the last stage. Power up, then tap Retry on the court.', '', 'up'); ui.go('play'); return; }
     ui.toast('Your team is on it. Keep the court running!', '', 'ball'); ui.flash($('[data-p="courtwrap"]'));
   }
   function questClaim(el) {
@@ -178,7 +178,7 @@
       const unlocked = s.best >= ab.unlock || (ab.unlock === 0);
       const cost = Math.round(ab.cost * costMult);
       const ready = unlocked && m && !m.over && energy >= cost && R.phase === 'playing';
-      const active = m && ((ab.k === 'hype' && m.fx[0].hype > 0) || (ab.k === 'lockdown' && m.fx[0].lockdown > 0) || (ab.k === 'iso' && m.fx[0].iso));
+      const active = m && ((ab.k === 'hype' && m.fx[0].hype > 0) || (ab.k === 'lockdown' && m.fx[0].lockdown > 0));
       const ic = { hype: 'fire', iso: 'bolt', lockdown: 'shield', timeout: 'clock' }[ab.k];
       html += '<button class="abil' + (ready ? ' ready' : '') + (active ? ' active' : '') + '" style="--ab:' + ab.color + '" data-act="ability" data-k="' + ab.k + '" data-ab="' + ab.k + '"' + (unlocked ? '' : ' disabled') + ' title="' + U.esc(ab.desc) + '">' +
         icon(unlocked ? ic : 'lock') + '<span>' + (unlocked ? ab.name : 'Locked') + '</span><span class="cost">' + (unlocked ? cost + ' ⚡' : 'G' + (ab.unlock + 1)) + '</span></button>';
@@ -197,7 +197,7 @@
       if (!b || b.disabled) continue;
       const ready = !m.over && m.energy >= Math.round(ab.cost * costMult) && R.phase === 'playing';
       b.classList.toggle('ready', ready);
-      const active = (ab.k === 'hype' && m.fx[0].hype > 0) || (ab.k === 'lockdown' && m.fx[0].lockdown > 0) || (ab.k === 'iso' && m.fx[0].iso);
+      const active = (ab.k === 'hype' && m.fx[0].hype > 0) || (ab.k === 'lockdown' && m.fx[0].lockdown > 0);
       b.classList.toggle('active', !!active);
     }
   }
@@ -237,12 +237,13 @@
       html = '<div class="court-overlay" style="bottom:12px"><button class="btn gold pulse stack" data-act="enterchamp">' + icon('trophy') + ' Enter ' + U.esc(D.worlds[E.worldOf(s.run.cleared)].champ) + '<span class="sub">3-round tournament · big rewards</span></button></div>';
     } else if (s.run.farming && s.run.cleared > 0 && !s.run.champ) {
       const need = E.oppPower(s.run.cleared), have = E.teamPower(s, E.sizeOf(Math.min(s.run.cleared, 99)));
-      html = '<div class="wall-hint"><span style="color:var(--bad)">' + icon('shield') + '</span><span class="grow"><b>Farming last win.</b> Next foe: ⚡' + U.fmt(need) + ' vs your ⚡' + U.fmt(have) + '</span><button class="btn xs" data-act="goteam">Upgrade</button><button class="btn xs ghost" data-act="retry">Retry</button></div>';
+      html = '<div class="wall-hint"><span style="color:var(--bad)">' + icon('shield') + '</span><span class="grow"><b>Replaying the last stage.</b> Next stage: ⚡' + U.fmt(need) + ' vs your ⚡' + U.fmt(have) + '</span><button class="btn xs" data-act="goteam">Upgrade</button><button class="btn xs ghost" data-act="retry">Retry</button></div>';
     }
     el.innerHTML = html;
   }
 
   function teamLabel(t) { return U.esc(t.name); }
+  // Scoreboard: squad Stamina on the left, the challenger run (pips, boss crown) in the middle, the opponent on the right
   function renderScoreboard() {
     const m = R.match;
     const el = $('[data-p="sb"]');
@@ -250,65 +251,52 @@
     if (!m) { el.innerHTML = '<div class="sb-mid" style="grid-column:1/-1">Warming up…</div>'; return; }
     const h = m.teams[0], a = m.teams[1];
     el.innerHTML =
-      '<div class="sb-team"><span class="sb-sw" style="background:' + h.colors[0] + '"></span><div style="min-width:0"><div class="sb-name">' + teamLabel(h) + '</div><div class="sb-pow">⚡' + U.fmt(h.power) + '</div></div><div class="sb-score" data-sb="0">' + m.score[0] + '</div></div>' +
+      '<div class="sb-team"><span class="sb-sw" style="background:' + h.colors[0] + '"></span><div class="sb-col"><div class="sb-name">' + teamLabel(h) + '</div><div class="sb-pow">⚡' + U.fmt(h.power) + '</div><div class="sb-bar sta" title="Squad stamina"><i data-sb="sta"></i></div></div></div>' +
       '<div class="sb-mid" data-sb="mid"></div>' +
-      '<div class="sb-team away"><span class="sb-sw" style="background:' + a.colors[0] + '"></span><div style="min-width:0"><div class="sb-name">' + teamLabel(a) + '</div><div class="sb-pow">⚡' + U.fmt(a.power) + '</div></div><div class="sb-score" data-sb="1">' + m.score[1] + '</div></div>';
-    R.lastScore = m.score.slice();
+      '<div class="sb-team away"><span class="sb-sw" style="background:' + a.colors[0] + '"></span><div class="sb-col"><div class="sb-name">' + teamLabel(a) + '</div><div class="sb-pow">⚡' + U.fmt(a.power) + '</div><div class="sb-bar run" title="Challengers left"><i data-sb="run"></i></div></div></div>';
+    R.sbKey = '';
     updateScoreboard();
   }
   function updateScoreboard() {
     const m = R.match;
     if (!m) return;
-    for (let i = 0; i < 2; i++) {
-      const e = $('[data-sb="' + i + '"]');
-      if (!e) continue;
-      if (R.lastScore[i] !== m.score[i]) { e.textContent = m.score[i]; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); }
-    }
-    R.lastScore = m.score.slice();
+    const sta = $('[data-sb="sta"]');
+    if (sta) { const k = Math.max(0, m.sta / m.staMax); sta.style.width = (k * 100).toFixed(1) + '%'; sta.classList.toggle('low', k < 0.3); }
+    const run = $('[data-sb="run"]');
+    if (run) run.style.width = ((1 - S_.progress(m)) * 100).toFixed(1) + '%';
+    const key = m.broken + ':' + (m.bossUp ? 1 : 0) + ':' + (m.over ? 1 : 0) + ':' + m.ctx.mode;
+    if (key === R.sbKey) return;
+    R.sbKey = key;
     const mid = $('[data-sb="mid"]');
     if (mid) {
-      let q;
-      if (m.format === '5v5') q = m.over ? 'FINAL' : m.overtime ? 'OT' : 'Q' + m.quarter;
-      else q = m.over ? 'FINAL' : 'TO ' + m.rules.target;
+      const won = m.over && m.winner === 0;
+      const pips = '<span class="wcount">' + Math.min(m.broken, m.nReg) + '/' + m.nReg + '</span><span class="wp boss' + (won ? ' done' : m.bossUp ? ' cur' : '') + '">♛</span>';
       const tg = m.ctx;
       const sub = tg.mode === 'champ' ? ['QF', 'SF', 'FINAL'][tg.round] : tg.mode === 'farm' ? 'Replay' : E.stageLabel(tg.g).replace('Game ', 'G');
-      mid.innerHTML = '<div class="q">' + q + '</div><div>' + sub + '</div>';
+      mid.innerHTML = '<div class="wpips">' + pips + '</div><div>' + sub + '</div>';
     }
   }
 
   // ---------- Commentary ----------
-  function nm(m, team, idx) { const p = m.teams[team].players[idx]; return p ? (p.short || p.last || p.name) : '?'; }
-  function describe(ev, m) {
-    const segs = ev.segs;
-    const lines = [];
-    const shots = segs.filter((x) => x.t === 'shot');
-    const last = shots[shots.length - 1];
-    const st = segs.find((x) => x.t === 'steal');
-    const ft = segs.find((x) => x.t === 'ft');
+  function nm(m, i) { const p = m.teams[0].players[i]; return p ? (p.short || p.last || p.name) : 'Your squad'; }
+  function foeName(w) { return w.p.first ? w.p.first + ' ' + w.p.last : w.p.name; }
+  function commentary(m, e) {
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-    if (st) lines.push(pick(['{d} picks the pocket of {o}!', 'Steal by {d}! {o} coughs it up.', '{d} jumps the lane — turnover!']).replace('{d}', nm(m, st.team, st.who)).replace('{o}', nm(m, 1 - st.team, st.from)));
-    else if (ft) { const made = ft.shots.filter(Boolean).length; lines.push(nm(m, ft.team, ft.who) + ' gets fouled and hits ' + made + ' of ' + ft.shots.length + ' at the line.'); }
-    else if (last) {
-      const who = nm(m, last.team, last.who);
-      if (last.blockedBy !== undefined) lines.push(pick(['REJECTED by {b}! Get that outta here!', '{b} swats {s} at the rim!', 'Denied! {b} with the block.']).replace('{b}', nm(m, 1 - last.team, last.blockedBy)).replace('{s}', who));
-      else if (last.made) {
-        const ast = last.assist >= 0 ? ' (dime from ' + nm(m, last.team, last.assist) + ')' : '';
-        const t = {
-          three: ['{s} buries the three!', 'Bang! {s} from downtown!', '{s} splashes it from deep!'],
-          mid: ['{s} pulls up — nothing but net.', 'Smooth jumper from {s}.', '{s} with the fadeaway, good!'],
-          layup: ['{s} glides in for the layup.', 'Euro-step and score by {s}.', '{s} finishes off the glass.'],
-          dunk: ['{s} THROWS IT DOWN!', 'Oh my! {s} with the monster jam!', '{s} rocks the rim!'],
-          post: ['{s} backs down and scores.', 'Drop step, bucket — {s}.', '{s} bullies inside for two.'],
-          putback: ['{s} cleans it up with the putback!', 'Second chance — {s} puts it home.'],
-        }[last.kind];
-        lines.push(pick(t).replace('{s}', who) + ast);
-      } else lines.push(pick(['{s} misses the ' + last.kind + '.', '{s} rims it out.', 'No good from {s}.']).replace('{s}', who));
-      const rb = segs.filter((x) => x.t === 'rebound').pop();
-      if (rb && !last.made) lines[lines.length - 1] += ' ' + nm(m, rb.team, rb.who) + (rb.off ? ' crashes the offensive glass!' : ' grabs the board.');
+    if (e.t === 'spawn') {
+      if (e.boss) return 'BOSS: ' + foeName(e) + ', the star of ' + m.teams[1].name + ', guards the rim!';
+      return e.kind === 'sniper' && Math.random() < 0.3 ? 'A sniper sets up deep. They can hit anyone in your formation.' : null;
     }
-    if (ev.endQuarter && !m.over) lines.push('End of Q' + ev.endQuarter + ': ' + m.score[0] + '-' + m.score[1]);
-    if (ev.clutch && Math.random() < 0.4) lines.push('Clutch time — the crowd is on its feet!');
-    return lines;
+    if (e.t === 'gassed') return nm(m, e.who) + ' is gassed and takes a breather.';
+    if (e.t === 'back') return nm(m, e.who) + ' is back in the lineup!';
+    if (e.t === 'wave') {
+      return null;
+    }
+    if (e.t === 'break') return e.boss ? nm(m, e.by) + ' breaks the boss! Stage clear.' : (e.broken === e.nReg ? 'All ' + e.nReg + ' defenders broken. Here comes the boss!' : Math.random() < 0.4 ? pick(['{s} breaks a defender!', '{s} cooks them. Next!']).replace('{s}', nm(m, e.by)) : null);
+    if (e.t === 'charge') return m.teams[1].name + "'s star is winding up a big play. Lockdown shuts it down!";
+    if (e.t === 'stop' && e.kind === 'lockdown') return 'Locked down! The big play is stuffed.';
+    if (e.t === 'stop' && Math.random() < 0.5) return (e.kind === 'block' ? pick(['{s} with the rejection!', 'Denied by {s}!']) : pick(['{s} picks the pocket!', 'Steal by {s}!'])).replace('{s}', nm(m, e.who));
+    if (e.t === 'hit' && e.crit && Math.random() < 0.35) return ({ three: '{s} splashes a deep three!', dunk: '{s} THROWS IT DOWN!', mid: '{s} drains the pull-up!', layup: '{s} finishes through contact!' })[e.kind].replace('{s}', nm(m, e.who));
+    return null;
   }
   function pushLine(text) {
     if (!S().settings.commentary) return;
@@ -318,16 +306,16 @@
     if (el) el.innerHTML = R.lines.map((l) => '<div class="tl">' + U.esc(l) + '</div>').join('');
   }
 
-  // ---------- Match runtime ----------
+  // ---------- Stage runtime ----------
   function startNext() {
     const s = S();
     R.match = G.newMatch(s);
     const m = R.match;
     CT.setTheme(E.worldOf(Math.min(m.ctx.g, 99)), G.cosmetic(s));
-    CT.startMatch(m);
+    CT.resize();
+    CT.start(m);
     CT.speed = speedOf(s);
     R.phase = 'playing';
-    R.quickWait = 0.5;
     $('[data-p="result"]') && $('[data-p="result"]').classList.add('hidden');
     renderScoreboard();
     renderStageBar();
@@ -343,8 +331,8 @@
       BE.audio.play('buzzer');
     } else if (tg.mode === 'push' && E.stageOf(tg.g) === 0 && tg.g > 0) {
       CT.showBanner(D.worlds[E.worldOf(tg.g)].arena.toUpperCase(), 'Welcome to ' + D.worlds[E.worldOf(tg.g)].name, D.worlds[E.worldOf(tg.g)].color, 2.2);
-    } else CT.showBanner('TIP-OFF', m.teams[0].name + ' vs ' + m.teams[1].name, '#ffffff', 1.2);
-    pushLine((tg.mode === 'farm' ? 'Replay vs ' : 'Up next: ') + m.teams[1].name + ' (' + m.rules.label + ').');
+    } else if (tg.mode === 'push') CT.showBanner(E.stageLabel(tg.g).toUpperCase(), m.teams[1].name, '#ffffff', 1.1);
+    pushLine((tg.mode === 'farm' ? 'Replay vs ' : 'Up next: ') + m.teams[1].name + '. ' + m.nReg + ' defenders, then their star.');
     BE.audio.setAmbience(0.4 + E.worldOf(tg.g) * 0.06);
   }
   function speedOf(s) { const list = speeds(s); return list.includes(s.settings.speed) ? s.settings.speed : list[list.length - 1]; }
@@ -353,25 +341,31 @@
     if (!s.settings.autoAbilities || !E.unlocked(s, 'autocoach')) return;
     const cm = E.mods(s).energyCost;
     const can = (k) => { const ab = D.abilities.find((a) => a.k === k); return s.best >= ab.unlock && m.energy >= Math.round(ab.cost * cm); };
-    const trailing = m.score[0] <= m.score[1];
-    if (m.fx[0].hype <= 0 && can('hype')) useAbility('hype', true);
-    else if (trailing && m.offense === 1 && m.fx[0].lockdown <= 0 && can('lockdown')) useAbility('lockdown', true);
-    else if (m.energy > 90 && m.offense === 0 && can('iso')) useAbility('iso', true);
+    let low = 1;
+    m.pl.forEach((pl, i) => { if (m.seats[i].role === 'front' && !pl.gassed) low = Math.min(low, pl.sta / pl.max); });
+    const boss = m.foes.some((f) => f.boss);
+    if (low < 0.35 && can('timeout')) useAbility('timeout', true);
+    else if (m.fx[0].hype <= 0 && can('hype')) useAbility('hype', true);
+    else if ((boss || low < 0.6) && m.fx[0].lockdown <= 0 && can('lockdown')) useAbility('lockdown', true);
+    else if (m.energy > 90 && can('iso')) useAbility('iso', true);
   }
 
   function useAbility(k, auto) {
     const s = S(), m = R.match;
     if (!m || R.phase !== 'playing') return false;
-    const ok = S_.useAbility(m, k, E.mods(s).energyCost);
+    const evs = [];
+    const ok = S_.useAbility(m, k, E.mods(s).energyCost, evs);
+    if (evs.length) CT.onEvents(evs);
     if (!ok) { if (!auto) { BE.audio.play('error'); ui.toast('Not enough energy yet', '', 'bolt'); } return false; }
     const ab = D.abilities.find((a) => a.k === k);
     s.stats.abilities++;
-    CT.showBanner(ab.name.toUpperCase() + '!', ab.desc, ab.color, 1.1);
+    if (k !== 'iso') CT.showBanner(ab.name.toUpperCase() + '!', ab.desc, ab.color, 1.1);
     CT.excite(0.6, true);
     BE.audio.play(k === 'timeout' ? 'whistle' : 'milestone');
     BE.services.haptic(20);
     if (!auto) ui.sparks($('[data-ab="' + k + '"]'), ab.color, 14);
     renderControls();
+    updateScoreboard();
     BE.bus.emit('ability', k);
     return true;
   }
@@ -380,22 +374,22 @@
     const s = S(), m = R.match;
     const res = G.onMatchEnd(s, m);
     R.phase = 'between';
-    R.betweenT = 2.2;
+    R.betweenT = res.win ? 0.9 : 1.6;
     R.lastResult = res;
     const resEl = $('[data-p="result"]');
-    const mvpIdx = S_.mvp(m, 0);
+    const mvpIdx = S_.mvp(m);
     const mvp = m.teams[0].players[mvpIdx];
     const ms = m.stats[0][mvpIdx];
     if (resEl) {
       const chips = [];
-      if (res.cash) chips.push(ui.rewChip('cash', res.cash));
+      const cash = res.cash + (res.livePaid || 0);
+      if (cash) chips.push(ui.rewChip('cash', cash));
       if (res.fans) chips.push('<span class="chip">+' + U.fmt(res.fans) + ' fans</span>');
       if (res.gems) chips.push(ui.rewChip('gems', res.gems));
       if (res.tickets) chips.push(ui.rewChip('tickets', res.tickets));
       if (res.gear) chips.push('<span class="chip gold">' + icon('gear') + ' Gear drop!</span>');
-      resEl.innerHTML = '<div class="rp"><div class="big" style="color:' + (res.win ? 'var(--good)' : 'var(--bad)') + '">' + (res.win ? (res.champ ? 'CHAMPIONS!' : 'VICTORY') : 'DEFEAT') + '</div>' +
-        '<div class="num" style="font-size:18px">' + m.score[0] + ' – ' + m.score[1] + '</div>' +
-        (res.win && mvp ? '<div class="small" style="margin-top:2px">MVP: <b>' + U.esc(mvp.short || mvp.name) + '</b> · ' + ms.pts + ' pts' + (ms.reb ? ', ' + ms.reb + ' reb' : '') + (ms.ast ? ', ' + ms.ast + ' ast' : '') + '</div>' : '') +
+      resEl.innerHTML = '<div class="rp"><div class="big" style="color:' + (res.win ? 'var(--good)' : 'var(--bad)') + '">' + (res.win ? (res.champ ? 'CHAMPIONS!' : 'STAGE CLEAR') : 'OUT OF GAS') + '</div>' +
+        (res.win && mvp ? '<div class="small" style="margin-top:2px">MVP: <b>' + U.esc(mvp.short || mvp.name) + '</b> · ' + ms.pts + ' pts · ' + U.fmt(ms.dmg) + ' dmg</div>' : '<div class="small" style="margin-top:2px">' + (m.collapsed ? 'Front line collapsed · ' : '') + m.broken + ' of ' + m.nReg + ' defenders broken</div>') +
         '<div class="rw">' + chips.join('') + '</div></div>';
       resEl.classList.remove('hidden');
     }
@@ -408,11 +402,11 @@
       const names = res.gifts.map((a) => A.tpl(a.cid).first + ' ' + A.tpl(a.cid).last).join(' & ');
       ui.toast(names + ' joined your squad for ' + E.formatOf(Math.min(s.run.cleared, 99)) + '!', 'good', 'social');
     }
-    if (!res.win && res.mode === 'push') pushLine('Tough loss. The team will farm the last win while you upgrade.');
-    if (res.champLost !== undefined) pushLine('Eliminated in the ' + ['quarterfinal', 'semifinal', 'final'][res.champLost] + '. Upgrade and try again!');
+    if (!res.win && res.mode === 'push') pushLine('Out of gas. The squad will replay the last stage while you power up.');
+    if (res.champLost !== undefined) pushLine('Eliminated in the ' + ['quarterfinal', 'semifinal', 'final'][res.champLost] + '. Power up and try again!');
     if (res.advanced && !res.champ) {
       const g = s.run.cleared;
-      if (g === s.best && res.mode === 'push') { CT.showBanner('NEW BEST!', E.stageLabel(g) + ' cleared', '#ffd23f', 1.6); CT.excite(0.8, true); }
+      if (g === s.best && res.mode === 'push') { CT.showBanner('NEW BEST!', E.stageLabel(g - 1) + ' cleared', '#ffd23f', 1.4); CT.excite(0.8, true); }
       if (E.isChamp(g) && g < 100) setTimeout(() => ui.toast(D.worlds[E.worldOf(g)].champ + ' is ready! Tap the trophy button.', 'gold', 'trophy'), 900);
     }
     BE.bus.emit('match:end', res);
@@ -438,36 +432,38 @@
     if (R.phase === 'idle') { startNext(); return; }
     if (R.phase === 'between') {
       if (R.hold || (BE.tutorial && BE.tutorial.blocking())) return;
-      R.betweenT -= dt;
+      R.betweenT -= dt * Math.max(1, CT.speed / 2);
       if (R.betweenT <= 0) startNext();
       return;
     }
     if (R.phase !== 'playing' || !R.match) return;
-    if (CT.busy()) return;
-    if (R.quickWait > 0) { R.quickWait -= dt * CT.speed; return; }
     const m = R.match;
     if (m.over) {
       R.phase = 'celebrate';
       BE.audio.play('buzzer');
+      updateScoreboard();
       CT.celebrate(m.winner, finishMatch);
       return;
     }
+    if (CT.C.hitstop > 0) return;
     autoAbility(s, m);
-    const ev = S_.nextPossession(m);
-    if (!ev) return;
-    if (ev.featured) {
-      for (const l of describe(ev, m)) pushLine(l);
-      CT.playEvent(ev, () => { updateScoreboard(); updateControls(); });
-    } else {
-      CT.quickEvent(ev);
+    const evs = S_.step(m, Math.min(0.1, dt) * CT.speed);
+    if (evs.length) {
+      CT.onEvents(evs);
+      for (const e of evs) {
+        if (e.t === 'break') {
+          const cash = G.onBreak(s, m, e);
+          if (cash > 0) { const f = CT.C.leaving[CT.C.leaving.length - 1]; CT.C.floaters.push({ text: '+$' + U.fmt(cash), x: f ? f.x : CT.C.W * 0.64, y: f ? f.y - f.h * 0.4 : CT.C.H * 0.6, t: 0, life: 1.1, color: '#38d996', size: 0.9, dx: 0 }); }
+        }
+        if (e.t === 'charge') { const b = $('[data-ab="lockdown"]'); if (b && !b.disabled) { b.classList.add('urge'); setTimeout(() => b.classList.remove('urge'), e.dur * 1000 / Math.max(1, CT.speed)); } }
+        const line = commentary(m, e);
+        if (line) pushLine(line);
+      }
       updateScoreboard();
-      updateControls();
-      R.quickWait = 0.16;
     }
-    if (ev.overtime) CT.showBanner('OVERTIME!', 'Tied after regulation', '#ff7a2f', 1.6);
-    if (ev.endQuarter && !m.over && !ev.overtime) CT.showBanner('END OF Q' + ev.endQuarter, m.score[0] + ' – ' + m.score[1], '#ffffff', 1.2);
+    R.ctlT -= dt;
+    if (R.ctlT <= 0) { R.ctlT = 0.12; updateControls(); }
   }
-
   function draw() { CT.draw(); }
 
   function enterChampionship() {

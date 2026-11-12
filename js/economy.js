@@ -25,7 +25,9 @@
   function oppPerPlayer(g, round) {
     g = Math.max(0, g);
     const lg = g <= 400 ? oppLog[g] : oppLog[400] + (g - 400) * Math.log(B.oppGrowthRift);
-    return B.oppBase * Math.exp(lg) * (round !== undefined ? B.champMult[round] : 1);
+    // Rookie discount: Worlds 1–2 opponents start soft so the first session never walls (fades out by World 3)
+    const rookie = g < 20 ? 0.6 + 0.02 * g : 1;
+    return B.oppBase * Math.exp(lg) * rookie * (round !== undefined ? B.champMult[round] : 1);
   }
   function oppPower(g, round) { return oppPerPlayer(g, round) * sizeOf(g); }
 

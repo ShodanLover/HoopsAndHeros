@@ -1,8 +1,8 @@
-/* Basketball Empire — game orchestration: opponents, match lifecycle, rewards, idle ticks, offline progress, resets */
+/* Basketball Empire — game orchestration: opponents, stage lifecycle (challenger stream), rewards, idle ticks, offline progress, resets */
 (function (root) {
   'use strict';
   const BE = (root.BE = root.BE || {});
-  const U = BE.util, D = BE.data, A = BE.athletes, E = BE.econ, S = BE.sim, B = D.balance;
+  const U = BE.util, D = BE.data, A = BE.athletes, E = BE.econ, S = BE.stream, B = D.balance;
 
   function cosmetic(s) { return D.cosmetics.find((c) => c.k === s.franchise.cosmetic) || D.cosmetics[0]; }
 
@@ -101,7 +101,8 @@
       const pool = D.worlds[w].teams.slice(0, 9);
       name = pool[(round * 4 + 3) % 9] + (size === 1 ? '' : ' (Playoff)');
     }
-    const t = A.opponentTeam(g, size, { round: champ ? round + 1 : 0, name });
+    const t = A.opponentTeam(g, 5, { round: champ ? round + 1 : 0, name });
+    if (size === 1 && g < 5 && !champ) { const parts = t.name.split(' '); t.players[0].first = parts[0]; t.players[0].last = parts.slice(1).join(' ') || parts[0]; }
     const per = E.oppPerPlayer(g, champ ? round : undefined);
     t.players.forEach((p) => { p.power = per; p.short = p.last; p.name = p.first + ' ' + p.last; p.gear = {}; });
     t.power = per * size;
@@ -128,16 +129,25 @@
     const home = playerTeam(s, size);
     if (!E.unlocked(s, 'tactics')) { home.tactic = null; away.tactic = null; }
     const m = E.mods(s);
-    const match = S.createMatch(home, away, {
-      format: fmt,
-      bonus: Object.assign({}, m.sim, { staminaDrain: m.staminaDrain }),
-      energy: 20,
-      awayFirst: Math.random() < 0.5 && s.tutorial.done,
-    });
+    const easy = !s.tutorial.done && s.run.cleared === 0;
+    if (easy) home.power *= 2.2;
+    const match = S.create(home, away, { format: fmt, bonus: Object.assign({}, m.sim, { staminaDrain: m.staminaDrain }) });
     match.ctx = tg;
-    match.tutorialEasy = !s.tutorial.done && s.run.cleared === 0;
-    if (match.tutorialEasy) { home.power *= 2.2; }
+    match.tutorialEasy = easy;
     return match;
+  }
+  // Win reward for the current stage before cash multipliers; each challenger broken pays a slice of it live
+  function winReward(s, tg) {
+    const reward = E.stageReward(s, tg.g);
+    return tg.mode === 'push' ? reward : tg.mode === 'farm' ? reward * B.farmReward : reward * B.champReward * (1 + tg.round * 0.5);
+  }
+  const BREAK_SHARE = 0.4; // regular defenders together pay 40% of the win reward live; the boss win pays the rest
+  function onBreak(s, match, ev) {
+    if (ev.boss) return 0;
+    const raw = winReward(s, match.ctx) * BREAK_SHARE / (match.nReg || 4);
+    match.paid += raw;
+    s.stats.breaks = (s.stats.breaks || 0) + 1;
+    return E.addCash(s, raw);
   }
 
   // ---------- Results ----------
@@ -151,6 +161,7 @@
     const ts = match.teamStats[0];
     st.threes += ts.threes; st.dunks += ts.dunks; st.blocks += ts.blocks; st.steals += ts.steals;
     const reward = E.stageReward(s, g);
+    const paid = match.paid || 0;
     if (win) {
       st.wins++;
       s.pass.xp += 2;
@@ -200,7 +211,8 @@
       if (tg.mode === 'champ') { r.champLost = tg.round; s.run.champ = null; s.run.farming = s.run.cleared > 0; s.run.farmWins = 0; }
     }
     if (s.run.cleared > s.best) s.best = s.run.cleared;
-    r.cash = E.addCash(s, r.cash);
+    r.livePaid = paid;
+    r.cash = E.addCash(s, Math.max(0, r.cash - paid));
     if (social.allianceActive(s) && win) s.social.contributed++;
     // format growth gifts
     const nextSize = E.sizeOf(Math.min(s.run.cleared, 99));
@@ -266,10 +278,10 @@
     const bonus = Object.assign({}, m.sim, { staminaDrain: m.staminaDrain });
     const rng = U.mulberry32(777 + g);
     let w = 0;
-    const n = fmt === '5v5' ? 16 : 30;
+    const n = 24;
     for (let i = 0; i < n; i++) {
-      const mt = S.createMatch(home, away, { format: fmt, rng, bonus });
-      S.playAll(mt);
+      const mt = S.create(home, away, { format: fmt, rng, bonus });
+      S.simulate(mt);
       if (mt.winner === 0) w++;
     }
     return w / n;
@@ -282,7 +294,7 @@
     const eff = m.offlineEff;
     const res = { seconds, counted: t, capped: seconds > capS, games: 0, wins: 0, cash: 0, tp: 0, fans: 0, stages: 0, division: 0, eff };
     if (t < 60) return res;
-    const gameLen = 28;
+    const gameLen = 26;
     let games = Math.floor(t / gameLen);
     res.games = games;
     let cash = 0;
@@ -428,8 +440,8 @@
       const scale = campScale(tier) * (1 + 0.15 * r);
       away.power *= scale; away.players.forEach((p) => { p.power *= scale; });
       away.name = c.rounds > 1 ? ['Camp Starters', 'Camp Veterans', 'Camp Boss'][r] : c.name + ' squad';
-      const mt = S.createMatch(home, away, { format: fmt, rng: Math.random, bonus });
-      S.playAll(mt);
+      const mt = S.create(home, away, { format: fmt, rng: Math.random, bonus });
+      S.simulate(mt);
       const w = mt.winner === 0;
       results.push({ opp: away.name, score: mt.score.slice(), won: w });
       if (!w) break;
@@ -625,8 +637,8 @@
       const scale = [0.8, 0.95, 1.08, 1.2][i];
       away.power *= scale;
       away.players.forEach((p) => { p.power *= scale; });
-      const mt = S.createMatch(home, away, { format: fmt, rng, bonus });
-      S.playAll(mt);
+      const mt = S.create(home, away, { format: fmt, rng, bonus });
+      S.simulate(mt);
       const won = mt.winner === 0;
       results.push({ round: rounds[i], opp: away.name, score: mt.score.slice(), won });
       if (!won) alive = false;
@@ -644,7 +656,7 @@
   }
 
   BE.game = {
-    cosmetic, ensureLineup, autoLineup, autoPromote, giftWalkOns, target, playerTeam, oppTeam, newMatch, onMatchEnd, startChampionship, tick, offline,
+    cosmetic, ensureLineup, autoLineup, autoPromote, giftWalkOns, target, playerTeam, oppTeam, newMatch, onMatchEnd, onBreak, winReward, startChampionship, tick, offline,
     estimateWinProb, resets, missionProgress, loginStatus, claimLogin, passReward, passTier, PASS_TIERS, PASS_XP, achievementState,
     claimAchievement, social, runTournament, gearVis, questProgress, questState, claimQuest,
     CAMPS, campsState, campScale, campReward, setCampTier, runCamp, activateBuff, spinState, spin, claimGift,

@@ -11,7 +11,7 @@
     return {
       wins: 0, losses: 0, gamesPlayed: 0, threes: 0, dunks: 0, blocks: 0, steals: 0, levelups: 0, pulls: 0, facilityUps: 0,
       gearUps: 0, contests: 0, trains: 0, abilities: 0, cashEarned: 0, championships: 0, prestiges: 0, legendaries: 0,
-      mythics: 0, unique: 1, bestWorld: 1, loginDays: 0, perfectFT: 0, stagesCleared: 0, champWins: 0, tourneyWins: 0, growthUps: 0,
+      mythics: 0, unique: 1, bestWorld: 1, loginDays: 0, perfectFT: 0, stagesCleared: 0, champWins: 0, tourneyWins: 0, growthUps: 0, breaks: 0,
     };
   }
 

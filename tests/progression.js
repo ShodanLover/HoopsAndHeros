@@ -1,6 +1,6 @@
 // Greedy bot plays the real game loop to measure pacing. Usage: node tests/progression.js [hours] [prestiges]
 const BE = require('./load')();
-const { econ: E, game: G, sim: S, state: ST, data: D, athletes: A } = BE;
+const { econ: E, game: G, stream: S, state: ST, data: D, athletes: A } = BE;
 const HOURS = +process.argv[2] || 12, RUNS = +process.argv[3] || 1;
 let s = ST.load(null); s.tutorial.done = true; s.tutorial.step = 99;
 let t = 0; const log = []; let lastW = -1;
@@ -28,9 +28,9 @@ for (let run = 0; run < RUNS; run++) {
     const tg = G.target(s);
     if (tg.champReady && (s.run.farmWins||0) >= 2) { G.startChampionship(s); s.run.farmWins = 0; }
     const m = G.newMatch(s);
-    S.playAll(m);
+    S.simulate(m);
     G.onMatchEnd(s, m);
-    const dur = m.format === '5v5' ? 30 : m.format === '3v3' ? 22 : 14;
+    const dur = m.t + 1.5;
     t += dur; G.tick(s, dur);
     // equip gear greedily
     for (const it of s.gear) if (!E.gearOwner(s, it.id)) { const ls = E.lineupAthletes(s); const a = ls.find(x => !x.gear[it.type]); if (a || ['ball','trainer'].includes(it.type)) E.equipGear(s, it.id, a || ls[0]); }
